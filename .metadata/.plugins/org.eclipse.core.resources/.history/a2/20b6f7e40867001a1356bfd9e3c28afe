@@ -40,15 +40,15 @@
 /******************************************************************************
 * Includes
 *******************************************************************************/
-#include "msp430.h"
+
 
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
 /**
- * This constant is used to enable ghe inputs and outputs GPIO
+ * This constant is an example
  */
-#define ENABLE_PINS 			0xFFFE
+#define Example 			32
 
 /******************************************************************************
 * Configuration Constants
@@ -59,74 +59,19 @@
 * Macros
 *******************************************************************************/
 
-/*********************************
- *  This is used to select the alternative primary functions of GPIO
- *  @param[in] port should be P1, P2, P3, etc...
- *  @param[in] pin should be values such as BIT1, BIT2, etc..
- *  \b  Example Example:
- *  @code
- *  SET_GPIO_PRI_FUN(P1, BIT4)    // to select primary function in pin P1.4
- *  @endcode
- */
 
-#define SET_GPIO_PRI_FUN(port, pin) \
-	do{ 						    \
-		port##SEL0 = port##SEL0 | pin;\
-	}while(0)
-
-
-/*********************************
- *  This is used to select the alternative secondary functions of GPIO
- *  @param[in] port should be P1, P2, P3, etc...
- *  @param[in] pin should be values such as BIT1, BIT2, etc..
- *  \b  Example Example:
- *  @code
- *  SET_GPIO_SEC_FUN(P1, BIT4)    // to select secondary function in pin P1.4
- *  @endcode
- */
-
-#define SET_GPIO_SEC_FUN(port, pin) \
-	do{								\
-		port##SEL1 = port##SEL1 | pin;\
-	}while)(0)
-
-
-/*********************************
- *  This is used to select the alternative tertary functions of GPIO
- *  @param[in] port should be P1, P2, P3, etc...
- *  @param[in] pin should be values such as BIT1, BIT2, etc..
- *  \b  Example Example:
- *  @code
- *  SET_GPIO_TER_FUN(P1, BIT4)    // to select tertary function in pin P1.4
- *  @endcode
- */
-
-#define SET_GPIO_TER_FUN(port, pin) \
-	do{								\
-		port##SEL1 = port##SEL1 | pin;\
-		port##SEL0 = port##SEL0 | pin;\
-	}while(0)
-
-
-#define SET_GPIO_OUTPUT(port, pin) \
-	do{								\
-		port##OUT = port##OUT | pin;  \
-	}while(0)
-
-
-#define CLEAR_GPIO_OUTPUT(port, pin) \
-	do {  \
-		 port##OUT = port##OUT & (~pin);\
-	}while(0)
-
-
-
-#define READ_GPIO_INPUT(port, pin)  (port##IN&pin)?1:0
 
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
-
+/**
+ * This enumeration is a list of test types
+ */
+typedef enum
+{
+	TEST_TEST1,			/**< Test Type 1 */
+	TEST_TEST2,			/**< Test Type 2 */
+}Test_t;
 
 /******************************************************************************
 * Variables

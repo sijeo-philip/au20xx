@@ -71,7 +71,7 @@
 
 #define SET_GPIO_PRI_FUN(port, pin) \
 	do{ 						    \
-		port##SEL0 = port##SEL0 | pin;\
+		port#SEL0 = port#SEL0 | pin;\
 	}while(0)
 
 
@@ -87,7 +87,7 @@
 
 #define SET_GPIO_SEC_FUN(port, pin) \
 	do{								\
-		port##SEL1 = port##SEL1 | pin;\
+		port#SEL1 = port#SEL1 | pin;\
 	}while)(0)
 
 
@@ -103,30 +103,33 @@
 
 #define SET_GPIO_TER_FUN(port, pin) \
 	do{								\
-		port##SEL1 = port##SEL1 | pin;\
-		port##SEL0 = port##SEL0 | pin;\
+		port#SEL1 = port#SEL1 | pin;\
+		port#SEL0 = port#SEL0 | pin;\
 	}while(0)
 
 
 #define SET_GPIO_OUTPUT(port, pin) \
 	do{								\
-		port##OUT = port##OUT | pin;  \
+		port#OUT = port#OUT | pin;  \
 	}while(0)
 
 
 #define CLEAR_GPIO_OUTPUT(port, pin) \
 	do {  \
-		 port##OUT = port##OUT & (~pin);\
+		 port#OUT = port#OUT & (~pin);\
 	}while(0)
-
-
-
-#define READ_GPIO_INPUT(port, pin)  (port##IN&pin)?1:0
 
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
-
+/**
+ * This enumeration is a list of test types
+ */
+typedef enum
+{
+	TEST_TEST1,			/**< Test Type 1 */
+	TEST_TEST2,			/**< Test Type 2 */
+}Test_t;
 
 /******************************************************************************
 * Variables
