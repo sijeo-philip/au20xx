@@ -1,0 +1,145 @@
+/****************************************************************************
+* Title                 :   osc_config
+* Filename              :   osc_config.h
+* Author                :   Sijeo Philip
+* Origin Date           :   15/03/2020
+* Version               :   1.0.0
+* Compiler              :   mspx_eabi
+* Target                :   MSP430FR6989
+* Notes                 :   This is configuration file to set the clock settings
+*
+* THIS SOFTWARE IS PROVIDED BY  UNISEM ELECTRONICS "AS IS" AND ANY EXPRESSED
+* OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL UNISEM ELECTRONICS OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+*****************************************************************************/
+
+/*************** INTERFACE CHANGE LIST **************************************
+*
+*    Date    Version   Author         Description
+*  15/03/2020  1.0.0   Sijeo Philip   Interface Created.
+*
+*****************************************************************************/
+/** @file osc_config.h
+ *  @brief This module is used to configure the clocks for core and peripherals
+ *
+ *  This is the header file for the configurations of clocks
+ */
+//TODO: UPDATE MACRO BELOW
+#ifndef OSC_CONFIG_H_
+#define OSC_CONFIG_H_
+
+/******************************************************************************
+* Includes
+*******************************************************************************/
+
+
+/******************************************************************************
+* Preprocess or Constants
+*******************************************************************************/
+
+/******************************************************************************
+* Configuration Constants
+*******************************************************************************/
+/*******************************************
+ * This is used to set the DCO frequecy for the MCU
+ * << 0x0000  ==> For 1MHz for DCORSEL =0 and DCORSEL =1
+ * << 0x0002  ==> For 2.67MHz for DCORSEL = 0 and 5.33MHz for DCORSEL = 1
+ * << 0x0004  ==> for 3.5MHz for DCORSEL = 0 and 7MHz for DCORSEL = 1
+ * << 0x0006  ==> for 4 MHz for DCORSEL = 0 and 8MHz for DCORSEL = 1
+ * << 0x0008  ==> for 5.33MHz for DCORSEL = 0 and 16MHz for DCORSEL =1
+ * << 0x000A  ==> for 7MHz for DCORSEL = 0 and 21MHz for DCORSEL = 1
+ * << 0x000C  ==> for 8MHz for DCORSEL = 0 and 24MHz for DCORSEL  =1
+ * << 0x000E  ==> defaults to 8MHz DCORSEL=0 and defaults to 24MHz for DCORSEL =1
+ * **************************************************/
+#ifndef CONF_CSCTL1_DCOFSEL
+#define CONF_CSCTL1_DCOFSEL 0x0000
+#endif
+
+/************************************
+ * This is to set to 0 in case of low frequency device and
+ * << 0x0000  ==> For low frequency Devices
+ * << 0x0040  ==> For High Frequency Devices
+ *
+ */
+#ifndef CONF_CSCTL1_DCORSEL
+#define CONF_CSCTL1_DCORSEL 0x0000
+#endif
+
+/**********************************************
+ * This is to select the  MCLK Source
+ * << 0x0000  ==> LFXTCLK when LFXT available otherwise VLOCLK
+ * << 0x0001  ==> VLOCLK
+ * << 0x0002  ==> LFMODCLK
+ * << 0x0003  ==> DCOCLK
+ * << 0x0004  ==> MODCLK
+ * << 0x0005  ==> HFXTCLK when HFXT available, otherwise DCOCLK
+ * << 0x0006  ==> Defaults to HFXTCLK  (Not Recommended to use)
+ * << 0x0007  ==> Defaults to HFXTCLK  (Not Recommended to use)
+ */
+#ifndef CONF_CSCTL2_SELM
+#define CONF_CSCTL2_SELM  0x0003
+#endif
+
+
+/**********************************************
+ * This is to select the  SMCLK Source
+ * << 0x0000  ==> LFXTCLK when LFXT available otherwise VLOCLK
+ * << 0x0010  ==> VLOCLK
+ * << 0x0020  ==> LFMODCLK
+ * << 0x0030  ==> DCOCLK
+ * << 0x0040  ==> MODCLK
+ * << 0x0050  ==> HFXTCLK when HFXT available, otherwise DCOCLK
+ * << 0x0060  ==> Defaults to HFXTCLK  (Not Recommended to use)
+ * << 0x0070  ==> Defaults to HFXTCLK  (Not Recommended to use)
+ */
+#ifndef CONF_CSCTL2_SELS
+#define CONF_CSCTL2_SELS  0x0030
+#endif
+
+/**********************************************
+ * This is to select the  ACLK Source
+ * << 0x0000  ==> LFXTCLK when LFXT available otherwise VLOCLK
+ * << 0x0100  ==> VLOCLK
+ * << 0x0200  ==> LFMODCLK
+ * << 0x0300  ==> DCOCLK
+ * << 0x0400  ==> MODCLK
+ * << 0x0500  ==> HFXTCLK when HFXT available, otherwise DCOCLK
+ * << 0x0600  ==> Defaults to HFXTCLK  (Not Recommended to use)
+ * << 0x0700  ==> Defaults to HFXTCLK  (Not Recommended to use)
+ */
+#ifndef CONF_CSCTL2_SELA
+#define CONF_CSCTL2_SELA  0x0300
+#endif
+/******************************************************************************
+* Macros
+*******************************************************************************/
+
+
+
+/******************************************************************************
+* Typedefs
+*******************************************************************************/
+
+
+/******************************************************************************
+* Variables
+*******************************************************************************/
+
+
+/******************************************************************************
+* Function Prototypes
+*******************************************************************************/
+
+
+#endif /*OSC_CONFIG_H_*/
+
+/*** End of File **************************************************************/

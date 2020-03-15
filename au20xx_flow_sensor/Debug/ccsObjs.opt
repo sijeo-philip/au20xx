@@ -1,0 +1,1 @@
+"./main.obj" "./source/hal_osc.obj" "../lnk_msp430fr6989.cmd" -l"libmath.a" -l"libc.a" 
