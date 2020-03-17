@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v4.4.3                      
 ******************************************************************************
->> Linked Mon Mar 16 03:37:50 2020
+>> Linked Tue Mar 17 22:47:49 2020
 
 OUTPUT FILE NAME:   <au20xx_flow_sensor.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 00004400

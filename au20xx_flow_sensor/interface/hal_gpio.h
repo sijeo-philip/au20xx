@@ -108,20 +108,63 @@
 	}while(0)
 
 
+/*********************************
+ *  This is used to set the GPIO to HIGH if the port is set as output
+ *  @param[in] port should be P1, P2, P3, etc...
+ *  @param[in] pin should be values such as BIT1, BIT2, etc..
+ *  \b  Example Example:
+ *  @code
+ *  SET_GPIO_OUTPUT(P1, BIT4)    // to set the output
+ *  @endcode
+ */
+
 #define SET_GPIO_OUTPUT(port, pin) \
 	do{								\
 		port##OUT = port##OUT | pin;  \
 	}while(0)
 
+/*********************************
+ *  This is used to set the GPIO to LOW if the port is set as output
+ *  @param[in] port should be P1, P2, P3, etc...
+ *  @param[in] pin should be values such as BIT1, BIT2, etc..
+ *  \b  Example Example:
+ *  @code
+ *  CLEAR_GPIO_OUTPUT(P1, BIT4)    // to set the output
+ *  @endcode
+ */
 
 #define CLEAR_GPIO_OUTPUT(port, pin) \
 	do {  \
 		 port##OUT = port##OUT & (~pin);\
 	}while(0)
 
+/*********************************
+ *  This is used to read the GPIO which is set as input
+ *  @param[in] port should be P1, P2, P3, etc...
+ *  @param[in] pin should be values such as BIT1, BIT2, etc..
+ *  \b  Example Example:
+ *  @code
+ *  uint8_t inputval;
+ *  inputval = READ_GPIO_INPUT(P1, BIT4)    // read the input
+ *  @endcode
+ */
 
+#define READ_GPIO_INPUT(port, pin)  ((port##IN&pin)?1:0)
 
-#define READ_GPIO_INPUT(port, pin)  (port##IN&pin)?1:0
+/************************************
+ * This is used to set the direction of the GPIO to output
+ *  @param[in] port should be P1, P2, P3, etc...
+ *  @param[in] pin should be values such as BIT1, BIT2, etc..
+ *  \b  Example Example:
+ *  @code
+ *  SET_GPIO_DIR_OUT(port, pin)
+ *  @endcode
+ *
+ */
+#define SET_GPIO_DIR_OUT(port, pin) \
+	do{		\
+		port##DIR = port##DIR | pin; \
+	}while(0)
 
 /******************************************************************************
 * Typedefs
