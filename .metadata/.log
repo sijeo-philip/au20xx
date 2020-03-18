@@ -2492,3 +2492,116 @@ java.lang.UnsatisfiedLinkError: C:\ti\ccsv6\eclipse\plugins\com.ti.dvt.tidisasse
 	at org.eclipse.osgi.container.SystemModule.stop(SystemModule.java:186)
 	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle$EquinoxSystemModule$1.run(EquinoxBundle.java:160)
 	at java.lang.Thread.run(Unknown Source)
+!SESSION 2020-03-19 00:32:40.314 -----------------------------------------------
+eclipse.buildId=4.4.1.M20140925-0400
+java.version=1.7.0_60
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Framework arguments:  -product com.ti.ccstudio.branding.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product com.ti.ccstudio.branding.product
+
+!ENTRY com.ti.common.core 4 0 2020-03-19 00:32:43.503
+!MESSAGE path=ccs_base/DebugServer
+
+!ENTRY com.ti.common.core 4 0 2020-03-19 00:32:43.511
+!MESSAGE debugServerDir=C:/ti/ccsv6/ccs_base/DebugServer
+
+!ENTRY com.ti.dvt.profileanalysismanagerplugin 4 0 2020-03-19 00:33:02.730
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+org.osgi.framework.BundleException: Exception in com.ti.dvt.profileanalysismanager.ProfileServerPlugin.stop() of bundle com.ti.dvt.profileanalysismanagerplugin.
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.stop(BundleContextImpl.java:847)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle.stopWorker0(EquinoxBundle.java:950)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$EquinoxModule.stopWorker(EquinoxBundle.java:324)
+	at org.eclipse.osgi.container.Module.doStop(Module.java:626)
+	at org.eclipse.osgi.container.Module.stop(Module.java:488)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.decStartLevel(ModuleContainer.java:1623)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1542)
+	at org.eclipse.osgi.container.SystemModule.stopWorker(SystemModule.java:248)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle$EquinoxSystemModule.stopWorker(EquinoxBundle.java:145)
+	at org.eclipse.osgi.container.Module.doStop(Module.java:626)
+	at org.eclipse.osgi.container.Module.stop(Module.java:488)
+	at org.eclipse.osgi.container.SystemModule.stop(SystemModule.java:186)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle$EquinoxSystemModule$1.run(EquinoxBundle.java:160)
+	at java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.UnsatisfiedLinkError: C:\ti\ccsv6\eclipse\plugins\com.ti.dvt.tidisassembly_4.0.0.201501151820\os\win32\msvcp71.dll: Can't find dependent libraries
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(Unknown Source)
+	at java.lang.ClassLoader.loadLibrary0(Unknown Source)
+	at java.lang.ClassLoader.loadLibrary(Unknown Source)
+	at java.lang.Runtime.loadLibrary0(Unknown Source)
+	at java.lang.System.loadLibrary(Unknown Source)
+	at com.ti.dvt.tidisassembly.TIDisassemblyJNI.<clinit>(TIDisassemblyJNI.java:98)
+	at com.ti.dvt.tidisassembly.TIDisassembly.disassemblyClose(TIDisassembly.java:116)
+	at com.ti.dvt.datamodel.core.SymbolicOperator.reset(SymbolicOperator.java:1781)
+	at com.ti.dvt.datamodel.core.SymbolicTranslator.reset(SymbolicTranslator.java:385)
+	at com.ti.dvt.datamodel.core.DataModel.resetAllProcessors(DataModel.java:675)
+	at com.ti.dvt.datamodel.solution.Solution.reset(Solution.java:1077)
+	at com.ti.dvt.profileanalysisprovider.AbstractProfileAnalysisProvider.closeSolutions(AbstractProfileAnalysisProvider.java:147)
+	at com.ti.dvt.profileanalysisprovider.AbstractProfileAnalysisProvider.closeSolution(AbstractProfileAnalysisProvider.java:240)
+	at com.ti.dvt.profileanalysisprovider.AbstractProfileAnalysisProvider.debugSessionDetached(AbstractProfileAnalysisProvider.java:265)
+	at com.ti.dvt.profileanalysismanager.ProfileServerPlugin.stop(ProfileServerPlugin.java:829)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$4.run(BundleContextImpl.java:827)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$4.run(BundleContextImpl.java:1)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.stop(BundleContextImpl.java:820)
+	... 13 more
+Root exception:
+java.lang.UnsatisfiedLinkError: C:\ti\ccsv6\eclipse\plugins\com.ti.dvt.tidisassembly_4.0.0.201501151820\os\win32\msvcp71.dll: Can't find dependent libraries
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(Unknown Source)
+	at java.lang.ClassLoader.loadLibrary0(Unknown Source)
+	at java.lang.ClassLoader.loadLibrary(Unknown Source)
+	at java.lang.Runtime.loadLibrary0(Unknown Source)
+	at java.lang.System.loadLibrary(Unknown Source)
+	at com.ti.dvt.tidisassembly.TIDisassemblyJNI.<clinit>(TIDisassemblyJNI.java:98)
+	at com.ti.dvt.tidisassembly.TIDisassembly.disassemblyClose(TIDisassembly.java:116)
+	at com.ti.dvt.datamodel.core.SymbolicOperator.reset(SymbolicOperator.java:1781)
+	at com.ti.dvt.datamodel.core.SymbolicTranslator.reset(SymbolicTranslator.java:385)
+	at com.ti.dvt.datamodel.core.DataModel.resetAllProcessors(DataModel.java:675)
+	at com.ti.dvt.datamodel.solution.Solution.reset(Solution.java:1077)
+	at com.ti.dvt.profileanalysisprovider.AbstractProfileAnalysisProvider.closeSolutions(AbstractProfileAnalysisProvider.java:147)
+	at com.ti.dvt.profileanalysisprovider.AbstractProfileAnalysisProvider.closeSolution(AbstractProfileAnalysisProvider.java:240)
+	at com.ti.dvt.profileanalysisprovider.AbstractProfileAnalysisProvider.debugSessionDetached(AbstractProfileAnalysisProvider.java:265)
+	at com.ti.dvt.profileanalysismanager.ProfileServerPlugin.stop(ProfileServerPlugin.java:829)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$4.run(BundleContextImpl.java:827)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl$4.run(BundleContextImpl.java:1)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.stop(BundleContextImpl.java:820)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle.stopWorker0(EquinoxBundle.java:950)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$EquinoxModule.stopWorker(EquinoxBundle.java:324)
+	at org.eclipse.osgi.container.Module.doStop(Module.java:626)
+	at org.eclipse.osgi.container.Module.stop(Module.java:488)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.decStartLevel(ModuleContainer.java:1623)
+	at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1542)
+	at org.eclipse.osgi.container.SystemModule.stopWorker(SystemModule.java:248)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle$EquinoxSystemModule.stopWorker(EquinoxBundle.java:145)
+	at org.eclipse.osgi.container.Module.doStop(Module.java:626)
+	at org.eclipse.osgi.container.Module.stop(Module.java:488)
+	at org.eclipse.osgi.container.SystemModule.stop(SystemModule.java:186)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle$EquinoxSystemModule$1.run(EquinoxBundle.java:160)
+	at java.lang.Thread.run(Unknown Source)
+
+!ENTRY org.eclipse.core.jobs 4 2 2020-03-19 00:33:02.843
+!MESSAGE An internal error occurred during: "Replace IU Job".
+!STACK 0
+java.lang.NullPointerException
+	at com.ti.ccstudio.app.center.internal.CCSAppCenter.log(CCSAppCenter.java:441)
+	at com.ti.ccstudio.app.center.internal.CCSAppCenter._replaceIusWithLatest(CCSAppCenter.java:409)
+	at com.ti.ccstudio.app.center.internal.CCSAppCenter.access$3(CCSAppCenter.java:353)
+	at com.ti.ccstudio.app.center.internal.CCSAppCenter$2.run(CCSAppCenter.java:227)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+
+!ENTRY org.eclipse.equinox.p2.updatechecker 4 0 2020-03-19 00:33:02.850
+!MESSAGE Exception in update check thread
+!STACK 0
+org.eclipse.core.runtime.OperationCanceledException
+	at org.eclipse.equinox.internal.p2.transport.ecf.RepositoryTransport.download(RepositoryTransport.java:125)
+	at org.eclipse.equinox.internal.p2.transport.ecf.RepositoryTransport.download(RepositoryTransport.java:156)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadIndexFile(AbstractRepositoryManager.java:735)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:657)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:96)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:92)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:151)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:129)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:73)
