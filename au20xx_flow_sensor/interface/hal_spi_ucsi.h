@@ -43,14 +43,17 @@
  */
 
 
-#define CONF_UCSI_SPI	  B0
 
 /******************************************************************************
 * Includes
 *******************************************************************************/
 #include "usci_spi_config.h"
 #include "msp430.h"
+#include "hal_gpio.h"
 
+
+#define ENABLE_SPI_CS 	CLEAR_GPIO_OUTPUT(P2, BIT0)
+#define DISABLE_SPI_CS	SET_GPIO_OUTPUT(P2, BIT0)
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
@@ -111,6 +114,8 @@ extern "C"{
 #endif
 
 void spi_init(void);
+void spi_read(uint8_t * const p_data, uint16_t data_count);
+void spi_write(uint8_t * p_data, uint16_t data_count);
 
 #ifdef __cplusplus
 } // extern "C"

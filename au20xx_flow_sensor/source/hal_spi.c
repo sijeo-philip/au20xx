@@ -58,7 +58,8 @@
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
-
+ static void spi_byte_write( uint8_t data );
+ static uint8_t spi_byte_read( void );
 /******************************************************************************
 * Function Definitions
 *******************************************************************************/
@@ -116,4 +117,206 @@ void spi_init( void )
 
 }
 
+/******************************************************************************
+* Function : spi_byte_write()
+*//**
+* \b Description:
+*
+* This function is used to write a byte of data over spi interface
+*
+* PRE-CONDITION: Configuration to be done in ucsi_spi_config file
+* PRE-CONDITION: The Oscillator should be initialized
+* PRE-CONDITION: The GPIO should be intialized
+* PRE-CONDITION: SPI should be intialized and enabled
+*
+* POST-CONDITION: Byte will be transferred over SPI
+* @param[in] 	byte 	byte of data to be transferred over spi
+*
+* @return 		None
+*
+* \b Example Example:
+* @code
+*  uint8_t byte = 0x0A;
+*  spi_byte_write(byte);
+*
+* @endcode
+*
+* @see system_init()
+* @see gpio_init()
+* @see spi_init()
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 17/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+static void spi_byte_write( uint8_t data )
+{
+	while (1 == CHECK_SPI_BUSY(B0) ) {}            /* This checks if the UCBUSY bit is High, if yes then the
+													 peripheral is busy reading or transmitting data over the
+													 peripheral */
+	ENABLE_SPI_CS;								 /* Pull the Chip Select line LO to select the Chip */
+	SPI_TX_BUF(B0) = data;						 /* Load the Data into SPI Transmit Buffer */
+
+	while ( 0 == SPI_TX_INT_FLAG(B0) ) {}        /* Test the TX is completed */
+}
+
+
+/******************************************************************************
+* Function : spi_byte_read()
+*//**
+* \b Description:
+*
+* This function is used to read a byte of data over spi interface
+*
+* PRE-CONDITION: Configuration to be done in ucsi_spi_config file
+* PRE-CONDITION: The Oscillator should be initialized
+* PRE-CONDITION: The GPIO should be intialized
+* PRE-CONDITION: SPI should be intialized and enabled
+*
+* POST-CONDITION: Byte will be read over SPI
+*
+* @return 		 byte of data read over SPI
+*
+* \b Example Example:
+* @code
+*  uint8_t byte = 0x00;
+*  byte = spi_byte_read();
+*
+* @endcode
+*
+* @see system_init()
+* @see gpio_init()
+* @see spi_init()
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 17/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+static uint8_t spi_byte_read(void)
+{
+	while (1 == CHECK_SPI_BUSY(B0) ) {}            /* This checks if the UCBUSY bit is High, if yes then the
+														 peripheral is busy reading or transmitting data over the
+														 peripheral */
+	ENABLE_SPI_CS;									/* Enable the SPI Slave chip */
+	SPI_TX_BUF(B0) = 0xAA;							/* Dummy Data is written over SPI to shift out the data to be read */
+	while ( 0 == SPI_RX_INT_FLAG(B0) ) {}           /* Waiting to receive a byte of data in SPI Register */
+
+	return SPI_RX_BUF(B0);
+}
+
+
+/******************************************************************************
+* Function : spi_write()
+*//**
+* \b Description:
+*
+* This function is used to write a byte of data over spi interface
+*
+* PRE-CONDITION: Configuration to be done in ucsi_spi_config file
+* PRE-CONDITION: The Oscillator should be initialized
+* PRE-CONDITION: The GPIO should be intialized
+* PRE-CONDITION: SPI should be intialized and enabled
+*
+* POST-CONDITION: Bytes will be transferred over SPI
+*
+* @param[in]	p_buff		pointer to buffer of data to be transferred over SPI
+* @param[in]    byte_count	Number of bytes to be transferred
+*
+* @return 		None
+*
+* \b Example Example:
+* @code
+*  uint8_t byte[20] = "Hello World!";
+*  spi_write(byte, 12);
+*
+* @endcode
+*
+* @see system_init()
+* @see gpio_init()
+* @see spi_init()
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 17/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void spi_write ( uint8_t * p_buff, uint16_t byte_count )
+{
+	static uint16_t bytes;
+	bytes = byte_count;
+	while((0 != bytes) && (0 != p_buff))
+	{
+		spi_byte_write(*p_buff);
+		p_buff++;
+		bytes--;
+	}
+   DISABLE_SPI_CS;
+}
+
+
+/******************************************************************************
+* Function : spi_read()
+*//**
+* \b Description:
+*
+* This function is used to read bytes of data over spi interface
+*
+* PRE-CONDITION: Configuration to be done in ucsi_spi_config file
+* PRE-CONDITION: The Oscillator should be initialized
+* PRE-CONDITION: The GPIO should be intialized
+* PRE-CONDITION: SPI should be intialized and enabled
+*
+* POST-CONDITION: Bytes will be transferred over SPI
+*
+* @param[in]	p_buff		pointer to buffer of data to be read over SPI
+* @param[in]    byte_count	Number of bytes to be read
+*
+* @return 		None
+*
+* \b Example Example:
+* @code
+*  uint8_t byte[20] ;
+*  spi_read(byte, 12);
+*
+* @endcode
+*
+* @see system_init()
+* @see gpio_init()
+* @see spi_init()
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 17/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void spi_read ( uint8_t * const p_buff, uint16_t byte_count )
+{
+	static uint16_t bytes;
+	bytes = 0;
+	while (( byte_count != bytes ) && (0 != p_buff) )
+	{
+		 p_buff[bytes]  = spi_byte_read();
+		 bytes++;
+
+	}
+	DISABLE_SPI_CS;
+}
 /*************** END OF FUNCTIONS ***************************************************************************/
