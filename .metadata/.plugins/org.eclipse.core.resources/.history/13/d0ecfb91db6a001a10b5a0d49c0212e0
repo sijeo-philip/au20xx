@@ -46,26 +46,7 @@
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
-#define DEV_ID_REG              0x00
-#define VER_ID_REG              0x01
-#define INTF_CFG_REG            0x05
-#define SNS1_OFF0_REG           0x06       /** << LSB of the offset to be added to SENSOR 1 code */
-#define SNS1_OFF1_REG           0x07       /** << MSB of the offset to be added to SENSOR 1 code */
-#define SNS2_OFF0_REG           0x08       /** << LSB of the offset to be added to SENSOR 2 code */
-#define SNS2_OFF1_REG           0x09       /** << MSB of the offset to be added to SENSOR 2 code */
-#define SNS_VALID_REG           0x0A       /** << When Set the Sensor output registers are valid */
-#define SNS1_OUT_Q8_REG         0x0B       /** << Sensor 1 output read back register, Soft decision
-                                           quantized to 8 bits */
-#define SNS2_OUT_Q8_REG         0x0C       /** << Sensor 2 output read back register, Soft decision
-                                                  quantized to 8 bits */
-#define SNS1_OUT_Q16_LSB_REG    0x0D       /** << Sensor 1 output read back register, Soft decision
-                                                   quantized to 16 bits */
-#define SNS1_OUT_Q16_MSB_REG    0x0E       /** << Sensor 1 output read back register, Soft decision
-                                                  quantized to 16 bits */
-#define SNS2_OUT_Q16_LSB_REG    0x0F       /** << Sensor 2 output read back register, Soft decision
-                                                  quantized to 16 bits */
-#define SNS2_OUT_Q16_MSB_REG    0x10       /** << Sensor 2 output read back register, Soft decision
-                                                  quantized to 16 bits */
+
 
 /******************************************************************************
 * Configuration Constants
