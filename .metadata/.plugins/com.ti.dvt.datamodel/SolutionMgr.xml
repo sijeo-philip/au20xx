@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.7.0_60" class="java.beans.XMLDecoder">
+<java version="1.8.0_144" class="java.beans.XMLDecoder">
  <object class="com.ti.dvt.datamodel.solution.SolutionManager$PersistState" id="SolutionManager$PersistState0">
   <void class="com.ti.dvt.datamodel.solution.SolutionManager$PersistState" method="getField">
    <string>defaultSolution</string>
    <void method="set">
     <object idref="SolutionManager$PersistState0"/>
-    <string>C:\ti\ccsv6\ccs_base\dvt_4.0.0.201501151820\FunctionProfile\solutions\null - CoverageProfile</string>
+    <string>C:\ti\ccs1000\ccs\ccs_base\dvt_4.1.0.202001311011\CodeGen\solutions\CodeGenCoverage</string>
    </void>
   </void>
  </object>
-<void class="com.ti.dvt.datamodel.solution.SolutionManager$PersistState" method="getField">
+<void class="com.ti.dvt.datamodel.solution.SolutionManager$PersistState" id="Field0" method="getField">
  <string>openedSolutions</string>
  <void id="ArrayList0" method="get">
   <object idref="SolutionManager$PersistState0"/>
   <void method="add">
-   <string>C:\ti\ccsv6\ccs_base\dvt_4.0.0.201501151820\FunctionProfile\solutions\null - FunctionProfile</string>
+   <string>E:\AuraSemi\au20xx\dvt\AnalysisSolutionsTemp\AnalysisSolution1584638832485\null</string>
   </void>
   <void method="add">
-   <string>E:\AuraSemi\au20xx\dvt\AnalysisSolutionsTemp\AnalysisSolution1584558172317\null</string>
-  </void>
-  <void method="add">
-   <string>C:\ti\ccsv6\ccs_base\dvt_4.0.0.201501151820\FunctionProfile\solutions\null - CoverageProfile</string>
-  </void>
-  <void method="add">
-   <string>C:\ti\ccsv6\ccs_base\dvt_4.0.0.201501151820\CodeGen\solutions\CodeGenCoverage</string>
+   <string>C:\ti\ccs1000\ccs\ccs_base\dvt_4.1.0.202001311011\CodeGen\solutions\CodeGenCoverage</string>
   </void>
  </void>
 </void>

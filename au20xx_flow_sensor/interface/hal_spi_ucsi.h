@@ -114,8 +114,8 @@ extern "C"{
 #endif
 
 void spi_init(void);
-void spi_read(uint8_t * const p_data, uint16_t data_count);
-void spi_write(uint8_t * p_data, uint16_t data_count);
+void spi_read(void * const p_data, uint16_t data_count);
+void spi_write(void * p_data, uint16_t data_count);
 
 #ifdef __cplusplus
 } // extern "C"

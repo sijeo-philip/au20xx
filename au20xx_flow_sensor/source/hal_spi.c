@@ -254,17 +254,20 @@ static uint8_t spi_byte_read(void)
 * <hr>
 *
 *******************************************************************************/
-void spi_write ( uint8_t * p_buff, uint16_t byte_count )
+void spi_write ( void * p_buff, uint16_t byte_count )
 {
 	static uint16_t bytes;
+	static uint8_t * p_data;
+	p_data = p_buff;
 	bytes = byte_count;
-	while((0 != bytes) && (0 != p_buff))
+	while((0 != bytes) && (0 != p_data))
 	{
-		spi_byte_write(*p_buff);
-		p_buff++;
+		spi_byte_write(*p_data);
+		p_data++;
 		bytes--;
 	}
-   DISABLE_SPI_CS;
+
+   /** TO DO: Disable the CS */
 }
 
 
@@ -307,16 +310,18 @@ void spi_write ( uint8_t * p_buff, uint16_t byte_count )
 * <hr>
 *
 *******************************************************************************/
-void spi_read ( uint8_t * const p_buff, uint16_t byte_count )
+void spi_read ( void * const p_buff, uint16_t byte_count )
 {
 	static uint16_t bytes;
+	static uint8_t * p_data;
+	p_data = p_buff;
 	bytes = 0;
 	while (( byte_count != bytes ) && (0 != p_buff) )
 	{
-		 p_buff[bytes]  = spi_byte_read();
+		 p_data[bytes]  = spi_byte_read();
 		 bytes++;
 
 	}
-	DISABLE_SPI_CS;
+	/** TODO: DISABLE_SPI_CS; */
 }
 /*************** END OF FUNCTIONS ***************************************************************************/

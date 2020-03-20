@@ -1,0 +1,50 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../source/common.c \
+../source/hal_gpio.c \
+../source/hal_osc.c \
+../source/hal_spi.c \
+../source/hal_timer.c 
+
+C_DEPS += \
+./source/common.d \
+./source/hal_gpio.d \
+./source/hal_osc.d \
+./source/hal_spi.d \
+./source/hal_timer.d 
+
+OBJS += \
+./source/common.obj \
+./source/hal_gpio.obj \
+./source/hal_osc.obj \
+./source/hal_spi.obj \
+./source/hal_timer.obj 
+
+OBJS__QUOTED += \
+"source\common.obj" \
+"source\hal_gpio.obj" \
+"source\hal_osc.obj" \
+"source\hal_spi.obj" \
+"source\hal_timer.obj" 
+
+C_DEPS__QUOTED += \
+"source\common.d" \
+"source\hal_gpio.d" \
+"source\hal_osc.d" \
+"source\hal_spi.d" \
+"source\hal_timer.d" 
+
+C_SRCS__QUOTED += \
+"../source/common.c" \
+"../source/hal_gpio.c" \
+"../source/hal_osc.c" \
+"../source/hal_spi.c" \
+"../source/hal_timer.c" 
+
+
