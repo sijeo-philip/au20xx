@@ -1,0 +1,110 @@
+/****************************************************************************
+* Title                 :   timerA_config
+* Filename              :   timerA_config.h
+* Author                :   Sijeo Philip
+* Origin Date           :   23/03/2020
+* Version               :   1.0.0
+* Compiler              :   mspx_eabi
+* Target                :   MSP430FR6989
+* Notes                 :   This module is used to configure Timers for the application
+*
+* THIS SOFTWARE IS PROVIDED BY UNISEM ELECTRONICS "AS IS" AND ANY EXPRESSED
+* OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL UNISEM ELECTRONICS OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+*****************************************************************************/
+/*************** INTERFACE CHANGE LIST **************************************
+*
+*    Date    Version   Author         Description
+*  23/03/20   1.0.0    Sijeo Philip   Interface Created.
+*
+*****************************************************************************/
+/** @file timerA_config.h
+ *  @brief This module is used to configure the TIMERA 0/1/2.. instance
+ *
+ *  This is the header file for the configuration of TIMER A instance 0
+ *  Below configurations should be repeated for further instances of TIMERA
+ */
+//TODO: UPDATE MACRO BELOW
+#ifndef TIMERA_CONFIG_H_
+#define TIMERA_CONFIG_H_
+
+/******************************************************************************
+* Includes
+*******************************************************************************/
+
+
+/******************************************************************************
+* Preprocessor Constants
+*******************************************************************************/
+
+/******************************************************************************
+* Configuration Constants
+*******************************************************************************/
+/**
+ * @brief This bit is used to enable and disable
+ * TimerA0 Interrupt
+ * <0x0000=> Disable the Timer Interrupt
+ * <0x0002=> Enable the Timer Interrupt
+ */
+
+#ifndef CONF_TACTL0_TAIE
+#define CONF_TACTL0_TAIE    0x0002
+#endif
+
+/**
+ * @brief This bit is used to set the MODE control
+ * <0x0000=> Stop Mode
+ * <0x0010=> Up Mode: Timer counts up to TAxCCR0
+ * <0x0020=> Continuous Mode : Timer counts up to 0xFFFF
+ * <0x0030=> Up/Down Mode : Timer Counts up to TAxCCR0 then
+ *           down to 0x000h
+ */
+#ifndef CONF_TACTL0_MC
+#define CONF_TACTL0_MC      0x0010
+#endif
+
+/**
+ * @brief This bits are used to select the divider for input
+ * clock
+ * <0x0000=>  Divide by 1
+ * <0x0040=>  Divide by 2
+ * <0x0080=>  Divide by 4
+ * <0x00C0=>  Divide by 8
+ */
+#ifndef CONF_TACTL0_ID
+#define CONF_TACTL0_ID
+#endif
+/******************************************************************************
+* Macros
+*******************************************************************************/
+
+
+
+/******************************************************************************
+* Typedefs
+*******************************************************************************/
+
+
+/******************************************************************************
+* Variables
+*******************************************************************************/
+
+
+/******************************************************************************
+* Function Prototypes
+*******************************************************************************/
+
+
+//TODO: UPDATE COMMENT BELOW
+#endif /*TIMERA_CONFIG_H_*/
+
+/*** End of File **************************************************************/

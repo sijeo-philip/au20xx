@@ -106,6 +106,9 @@ void gpio_init( void )
 	SET_GPIO_DIR_OUT(P2, BIT0);				/* << Make CS pin an output */
 
 	SET_GPIO_PRI_FUN(PJ, BIT4|BIT5);		/* Enable some clock pins for SPIs synch operation */
+
+	CLEAR_GPIO_OUTPUT(P1, BIT3);              /* << P1.3==> SENS_EN to high */
+	SET_GPIO_DIR_OUT(P1, BIT3);            /* << Make SENS_EN to output */
 }
 
 /*************** END OF FUNCTIONS ***************************************************************************/
