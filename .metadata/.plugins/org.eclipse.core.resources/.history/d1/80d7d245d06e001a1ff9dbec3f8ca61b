@@ -526,22 +526,6 @@
  * @brief Check if ADC is busy with conversion
  */
 #define IS_ADC_BUSY()   (ADC12CTL1 & 0x0001)?1:0
-
-
-/**
- * @brief check if interrupt flag from 0 to 15 mem is high
- */
-#define IS_ADC_MEM_INT_0_TO_15_HIGH(memory_no)   (ADC12IFGR0 & (1UL<<memory_no))?1:0
-
-
-/**
- * @brief check if interrupt flag from 16 to 31 is high
- */
-#define IS_ADC_MEM_INT_16_31_HIGH(memory_no)  (ADC12IFGR0 & (1UL<<(memory_no-16)))?1:0
-
-
-
-
 /******************************************************************************
 * Typedefs
 *******************************************************************************/

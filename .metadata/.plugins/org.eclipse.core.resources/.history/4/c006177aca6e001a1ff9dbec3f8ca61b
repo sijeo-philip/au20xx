@@ -391,71 +391,6 @@
 
 #ifndef CONF_ADC12CTL3_ADC12CSTARTADD
 #define CONF_ADC12CTL3_ADC12CSTARTADD       0x001E
-#endif
-
-/**
- * @brief This bit enable/disable the local reference buffer ready
- * interrupt (GIE should be enabled)
- * <0x0000=>  Interrupt Disabled
- * <0x0040=>  Interrupt Enabled
- */
-#ifndef CONF_ADC12IER2_ADC12RDYIE
-#define CONF_ADC12IER2_ADC12RDYIE   0x0000
-#endif
-
-
-/**
- * @brief This bit enable/disable conversion-time-overflow
- * interrupt (GIE should be enabled)
- * <0x0000=>  Interrupt Disabled
- * <0x0020=>  Interrupt Enabled
- */
-#ifndef CONF_ADC12IER2_ADC12TOVIE
-#define CONF_ADC12IER2_ADC12TOVIE   0x0000
-#endif
-
-
-/**
- * @brief This bit enable/disable the overflow
- * interrupt (GIE should be enabled)
- * <0x0000=>  Interrupt Disabled
- * <0x0010=>  Interrupt Enabled
- */
-#ifndef CONF_ADC12IER2_ADC12OVIE
-#define CONF_ADC12IER2_ADC12OVIE   0x0000
-#endif
-
-
-/**
- * @brief This bit enable/disable upper limit of window comparator
- * interrupt (GIE should be enabled)
- * <0x0000=>  Interrupt Disabled
- * <0x0008=>  Interrupt Enabled
- */
-#ifndef CONF_ADC12IER2_ADC12HIIE
-#define CONF_ADC12IER2_ADC12HIIE   0x0000
-#endif
-
-/**
- * @brief This bit enable/disable lower limit of window comparator
- * interrupt (GIE should be enabled)
- * <0x0000=>  Interrupt Disabled
- * <0x0004=>  Interrupt Enabled
- */
-#ifndef CONF_ADC12IER2_ADC12LOIE
-#define CONF_ADC12IER2_ADC12LOIE   0x0000
-#endif
-
-/**
- * @brief This bit enable/disable result greater than lower limit and
- * lower than higher limit of window comparator nterrupt (GIE should be enabled)
- * <0x0000=>  Interrupt Disabled
- * <0x0002=>  Interrupt Enabled
- */
-#ifndef CONF_ADC12IER2_ADC12INIIE
-#define CONF_ADC12IER2_ADC12INIIE   0x0000
-#endif
-
 /******************************************************************************
 * Macros
 *******************************************************************************/
@@ -497,51 +432,6 @@
  * @brief This Macro selects the ACD Memory Control to be used
  */
 #define ADC_MEMORY_CTL(number)      ADC12MCTL##number
-
-
-/**
- * @brief this half word is for the comparator window high setting
- */
-#define ADC_COMPARATOR_WINDOW_HI    ADC12HI
-
-/**
- * @brief This Half word is the for Comparator window low setting
- */
-#define ADC_COMPARATOR_WINDOW_LO   ADC12LO
-
-
-/**
- * @brief This Register is used to enable the interrupts for the
- * results after ADC conversion into the respective memory
- */
-#define ADC_ENABLE_MEM_INT(memory_no) \
-    do{  \
-        if ( memory_no > 15 )    \
-            ADC12IER1 |= 1<<memory_no;  \
-        else                            \
-            ADC12IER0 |= 1<<memory_no;  \
-    }while(0)
-
-/**
- * @brief Check if ADC is busy with conversion
- */
-#define IS_ADC_BUSY()   (ADC12CTL1 & 0x0001)?1:0
-
-
-/**
- * @brief check if interrupt flag from 0 to 15 mem is high
- */
-#define IS_ADC_MEM_INT_0_TO_15_HIGH(memory_no)   (ADC12IFGR0 & (1UL<<memory_no))?1:0
-
-
-/**
- * @brief check if interrupt flag from 16 to 31 is high
- */
-#define IS_ADC_MEM_INT_16_31_HIGH(memory_no)  (ADC12IFGR0 & (1UL<<(memory_no-16)))?1:0
-
-
-
-
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
