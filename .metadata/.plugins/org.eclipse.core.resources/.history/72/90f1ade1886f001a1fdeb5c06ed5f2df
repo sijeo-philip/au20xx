@@ -1,0 +1,127 @@
+/*******************************************************************************
+* Title                 :   hal_adc
+* Filename              :   hal_adc.c
+* Author                :   Sijeo Philip
+* Origin Date           :   25/03/2020
+* Version               :   1.0.0
+* Compiler              :   mspx_eabi
+* Target                :   MSP430FR6989
+* Notes                 :   This module is used to initialize the ADC and read sensor
+*
+* THIS SOFTWARE IS PROVIDED BY UNISEM ELECTRONICS "AS IS" AND ANY EXPRESSED
+* OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL UNISEM ELECTRONICS OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+*******************************************************************************/
+/*************** SOURCE REVISION LOG *****************************************
+*
+*    Date    Version   Author         Description
+*  25/03/20   1.0.0    Sijeo Philip   Initial Release.
+*
+*******************************************************************************/
+/** @file hal_adc.c
+ *  @brief This is the source file for initializing the ADC and
+ *  reading the temperature sensor.
+ */
+/******************************************************************************
+* Includes
+*******************************************************************************/
+#include <stdint.h>             /* For portable types */
+
+//TODO: UPDATE MY INCLUDE
+#include "hal_adc.h"             /* For TODO: WHY ME? */
+
+/******************************************************************************
+* Module Preprocessor Constants
+*******************************************************************************/
+
+
+/******************************************************************************
+* Module Preprocessor Macros
+*******************************************************************************/
+
+/******************************************************************************
+* Module Typedefs
+*******************************************************************************/
+
+/******************************************************************************
+* Module Variable Definitions
+*******************************************************************************/
+
+/******************************************************************************
+* Function Prototypes
+*******************************************************************************/
+
+/******************************************************************************
+* Function Definitions
+*******************************************************************************/
+// TODO: UPDATE AND COPY THESE FOR EACH NON_TRIVIAL FUNCTION
+/******************************************************************************
+* Function : adc_init()
+*//**
+* \b Description:
+*
+* This function is used to initialize the ADC as per the application
+*
+* PRE-CONDITION: Initialize the system clock
+* PRE-CONDITION: Initialize the refa module
+*
+* POST-CONDITION: ADC is configured as per the parameters configured in the adc_config.h file
+*
+* @return       None
+*
+* \b Example Example:
+* @code
+*
+*   adc_init();
+* @endcode
+*
+* @see system_clock_init()
+* @see refa_init()
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 25/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void adc_init( void )
+{
+   ADC_CONV_DISABLE;            /**<< The ADC conversion is stopped */
+   ADC12CTL1 |= CONF_ADC12CTL1_ADC12SHS | CONF_ADC12CTL1_ADC12DIV | CONF_ADC12CTL1_ADC12PDIV |
+                CONF_ADC12CTL1_ADC12SSEL | CONF_ADC12_CTL1_ADC12CONSEQ;
+
+   ADC12CTL2 |= CONF_ADC12CTL1_ADC12RES | CONF_ADC12CTL2_ADC12DF | CONF_ADC12CTL1_ADC12PWRMD;
+
+   ADC12CTL3 |= CONF_ADC12CTL3_ADC12ICH3MAP | CONF_ADC12CTL3_ADC12ICH2MAP | CONF_ADC12CTL3_ADC12ICH1MAP |
+                CONF_ADC12CTL3_ADC12ICH0MAP | CONF_ADC12CTL3_ADC12TCMAP | CONF_ADC12CTL3_ADC12BATMAP |
+                CONF_ADC12CTL3_ADC12CSTARTADD ;
+
+   ADC12CTL0 |= CONF_ADC12CTL0_ADC12ON;
+
+   ADC12CTL0 |= CONF_ADC12CTL0_ADC12SHT1 | CONF_ADC12CTL0_ADC12SHT0 | CONF_ADC12CTL0_ADC12MSC;
+
+   ADC_MEMORY_CTL(0) |= COMPARATOR_WINDOW_DISABLE | ADC_SINGLE_ENDED | VREFP_VEREFB_VREFN_AVSS |
+                        ADC_NOT_END_OF_SEQUENCE | ADC_A30_CHANNEL_SINGLE;
+   ADC_MEMORY_CTL(1) |= COMPARATOR_WINDOW_DISABLE | ADC_SINGLE_ENDED | VREFP_ AVCC_VREFN_AVSS |
+                        ADC_END_OF_SEQUENCE | ADC_A31_CHANNEL_SINGLE;
+
+
+}
+
+/*************** END OF FUNCTIONS ***************************************************************************/
+
+
+
+

@@ -195,10 +195,15 @@ __interrupt void TIMER0_ISR ( void )
     SET_GPIO_OUTPUT(P1, BIT3);    /**<< Set SENS_EN to high */
     sensENFlag = true;
 
-    /* TO DO: In main function the the sensENFlag is checked for
+    /* TODO: In main function the the sensENFlag is checked for
      * true if it is true blocking delay of prescribed duration is
      * done post which the flag is reset to false and the SENS_EN
      * IO is also cleared.
+     */
+    /**
+     * TODO : Software Timer to be built on at which the ADC for temperature
+     *  sensor should be triggered via software.. Both conversion enable and
+     *  conversion start has to be done here.
      */
 }
 

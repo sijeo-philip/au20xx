@@ -40,15 +40,16 @@
 /******************************************************************************
 * Includes
 *******************************************************************************/
-
+#include "msp430.h"
+#include <stdint.h>
 
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
 #define COMPARATOR_WIN_ENABLE               0x4000
-#define COMPARATOR_WIN_DISABLE              ~(0x4000)
+#define COMPARATOR_WIN_DISABLE              0x0000
 #define ADC_DIFF_MODE                       0x2000
-#define ADC_SINGLE_ENDED                    ~(0x2000)
+#define ADC_SINGLE_ENDED                    0x0000
 #define VREFP_AVCC_VREFN_AVSS                   0x0000    /**<<VR+ = AVCC, VR- = AVSS */
 #define VREFP_VEREFB_VREFN_AVSS                 0x0100    /**<<VR+ = VREF buffered, VR- = AVSS */
 #define VREFP_VEREFN_VREFN_AVSS                 0x0200    /**<<VR+ = VeREF-, VR- = AVSS */
@@ -64,7 +65,7 @@
 #define VREFP_VEREFP_VREFN_VEREFN               0x0E00    /**<<VR+ = VeREF+, VR- = VeREF- */
 #define VREFP_VEREFPB_VREFN_VEREFN              0x0F00    /**<<VR+ = VeREF+ buffered, VR- = VeREF-*/
 #define ADC_END_OF_SEQUENCE                     0x0080
-
+#define ADC_NOT_END_OF_SEQUENCE                 0x0000
 #define ADC_A0_CHANNEL_SINGLE                    0x0000
 #define ADC_A1_CHANNEL_SINGLE                    0x0001
 #define ADC_A2_CHANNEL_SINGLE                    0x0002
@@ -136,7 +137,7 @@
  *
  */
 #ifndef CONF_ADC12CTL0_ADC12SHT1
-#define CONF_ADC12CTL0_ADC12SHT1    0x8000
+#define CONF_ADC12CTL0_ADC12SHT1    0x0000
 #endif
 
 /**
@@ -167,7 +168,7 @@
  * <0x0080=> Enable  the Multiple Sample and Conversion
  */
 #ifndef CONF_ADC12CTL0_ADC12MSC
-#define CONF_ADC12CTL0_ADC12MSC     0x0000
+#define CONF_ADC12CTL0_ADC12MSC     0x0080
 #endif
 
 /**
@@ -476,19 +477,6 @@
 
 
 /**
- * This Macro to be called while conversion should be start i.e when
- * the Conversions are Software Triggered
- * ADC12SC and ADC12ENC can be set together with one instruction the
- * Start conversion bit is reset automatically
- */
-#define ADC_START_CONV  \
-    do{         \
-        ADC12CTL0 |= 0x0001; \
-    }while(0)
-
-
-
-/**
  * This Macro is used read the ADC Memory for the Conversion Result
  */
 #define ADC_CONV_MEMORY(location)   ADC12MEM##location
@@ -514,30 +502,31 @@
  * @brief This Register is used to enable the interrupts for the
  * results after ADC conversion into the respective memory
  */
-#define ADC_ENABLE_MEM_INT(memory_no) \
-    do{  \
-        if ( memory_no > 15 )    \
-            ADC12IER1 |= 1<<memory_no;  \
-        else                            \
-            ADC12IER0 |= 1<<memory_no;  \
-    }while(0)
+
+inline void __adc_enable_memory_interrupt(uint8_t memory_no)
+{
+    if ( memory_no > 15)
+        ADC12IER1 |= 1<<(memory_no - 16);
+    else
+        ADC12IER0 |= 1<<(memory_no);
+}
 
 /**
  * @brief Check if ADC is busy with conversion
  */
-#define IS_ADC_BUSY()   (ADC12CTL1 & 0x0001)?1:0
+#define IS_ADC_BUSY()   ((ADC12CTL1 & 0x0001)?1:0)
 
 
 /**
  * @brief check if interrupt flag from 0 to 15 mem is high
  */
-#define IS_ADC_MEM_INT_0_TO_15_HIGH(memory_no)   (ADC12IFGR0 & (1UL<<memory_no))?1:0
+#define IS_ADC_MEM_INT_0_TO_15_HIGH(memory_no)   ((ADC12IFGR0 & (1UL<<memory_no))?1:0)
 
 
 /**
  * @brief check if interrupt flag from 16 to 31 is high
  */
-#define IS_ADC_MEM_INT_16_31_HIGH(memory_no)  (ADC12IFGR0 & (1UL<<(memory_no-16)))?1:0
+#define IS_ADC_MEM_INT_16_31_HIGH(memory_no)  ((ADC12IFGR1 & (1UL<<(memory_no-16)))?1:0)
 
 
 
@@ -545,6 +534,8 @@
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
+
+
 
 
 /******************************************************************************
