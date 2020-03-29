@@ -14,6 +14,7 @@ ORDERED_OBJS += \
 "./au20xx_api/au20xx_api.obj" \
 "./source/common.obj" \
 "./source/hal_adc.obj" \
+"./source/hal_fram.obj" \
 "./source/hal_gpio.obj" \
 "./source/hal_osc.obj" \
 "./source/hal_refa.obj" \
@@ -166,8 +167,8 @@ au20xx_flow_sensor.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "au20xx_api\au20xx_api.obj" "source\common.obj" "source\hal_adc.obj" "source\hal_gpio.obj" "source\hal_osc.obj" "source\hal_refa.obj" "source\hal_spi.obj" "source\hal_timerA.obj" 
-	-$(RM) "main.d" "au20xx_api\au20xx_api.d" "source\common.d" "source\hal_adc.d" "source\hal_gpio.d" "source\hal_osc.d" "source\hal_refa.d" "source\hal_spi.d" "source\hal_timerA.d" 
+	-$(RM) "main.obj" "au20xx_api\au20xx_api.obj" "source\common.obj" "source\hal_adc.obj" "source\hal_fram.obj" "source\hal_gpio.obj" "source\hal_osc.obj" "source\hal_refa.obj" "source\hal_spi.obj" "source\hal_timerA.obj" 
+	-$(RM) "main.d" "au20xx_api\au20xx_api.d" "source\common.d" "source\hal_adc.d" "source\hal_fram.d" "source\hal_gpio.d" "source\hal_osc.d" "source\hal_refa.d" "source\hal_spi.d" "source\hal_timerA.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

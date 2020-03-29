@@ -42,7 +42,6 @@
 #include "msp430.h"
 #include "hal_gpio.h"
 #include "hal_adc.h"
-#include "hal_fram.h"
 /******************************************************************************
 * Module Preprocessor Constants
 *******************************************************************************/
@@ -57,7 +56,11 @@
 bool volatile sensENFlag = false;
 bool volatile readTemperatureFlag = false;
 
+#pragma NOINIT(samplePerTempReading)
 static uint32_t volatile samplesPerTempReading = 100;
+
+
+
 static uint32_t volatile sampleCount = 0;
 /******************************************************************************
 * Module Preprocessor Macros
@@ -120,7 +123,6 @@ void timerA_init( void )
                                    CONF_TACCTL0_OUTMOD | CONF_TACCTL0_CAP |
                                    CONF_TACCTL0_SCS | CONF_TACCTL0_CCIS |
                                    CONF_TACCTL0_CM;
-
 }
 
 /******************************************************************************
@@ -261,11 +263,10 @@ __interrupt void TIMER0_ISR ( void )
 * <hr>
 *
 *******************************************************************************/
-uint32_t* get_samples_per_temperature_read( void )
+uint32_t * get_samples_per_temperature_read( void )
 {
     //TODO: Read the memory and store the same to samplePerTempReading
-    fram_read(&samplesPerTempReading, 4, SAMPLES_PER_TEMP_READ_ADDRESS );
-    if ((samplesPerTempReading == 0xFFFFFFFF) || (samplesPerTempReading == 0))
+    if (samplesPerTempReading < 0 || samplesPerTempReading ==0xFFFFFFFF)
         samplesPerTempReading = 100;
     return &samplesPerTempReading;
 }
@@ -311,7 +312,6 @@ void set_samples_per_temperature_read( uint32_t  samples)
 {
     samplesPerTempReading = samples;
     //TODO: Store the value to NVM memory for further use.
-    fram_write(&samplesPerTempReading, 4, SAMPLES_PER_TEMP_READ_ADDRESS);
 
 }
 

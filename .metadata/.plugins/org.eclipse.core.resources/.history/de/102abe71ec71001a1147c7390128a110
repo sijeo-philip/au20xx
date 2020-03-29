@@ -48,11 +48,8 @@
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
-#define FRAM_START_ADDRESS    (uint8_t*)0x001800
-#define FRAM_END_ADDRESS      (uint8_t*)0x0019FF
-
-#define SAMPLES_PER_TEMP_READ_ADDRESS       (uint8_t*)0x001800    /**<< Address of FRAM where
-                                                                    samplePerTempReading is stored */
+#define FRAM_START_ADDRESS    0x001800
+#define FRAM_END_ADDRESS      0x0019FF
 
 /******************************************************************************
 * Configuration Constants

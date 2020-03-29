@@ -8,6 +8,7 @@ SHELL = cmd.exe
 C_SRCS += \
 ../source/common.c \
 ../source/hal_adc.c \
+../source/hal_fram.c \
 ../source/hal_gpio.c \
 ../source/hal_osc.c \
 ../source/hal_refa.c \
@@ -17,6 +18,7 @@ C_SRCS += \
 C_DEPS += \
 ./source/common.d \
 ./source/hal_adc.d \
+./source/hal_fram.d \
 ./source/hal_gpio.d \
 ./source/hal_osc.d \
 ./source/hal_refa.d \
@@ -26,6 +28,7 @@ C_DEPS += \
 OBJS += \
 ./source/common.obj \
 ./source/hal_adc.obj \
+./source/hal_fram.obj \
 ./source/hal_gpio.obj \
 ./source/hal_osc.obj \
 ./source/hal_refa.obj \
@@ -35,6 +38,7 @@ OBJS += \
 OBJS__QUOTED += \
 "source\common.obj" \
 "source\hal_adc.obj" \
+"source\hal_fram.obj" \
 "source\hal_gpio.obj" \
 "source\hal_osc.obj" \
 "source\hal_refa.obj" \
@@ -44,6 +48,7 @@ OBJS__QUOTED += \
 C_DEPS__QUOTED += \
 "source\common.d" \
 "source\hal_adc.d" \
+"source\hal_fram.d" \
 "source\hal_gpio.d" \
 "source\hal_osc.d" \
 "source\hal_refa.d" \
@@ -53,6 +58,7 @@ C_DEPS__QUOTED += \
 C_SRCS__QUOTED += \
 "../source/common.c" \
 "../source/hal_adc.c" \
+"../source/hal_fram.c" \
 "../source/hal_gpio.c" \
 "../source/hal_osc.c" \
 "../source/hal_refa.c" \
