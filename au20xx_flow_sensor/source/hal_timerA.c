@@ -41,6 +41,7 @@
 #include "hal_timerA.h"             /* For timer intializing */
 #include "msp430.h"
 #include "hal_gpio.h"
+#include "hal_adc.h"
 /******************************************************************************
 * Module Preprocessor Constants
 *******************************************************************************/
@@ -53,6 +54,14 @@
                                                       TAxEX0 is selected as divide
                                                       by 5 */
 bool volatile sensENFlag = false;
+bool volatile readTemperatureFlag = false;
+
+#pragma NOINIT(samplePerTempReading)
+static uint32_t volatile samplesPerTempReading = 100;
+
+
+
+static uint32_t volatile sampleCount = 0;
 /******************************************************************************
 * Module Preprocessor Macros
 *******************************************************************************/
@@ -205,6 +214,105 @@ __interrupt void TIMER0_ISR ( void )
      *  sensor should be triggered via software.. Both conversion enable and
      *  conversion start has to be done here.
      */
+    if ( sampleCount <= 0)
+    {
+        readTemperatureFlag = true;  /** << This flag is checked in main to initiate
+                                            Temperature Reading along with return value of
+                                            read_temp_sensor() if both are true new updated value is read*/
+        sampleCount = samplesPerTempReading;
+        sampleCount--;
+        __start_adc_conv();
+    }
+    else
+    {
+        sampleCount-- ;
+    }
+}
+
+
+/******************************************************************************
+* Function : get_samples_per_temperature_read
+*//**
+* \b Description:
+*
+* This function is used to read from NVM memory and update the samplesPerTempReading
+* variable.. and return the address of the same to the caller
+*
+* PRE-CONDITION: The clocks should be initialized
+* PRE-CONDITION: ADC should be initialized
+* PRE-CONDITION: Timer should be initialized
+* PRE-CONDITION: GPIO and thus SPI should be initialized
+*
+* POST-CONDITION: value of samples Per Temperature Reading stored in the NVM is returned
+*
+*
+* @return       uint32_t*
+*
+*
+* @see system_clk_init()
+* @see adc_init()
+* @see timerA_init()
+* @see gpio_init()
+*
+*  <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+uint32_t * get_samples_per_temperature_read( void )
+{
+    //TODO: Read the memory and store the same to samplePerTempReading
+    if (samplesPerTempReading < 0 || samplesPerTempReading ==0xFFFFFFFF)
+        samplesPerTempReading = 100;
+    return &samplesPerTempReading;
+}
+
+
+/******************************************************************************
+* Function : set_samples_per_temperature_read
+*//**
+* \b Description:
+*
+* This function is used to set value to samplePerTempReading and store the same to
+* the NVM memory
+*
+* PRE-CONDITION: The clocks should be initialized
+* PRE-CONDITION: ADC should be initialized
+* PRE-CONDITION: Timer should be initialized
+* PRE-CONDITION: GPIO and thus SPI should be initialized
+*
+* POST-CONDITION: value of samples Per Temperature Reading stored in the NVM is returned
+*
+*
+* @param[in]    samples     Number of samples per Temperature reading
+*
+* @return       None
+*
+*
+* @see system_clk_init()
+* @see adc_init()
+* @see timerA_init()
+* @see gpio_init()
+*
+*  <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+
+void set_samples_per_temperature_read( uint32_t  samples)
+{
+    samplesPerTempReading = samples;
+    //TODO: Store the value to NVM memory for further use.
+
 }
 
 /*************** END OF FUNCTIONS ***************************************************************************/

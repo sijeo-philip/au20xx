@@ -108,6 +108,8 @@ extern "C"{
 
 void timerA_init(void);
 void timerA_load_time(uint16_t);
+uint32_t * get_samples_per_temperature_read( void );
+void set_samples_per_temperature_read( uint32_t samples);
 
 #ifdef __cplusplus
 } // extern "C"

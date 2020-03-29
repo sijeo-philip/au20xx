@@ -270,8 +270,8 @@
 /************************************************
  * This bit is the LFXTOFFG fault flag is set when LFXT fault occured
  * after last reset
- * <0x0000=> No fault condition occured after last reset
- * <0x0001=> LFXT fault, fault occured after last reset (default)
+ * <0x0000=> No fault condition occurred after last reset
+ * <0x0001=> LFXT fault, fault occurred after last reset (default)
  */
 #ifndef CONF_CSCTL5_LFXTOFFG
 #define CONF_CSCTL5_LFXTOFFG   0x0000
@@ -280,8 +280,8 @@
 /************************************************
  * This bit is the HFXTOFFG fault flag is set when HFXT fault occured
  * after last reset
- * <0x0000=> No fault condition occured after last reset (default)
- * <0x0002=> HFXT fault, fault occured after last reset
+ * <0x0000=> No fault condition occurred after last reset (default)
+ * <0x0002=> HFXT fault, fault occurred after last reset
  */
 #ifndef CONF_CSCTL5_HFXTOFFG
 #define CONF_CSCTL5_HFXTOFFG   0x0000

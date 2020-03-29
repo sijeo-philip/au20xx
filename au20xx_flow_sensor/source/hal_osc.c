@@ -39,6 +39,7 @@
 #include <msp430.h>
 
 #include "hal_osc.h"				/* For intializing the clock */
+#include "common.h"
 
 /******************************************************************************
 * Module Preprocessor Constants
@@ -108,14 +109,15 @@ void system_clock_init( void )
 			 CONF_CSCTL4_HFFREQ | CONF_CSCTL4_HFXTBYPASS | CONF_CSCTL4_HFXTDRIVE;
     CSCTL6 = CONF_CSCTL6_ACLKREQEN | CONF_CSCTL6_MCLKREQEN |		// ** << Conditional Requests for Each clock source
     		 CONF_CSCTL6_SMCLKREQEN | CONF_CSCTL6_MODCLKREQEN;
-
+#if 0
     do
     {
     	CSCTL5 = CONF_CSCTL5_LFXTOFFG | CONF_CSCTL5_HFXTOFFG |
     			CONF_CSCTL5_ENSTFCNT1 | CONF_CSCTL5_ENSTFCNT2;
-    	SFRIFG1 = SFRIFG1 & (~OFIFG);                               //** << Waiting and clearing fault flags of clock src
+    	SFRIFG1 = SFRIFG1 & 0xFFFD;                               //** << Waiting and clearing fault flags of clock src
+    	delay_us(1);
     }while( SFRIFG1 & OFIFG);
-
+#endif
     CSCTL0_H = 0;							  						// ** << Lock CS Register
  }
 

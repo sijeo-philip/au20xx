@@ -100,7 +100,9 @@ static bool volatile temperatureReadFlag = false;
 * </table><br><br>
 * <hr>
 *
+*
 *******************************************************************************/
+//TODO: Call refa_init() before calling the below function
 void adc_init( void )
 {
    ADC_CONV_DISABLE;            /**<< The ADC conversion is stopped */
@@ -271,11 +273,12 @@ __interrupt void ADC12_ISR(void)
 
 bool read_temp_sensor( int * degrees )
 {
-    static bool retVal =0;
+    static bool retVal;
     retVal = temperatureReadFlag;
 
     *degrees = degC;
-    temperatureReadFlag = false;
+    if (true == temperatureReadFlag)
+        temperatureReadFlag = false;
     return retVal;
 
 }

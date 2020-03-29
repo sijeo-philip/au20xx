@@ -28,7 +28,7 @@
 *
 *****************************************************************************/
 /** @file hal_adc.h
- *  @brief This module is used to initalize and use the ADC module
+ *  @brief This module is used to initialize and use the ADC module
  *
  *  This is the header file for the definition to initialize ADC and
  *  read from the ADC after conversion
@@ -72,7 +72,7 @@
  */
 inline void __start_adc_conv( void )
 {
-    ADC12CTL0 |= 0x0001;
+    ADC12CTL0 |= 0x0003;
 }
 
 /******************************************************************************
