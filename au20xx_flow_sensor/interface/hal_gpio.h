@@ -72,6 +72,7 @@
 #define SET_GPIO_PRI_FUN(port, pin) \
 	do{ 						    \
 		port##SEL0 = port##SEL0 | pin;\
+		port##SEL1 = port##SEL1 & (~pin);\
 	}while(0)
 
 
@@ -88,6 +89,7 @@
 #define SET_GPIO_SEC_FUN(port, pin) \
 	do{								\
 		port##SEL1 = port##SEL1 | pin;\
+		port##SEL0 = port##SEL0 & (~pin);\
 	}while)(0)
 
 
@@ -165,6 +167,17 @@
 	do{		\
 		port##DIR = port##DIR | pin; \
 	}while(0)
+
+/******
+ * @brief This Enable the Pull up resistor on PIN
+ * ENABLE_PULL_UP(port, pin)
+ */
+#define ENABLE_PULL_UP(port, pin) \
+    do{ \
+        port##OUT = port##OUT | pin;\
+        port##REN = port##REN | pin; \
+    }while(0)
+
 
 /******************************************************************************
 * Typedefs

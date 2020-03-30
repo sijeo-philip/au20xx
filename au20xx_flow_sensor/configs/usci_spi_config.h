@@ -65,7 +65,7 @@
  * This bit is used to configure STE Mode in Master Mode (This bit is ignored
  * in slave or 3-Wire Mode.
  * <0x0000=>  	STE pin is used prevent conflicts with other masters (default)
- * <0x0002=>	STE pin is used to generate the enable signla for a 4
+ * <0x0002=>	STE pin is used to generate the enable signal for a 4
  *          	wire slave
  *
  */
@@ -149,7 +149,7 @@
  *
  */
 #ifndef CONF_UCCTLW0_UCCKPL
-#define CONF_UCCTLW0_UCCKPL		0x0000
+#define CONF_UCCTLW0_UCCKPL		0x4000
 #endif
 
 
@@ -161,7 +161,7 @@
  * 				on the following edge
  */
 #ifndef CONF_UCCTLW0_UCCKPH
-#define CONF_UCCTLW0_UCCKPH		0x8000
+#define CONF_UCCTLW0_UCCKPH		0x0000
 #endif
 
 
@@ -171,7 +171,7 @@
  * Fbit_clock = Fbr_clock/CONF_UCAXCLTW0_UCAxBRW
  */
 #ifndef CONF_UCBRW_UCBRW
-#define CONF_UCBRW_UCBRW		0x0002
+#define CONF_UCBRW_UCBRW		0x0001
 #endif
 
 

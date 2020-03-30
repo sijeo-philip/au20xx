@@ -61,7 +61,7 @@
 /******************************************************************************
 * Module Variable Definitions
 *******************************************************************************/
-
+uint8_t au20xx_dev_id =0x00;
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -107,8 +107,15 @@
 *******************************************************************************/
 void aura_hw_init ( void )
 {
-    system_clock_init();
+    system_clock_init();        /**<< Set the Frequency of the system */
+    gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
+    spi_init();                 /**<< Initialize the SPI peripheral */
+    //au20xx_write_reg(INTF_CFG_REG, 0x7B); /**<< Writing to INT_CFG_Register*/
+    timerA_init();
+    refa_init();
+    adc_init();
 
+    _BIS_SR(GIE);
 }
 
 
@@ -120,7 +127,9 @@ int main(void) {
     WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer
    aura_hw_init();
 
-    for(;;){}
+   read_top_variables();
+
+   for(;;){}
 
 
 }

@@ -98,12 +98,18 @@ void gpio_init( void )
 {
 	PM5CTL0 	=	ENABLE_PINS;			/* << Enables the use of inputs and outputs */
 
-	SET_GPIO_PRI_FUN(P1, BIT4);             /* << P1.4 ==> SPI Clock Signal */
-	SET_GPIO_PRI_FUN(P1, BIT6); 			/* << P1.6 ==> SPI Slave IN / Master Out (MOSI) */
-	SET_GPIO_PRI_FUN(P1, BIT7);				/* << P1.7 ==> SPI Slave OUT / Master In (MISO) */
-
 	SET_GPIO_OUTPUT(P2, BIT0);				/* << CS to start HI to avoid possible glitches */
 	SET_GPIO_DIR_OUT(P2, BIT0);				/* << Make CS pin an output */
+
+	SET_GPIO_DIR_OUT(P1, BIT6);
+	CLEAR_GPIO_OUTPUT(P1, BIT6);
+
+	SET_GPIO_DIR_OUT(P1, BIT4);
+	SET_GPIO_OUTPUT(P1, BIT4);
+
+	SET_GPIO_PRI_FUN(P1, BIT4);             /* << P1.4 ==> SPI Clock Signal */
+	SET_GPIO_PRI_FUN(P1, BIT6);              /* << P1.6 ==> SPI Slave IN / Master Out (MOSI) */
+	SET_GPIO_PRI_FUN(P1, BIT7);             /* << P1.7 ==> SPI Slave OUT / Master In (MISO) */
 
 	SET_GPIO_PRI_FUN(PJ, BIT4|BIT5);		/* Enable some clock pins for SPIs synch operation */
 

@@ -189,12 +189,13 @@ void au20xx_send_command(uint8_t sub_command)
 void au20xx_write_reg(uint8_t reg_addr, uint8_t data)
 {
   static uint16_t register_data = 0;
-  register_data = WRITE_AU20xx | reg_addr | data ;
+  register_data = (WRITE_AU20xx<<8)| (reg_addr<<8)|data;
+  ENABLE_SPI_CS;                                 /* Pull the Chip Select line LO to select the Chip */
+  delay_us(5);
   spi_write(&register_data, 2);
-  delay_us(3);
+  delay_us(5);
   DISABLE_SPI_CS;
-
-}
+ }
 
 /******************************************************************************
 * Function : au20xx_read_reg();
@@ -233,11 +234,12 @@ void au20xx_write_reg(uint8_t reg_addr, uint8_t data)
 *******************************************************************************/
 void au20xx_read_reg( uint8_t reg_addr, uint8_t * const data)
 {
-  static uint8_t register_data = 0;
-  register_data = READ_AU20xx | reg_addr ;
+  static uint16_t register_data = 0;
+  register_data = READ_AU20xx | reg_addr;
   spi_write(&register_data, 2);
   delay_us(3);
   DISABLE_SPI_CS;
+  delay_us(1000);
   spi_read ( (void*)data, 1 );
   delay_us(3);
   DISABLE_SPI_CS;

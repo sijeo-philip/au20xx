@@ -38,6 +38,7 @@
 
 //TODO: UPDATE MY INCLUDE
 #include "hal_spi_ucsi.h"				/* For SPI routines */
+#include "common.h"
 
 /******************************************************************************
 * Module Preprocessor Constants
@@ -159,7 +160,6 @@ static void spi_byte_write( uint8_t data )
 	while (1 == CHECK_SPI_BUSY(B0) ) {}            /* This checks if the UCBUSY bit is High, if yes then the
 													 peripheral is busy reading or transmitting data over the
 													 peripheral */
-	ENABLE_SPI_CS;								 /* Pull the Chip Select line LO to select the Chip */
 	SPI_TX_BUF(B0) = data;						 /* Load the Data into SPI Transmit Buffer */
 
 	while ( 0 == SPI_TX_INT_FLAG(B0) ) {}        /* Test the TX is completed */
@@ -258,13 +258,17 @@ void spi_write ( void * p_buff, uint16_t byte_count )
 {
 	static uint16_t bytes;
 	static uint8_t * p_data;
-	p_data = p_buff;
-	bytes = byte_count;
-	while((0 != bytes) && (0 != p_data))
+	p_data = (uint8_t*)p_buff;
+	bytes = 0;
+	ENABLE_SPI_CS;
+	delay_us(10);
+    while (( byte_count != bytes ) && (0 != p_buff) )
 	{
 		spi_byte_write(*p_data);
-		p_data++;
-		bytes--;
+		bytes++;
+		if (byte_count != bytes )
+		    p_data++;
+		delay_us(1);
 	}
 
    /** TO DO: Disable the CS */
@@ -316,6 +320,7 @@ void spi_read ( void * const p_buff, uint16_t byte_count )
 	static uint8_t * p_data;
 	p_data = p_buff;
 	bytes = 0;
+	ENABLE_SPI_CS;
 	while (( byte_count != bytes ) && (0 != p_buff) )
 	{
 		 p_data[bytes]  = spi_byte_read();
