@@ -42,7 +42,7 @@
 *******************************************************************************/
 #include "common.h"
 #include <stdint.h>
-
+#include "hal_gpio.h"
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
@@ -66,6 +66,9 @@
                                                   quantized to 16 bits */
 #define SNS2_OUT_Q16_MSB_REG    0x10       /** << Sensor 2 output read back register, Soft decision
                                                   quantized to 16 bits */
+
+#define SNS_EN_HIGH             SET_GPIO_OUTPUT(P3, BIT4)
+#define SNS_EN_LOW              CLEAR_GPIO_OUTPUT(P3, BIT4)
 
 /******************************************************************************
 * Configuration Constants
@@ -98,7 +101,7 @@ extern "C"{
 void au20xx_chip_reset(void);
 void au20xx_send_command(uint8_t sub_command);
 void au20xx_write_reg(uint8_t reg_addr, uint8_t data);
-void au20xx_read_reg( uint8_t reg_addr, uint8_t * const data);
+void au20xx_read_reg( uint8_t reg_addr, void * const data);
 
 #ifdef __cplusplus
 } // extern "C"

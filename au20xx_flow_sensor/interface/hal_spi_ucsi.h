@@ -52,8 +52,8 @@
 #include "hal_gpio.h"
 
 
-#define ENABLE_SPI_CS 	CLEAR_GPIO_OUTPUT(P2, BIT0)
-#define DISABLE_SPI_CS	SET_GPIO_OUTPUT(P2, BIT0)
+#define ENABLE_SPI_CS 	CLEAR_GPIO_OUTPUT(P1, BIT5)
+#define DISABLE_SPI_CS	SET_GPIO_OUTPUT(P1, BIT5)
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/

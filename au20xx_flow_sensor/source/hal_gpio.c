@@ -98,8 +98,11 @@ void gpio_init( void )
 {
 	PM5CTL0 	=	ENABLE_PINS;			/* << Enables the use of inputs and outputs */
 
-	SET_GPIO_OUTPUT(P2, BIT0);				/* << CS to start HI to avoid possible glitches */
-	SET_GPIO_DIR_OUT(P2, BIT0);				/* << Make CS pin an output */
+	SET_GPIO_OUTPUT(P1, BIT5);				/* << CS to start HI to avoid possible glitches */
+	SET_GPIO_DIR_OUT(P1, BIT5);				/* << Make CS pin an output */
+
+	CLEAR_GPIO_OUTPUT(P3, BIT4);            /*<< ** SENS_EN PIN to the AU20XX chip CLEARED */
+	SET_GPIO_DIR_OUT(P3, BIT4);             /*<< ** SENS_EN is Set as output */
 
 	SET_GPIO_DIR_OUT(P1, BIT6);
 	CLEAR_GPIO_OUTPUT(P1, BIT6);

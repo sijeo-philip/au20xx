@@ -309,10 +309,10 @@ uint32_t* get_samples_per_temperature_read( void )
 
 void set_samples_per_temperature_read( uint32_t  samples)
 {
+    if ( samples < 1)
+        samples = 10;
     samplesPerTempReading = samples;
     //TODO: Store the value to NVM memory for further use.
-    fram_write((void*)&samplesPerTempReading, 4, SAMPLES_PER_TEMP_READ_ADDRESS);
-
-}
+ }
 
 /*************** END OF FUNCTIONS ***************************************************************************/

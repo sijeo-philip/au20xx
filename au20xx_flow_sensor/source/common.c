@@ -38,6 +38,8 @@
 
 //TODO: UPDATE MY INCLUDE
 #include "common.h"             /* For common functions such as delays */
+#include "hal_fram.h"           /* For top variable address locations */
+#include "hal_timerA.h"
 
 /******************************************************************************
 * Module Preprocessor Constants
@@ -99,6 +101,136 @@ void delay_us( uint16_t microseconds )
    static uint16_t i =0;
    for ( i = 0; i < microseconds; i ++ )
        __no_operation();
+}
+
+
+/******************************************************************************
+* Function : get_top_variables
+*//**
+* \b Description:
+*
+* This function is used to read all the top variables from the memory store in a
+* struct of type top_variables_t
+*
+* PRE-CONDITION: Clocks should be initialized for 1MHz Source
+*
+* POST-CONDITION: The data from FRAM is read
+*
+* @param[out]   values of top variables in a structure
+*
+* @return       None
+*
+* \b Example Example:
+* @code
+*  top_variables_t topVariable;
+*  get_top_variable (&topVariable)
+*
+* @endcode
+*
+* @see system_clock_init
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 30/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+bool get_top_variables(top_variables_t * topVariable)
+{
+    static bool retVal = false;
+    retVal =  fram_read (&topVariable->samplesPerTemp , 4, SAMPLES_PER_TEMP_READ_ADDRESS);
+    if( false == retVal )
+        return retVal;
+    set_samples_per_temperature_read( topVariable->samplesPerTemp);
+
+    retVal =  fram_read(&topVariable->sensEnTime, 2, SAMPLE_TIME_ADD);
+    if( false == retVal )
+        return retVal;
+
+    if( topVariable->sensEnTime > 3 )
+    { topVariable->sensEnTime = 3 ; topVariable->sensEnTime_us = 384; }
+    else
+    {
+        switch(topVariable->sensEnTime)
+        {
+        case 0:
+            topVariable->sensEnTime_us = 48;
+        break;
+        case 1:
+            topVariable->sensEnTime_us = 96;
+        break;
+        case 2:
+            topVariable->sensEnTime_us = 192;
+        break;
+        case 3:
+            topVariable->sensEnTime_us = 384;
+        break;
+        default:
+            topVariable->sensEnTime_us = 384;
+        break;
+        }
+    }
+    retVal = fram_read(&topVariable->lastRotCount, 2, LAST_ROT_COUNT_ADD);
+    if( false == retVal )
+        return retVal;
+    retVal = fram_read(&topVariable->sampleTime, 2, SAMPLE_TIME_ADD);
+    if( false == retVal )
+        return retVal;
+    if ( (topVariable->sampleTime < 2) || (topVariable->sampleTime > 512))
+        topVariable->sampleTime = 20;
+    timerA_load_time(topVariable->sampleTime);
+
+    retVal = fram_read(&topVariable->cd1_corr_slope, 4, CD1_CORR_SLOPE_ADD);
+    if( false == retVal )
+        return retVal;
+    retVal = fram_read(&topVariable->cd2_corr_slope, 4, CD2_CORR_SLOPE_ADD);
+    if( false == retVal )
+        return retVal;
+  return retVal;
+}
+
+/******************************************************************************
+* Function : absolute
+*//**
+* \b Description:
+*
+* This function returns absolute value of the input
+*
+* PRE-CONDITION: Clocks should be initialized for 1MHz Source
+*
+* POST-CONDITION: absolute value of the input is returned
+*
+* @param[in]   variable whose absolute value has to be returned.
+*
+* @return       absolute value of the input variable.
+*
+* \b Example Example:
+* @code
+*  int8_t value;
+* value = absolute (value)
+*
+* @endcode
+*
+* @see system_clock_init
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 30/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+int8_t absolute(int8_t value)
+{
+    if ( value < 0 )
+        return (-1 * value);
+    else
+        return value;
 }
 
 /*************** END OF FUNCTIONS ***************************************************************************/

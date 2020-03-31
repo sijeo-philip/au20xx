@@ -61,7 +61,29 @@
 /******************************************************************************
 * Module Variable Definitions
 *******************************************************************************/
-uint8_t au20xx_dev_id =0x00;
+top_variables_t system_settings;
+static int8_t cd1_value;
+static int8_t cd2_value;
+static int8_t cd1_previous_value=0;
+static int8_t cd2_previous_value=0;
+static uint8_t volatile valid_data = 0;
+static bool volatile normal_operation_mode = true;
+static int8_t const tempInit = 25;
+static int currTempValue = 0;
+static int volatile tempNorm = 0;
+static int8_t volatile delta_x =0;
+static int8_t volatile delta_y = 0;
+int8_t volatile delta_x_abs = 0;
+int8_t volatile delta_y_abs = 0;
+static int8_t volatile x0 =0;
+static int8_t volatile y0 = 0;
+static int8_t volatile delta_r = 0;
+float volatile delta_XC;
+float volatile delta_YC;
+float volatile delta_previous_XC = 0;
+float volatile delta_previous_YC = 0;
+long volatile cd_rot_direction_x = 0;
+
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -110,8 +132,8 @@ void aura_hw_init ( void )
     system_clock_init();        /**<< Set the Frequency of the system */
     gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
     spi_init();                 /**<< Initialize the SPI peripheral */
-    //au20xx_write_reg(INTF_CFG_REG, 0x7B); /**<< Writing to INT_CFG_Register*/
     timerA_init();
+    get_top_variables(&system_settings);
     refa_init();
     adc_init();
 
@@ -126,10 +148,79 @@ void aura_hw_init ( void )
 int main(void) {
     WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer
    aura_hw_init();
+   /*TODO : Check for the IO pin after Power ON to work in normal measurment mode
+     or Calibration Mode, wherein the UART will be active and ready to recieve the
+     Top Variable settings and store the same in the respective FRAM locations */
+   while(!read_temp_sensor( &currTempValue )) {} /** << After ADC Initialization the First Temperature
+                                                        Value is read*/
+   for(;;){
 
-   read_top_variables();
+       if(true == normal_operation_mode)
+       {
+          if ( true == sensENFlag)
+          {
+              SNS_EN_HIGH;
+              delay_us(system_settings.sensEnTime_us);
+              SNS_EN_LOW;
+              sensENFlag = false;
+              valid_data = 0;
+              while( 0 == valid_data )
+              {
+                au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
+                delay_us(100);
+              }
+              if(valid_data)
+              {
+                 valid_data =0;
+                 au20xx_read_reg(SNS1_OUT_Q8_REG, &cd1_value);
+                 au20xx_read_reg(SNS2_OUT_Q8_REG, &cd2_value);
+                 /** Temperature Compensate the Values */
+                 tempNorm = currTempValue - tempInit;
+                 cd1_value = (int8_t)(cd1_value - (system_settings.cd1_corr_slope * tempNorm));
+                 cd2_value = (int8_t)(cd2_value - (system_settings.cd2_corr_slope * tempNorm));
+                 if ((absolute(cd1_value - cd1_previous_value)) <=1)
+                     cd1_value = cd1_previous_value;
+                 if ((absolute(cd2_value - cd2_previous_value)) <=1)
+                     cd2_value = cd2_previous_value;
+                 delta_x = cd1_value - x0;
+                 delta_y = cd2_value - y0;
+                 delta_x_abs = absolute(delta_x);
+                 delta_y_abs = absolute(delta_y);
+                 if((delta_x == 0) && (delta_y == 0))
+                    delta_r = 1;
+                 else
+                 delta_r = delta_x_abs + delta_y_abs;
+                 delta_XC = (2*delta_x)/delta_r;           // We can convert to integer based on the decimal places.
+                 delta_YC = (2*delta_y)/delta_r;           // We can convert to integer based on the decimal places.
+                 x0 = (int8_t)(cd1_value - delta_XC);
+                 y0 = (int8_t)(cd2_value - delta_YC);
+                 if (( delta_XC >=0 ) && ( delta_previous_XC < 0 ))
+                 {
+                     if(delta_YC < 0)
+                         cd_rot_direction_x = cd_rot_direction_x + 1;
+                     else
+                         cd_rot_direction_x = cd_rot_direction_x - 1;
+                     // TODO: Need to understand when to reset the value... (Ask Nigesh or Sandeep)
+                 }
 
-   for(;;){}
+              }
+              delta_previous_XC = delta_XC;
+              delta_previous_YC = delta_YC;
+              cd1_previous_value = cd1_value;
+              cd2_previous_value = cd2_value;
+          }
+          if ( true == temperatureReadFlag )
+          {
+              read_temp_sensor(&currTempValue);
+          }
+       }
+       else
+       {
+          //TODO: Write for Calibration Mode of operation
+       }
+       //TODO : Get to Low Power Mode.. On timer Interrupt switch to Active Mode.
+       //TODO : Feed the Watchdog. Mechanism
+   }
 
 
 }

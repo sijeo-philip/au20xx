@@ -43,11 +43,12 @@
 * Includes
 *******************************************************************************/
 #include <stdbool.h>
-
+#include <stdint.h>
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
 extern bool volatile sensENFlag;
+extern bool volatile temperatureReadFlag;
 /******************************************************************************
 * Configuration Constants
 *******************************************************************************/
@@ -62,6 +63,22 @@ extern bool volatile sensENFlag;
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
+typedef struct
+{
+    uint32_t samplesPerTemp;        /**<< This variable stores the value of when to read
+                                          Temperature from ADC */
+    uint16_t sensEnTime;            /**<< This variable stores the duration for which the
+                                          SENSEN should be asserted 0 - 4 */
+    uint16_t lastRotCount;          /**<< This variable stores the last Rotation Count
+                                          before Power Down */
+    uint16_t sampleTime;            /**<< This variable stores the Sampling Time of the
+                                          system for au20xx chip */
+    uint16_t sensEnTime_us;          /**<< Delay in microseconds */
+
+    float cd1_corr_slope;           /** <<Slope for temperature correction for cd1 reading */
+
+    float cd2_corr_slope;           /** <<Slope for temperature correction for cd2 reading */
+}top_variables_t;
 
 /******************************************************************************
 * Variables
@@ -76,6 +93,9 @@ extern "C"{
 #endif
 
 void delay_us(uint16_t microseconds);
+bool get_top_variables(top_variables_t*);
+bool set_top_variables(top_variables_t*);
+int8_t absolute(int8_t);
 
 #ifdef __cplusplus
 } // extern "C"

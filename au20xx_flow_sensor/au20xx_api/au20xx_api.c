@@ -232,14 +232,14 @@ void au20xx_write_reg(uint8_t reg_addr, uint8_t data)
 * <hr>
 *
 *******************************************************************************/
-void au20xx_read_reg( uint8_t reg_addr, uint8_t * const data)
+void au20xx_read_reg( uint8_t reg_addr, void * const data)
 {
   static uint16_t register_data = 0;
   register_data = READ_AU20xx | reg_addr;
   spi_write(&register_data, 2);
   delay_us(3);
   DISABLE_SPI_CS;
-  delay_us(1000);
+  delay_us(3);
   spi_read ( (void*)data, 1 );
   delay_us(3);
   DISABLE_SPI_CS;

@@ -60,7 +60,8 @@
 static uint16_t volatile tempValue;
 static int volatile degC;
 static uint16_t volatile voltValue;
-static bool volatile temperatureReadFlag = false;
+
+bool volatile temperatureReadFlag = false;
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
