@@ -68,12 +68,12 @@ typedef struct
     uint32_t samplesPerTemp;        /**<< This variable stores the value of when to read
                                           Temperature from ADC */
     uint16_t sensEnTime;            /**<< This variable stores the duration for which the
-                                          SENSEN should be asserted 0 - 4 */
+                                          SENSEN should be asserted 0 - 4 i.e. Accuracy setting*/
     uint16_t lastRotCount;          /**<< This variable stores the last Rotation Count
                                           before Power Down */
     uint16_t sampleTime;            /**<< This variable stores the Sampling Time of the
-                                          system for au20xx chip */
-    uint16_t sensEnTime_us;          /**<< Delay in microseconds */
+                                          system for au20xx chip Measurement Delay */
+    uint16_t sensEnTime_us;          /**<< Accuracy Setting Delay in microseconds */
 
     float cd1_corr_slope;           /** <<Slope for temperature correction for cd1 reading */
 

@@ -136,8 +136,7 @@ void aura_hw_init ( void )
     get_top_variables(&system_settings);
     refa_init();
     adc_init();
-
-    _BIS_SR(GIE);
+   _BIS_SR(GIE);
 }
 
 
@@ -159,17 +158,17 @@ int main(void) {
        {
           if ( true == sensENFlag)
           {
+              valid_data = 0;
               SNS_EN_HIGH;
               delay_us(system_settings.sensEnTime_us);
-              SNS_EN_LOW;
-              sensENFlag = false;
-              valid_data = 0;
               while( 0 == valid_data )
               {
                 au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
-                delay_us(100);
+                delay_us(2);
               }
-              if(valid_data)
+              SNS_EN_LOW;
+              sensENFlag = false;
+             if(valid_data)
               {
                  valid_data =0;
                  au20xx_read_reg(SNS1_OUT_Q8_REG, &cd1_value);

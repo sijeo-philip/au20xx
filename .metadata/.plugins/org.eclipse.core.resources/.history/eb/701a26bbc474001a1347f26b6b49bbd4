@@ -1,12 +1,12 @@
 /****************************************************************************
-* Title                 :   refa_config
-* Filename              :   refa_config.h
+* Title                 :   common
+* Filename              :   common.h
 * Author                :   Sijeo Philip
-* Origin Date           :   25/03/2020
+* Origin Date           :   20/03/2020
 * Version               :   1.0.0
 * Compiler              :   mspx_eabi
 * Target                :   MSP430FR6989
-* Notes                 :   This module is used to configure the Reference module of MSP430
+* Notes                 :   This module is used for common functionality used accross the application
 *
 * THIS SOFTWARE IS PROVIDED BY UNISEM ELECTRONICS "AS IS" AND ANY EXPRESSED
 * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -25,29 +25,30 @@
 /*************** INTERFACE CHANGE LIST **************************************
 *
 *    Date    Version   Author         Description
-*  24/03/20   1.0.0    Sijeo Philip   Interface Created.
+*  20/03/20   1.0.0    Sijeo Philip   Interface Created.
 *
 *****************************************************************************/
-/** @file refa_config.h
- *  @brief This module is to configure the REference module of the MSP430
- *  device
+/** @file common.h
+ *  @brief This module is for common functionalities such as delay or string
+ *  manipulation routines etc..
  *
- *  This is the header file for the definition of configuration parameters
- *  for the MSP430 device
+ *  This is the header file for the definition of common functions such as delays
  */
-#ifndef REFA_CONFIG_H_
-#define REFA_CONFIG_H_
+//TODO: UPDATE MACRO BELOW
+#ifndef COMMON_H_
+#define COMMON_H_
+
 
 /******************************************************************************
 * Includes
 *******************************************************************************/
-
-
+#include <stdbool.h>
+#include <stdint.h>
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
-
-
+extern bool volatile sensENFlag;
+extern bool volatile temperatureReadFlag;
 /******************************************************************************
 * Configuration Constants
 *******************************************************************************/
@@ -56,46 +57,28 @@
 /******************************************************************************
 * Macros
 *******************************************************************************/
-/**
- * @brief Checks if the Buffered Bandgap voltage is ready to be used
- *
- */
- IS_REFBG_READY()       ((REFCTL0 & 0x2000)?1:0)
-
- /**
-  * @brief Checks if Variable Reference Voltage is Ready
-  */
- IS_REFGEN_READY()      ((REFCTL0 & 0x1000)?1:0)
-
-
- /**
-  * @brief Read BandGap mode if 1 its Sampled mode and Static
-  * mode otherwise
-  */
-READ_BANDGAP_MODE()     ((REFCTL0 & 0x0800)?1:0)
-
-/**
- * @brief Check if reference Generator is busy
- */
-IS_REFGEN_BUSY()        ((REFCTL0 &0x0400)?1:0)
-
-/**
- * @brief Check if Reference Bandgap is active
- */
-IS_REF_BANDGAP_ACTIVE() ((REFCTL0 & 0x0200)?1:0)
-
-/**
- * @brief Check if Reference Generator is Active
- *
- */
-IS_REF_GEN_ACTIVE()     ((REFCTL0 & 0x0100)?1:0)
 
 
 
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
+typedef struct
+{
+    uint32_t samplesPerTemp;        /**<< This variable stores the value of when to read
+                                          Temperature from ADC */
+    uint16_t sensEnTime;            /**<< This variable stores the duration for which the
+                                          SENSEN should be asserted 0 - 4 */
+    uint16_t lastRotCount;          /**<< This variable stores the last Rotation Count
+                                          before Power Down */
+    uint16_t sampleTime;            /**<< This variable stores the Sampling Time of the
+                                          system for au20xx chip */
+    uint16_t sensEnTime_us;          /**<< Delay in microseconds */
 
+    float cd1_corr_slope;           /** <<Slope for temperature correction for cd1 reading */
+
+    float cd2_corr_slope;           /** <<Slope for temperature correction for cd2 reading */
+}top_variables_t;
 
 /******************************************************************************
 * Variables
@@ -105,8 +88,20 @@ IS_REF_GEN_ACTIVE()     ((REFCTL0 & 0x0100)?1:0)
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+void delay_us(uint16_t microseconds);
+bool get_top_variables(top_variables_t*);
+bool set_top_variables(top_variables_t*);
+int8_t absolute(int8_t);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 //TODO: UPDATE COMMENT BELOW
-#endif /*REFA_CONFIG_H_*/
+#endif /*File_H_*/
 
 /*** End of File **************************************************************/
