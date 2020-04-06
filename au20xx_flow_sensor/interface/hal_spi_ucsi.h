@@ -81,6 +81,10 @@
 
 #define SPI_RX_INT_FLAG(peri)   ((UC##peri##IFG & 0x0001)?1:0)
 
+#define CLR_SPI_RX_INT_FLAG(peri) (UC##peri##IFG &= ~(0x0001))
+
+#define CLR_SPI_TX_INT_FLAG(peri)  (UC##peri##IFG &= ~(0x0002))
+
 #define SPI_TX_INT_FLAG(peri)   ((UC##peri##IFG & 0x0002)?1:0)
 
 #define SPI_IV_REG(peri)	(UC##peri##IV)

@@ -129,11 +129,13 @@ long volatile cd_rot_direction_x = 0;
 *******************************************************************************/
 void aura_hw_init ( void )
 {
+
     system_clock_init();        /**<< Set the Frequency of the system */
     gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
     spi_init();                 /**<< Initialize the SPI peripheral */
     timerA_init();
     get_top_variables(&system_settings);
+    au20xx_write_reg(INTF_CFG_REG, 0x7B);
     refa_init();
     adc_init();
    _BIS_SR(GIE);

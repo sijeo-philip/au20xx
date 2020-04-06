@@ -160,6 +160,7 @@ static void spi_byte_write( uint8_t data )
 	while (1 == CHECK_SPI_BUSY(B0) ) {}            /* This checks if the UCBUSY bit is High, if yes then the
 													 peripheral is busy reading or transmitting data over the
 													 peripheral */
+	CLR_SPI_TX_INT_FLAG(B0);
 	SPI_TX_BUF(B0) = data;						 /* Load the Data into SPI Transmit Buffer */
 
 	while ( 0 == SPI_TX_INT_FLAG(B0) ) {}        /* Test the TX is completed */
@@ -207,6 +208,7 @@ static uint8_t spi_byte_read(void)
 	while (1 == CHECK_SPI_BUSY(B0) ) {}            /* This checks if the UCBUSY bit is High, if yes then the
 														 peripheral is busy reading or transmitting data over the
 														 peripheral */
+	CLR_SPI_RX_INT_FLAG(B0);
 	ENABLE_SPI_CS;									/* Enable the SPI Slave chip */
 	SPI_TX_BUF(B0) = 0xAA;							/* Dummy Data is written over SPI to shift out the data to be read */
 	while ( 0 == SPI_RX_INT_FLAG(B0) ) {}           /* Waiting to receive a byte of data in SPI Register */
@@ -268,7 +270,6 @@ void spi_write ( void * p_buff, uint16_t byte_count )
 		bytes++;
 		if (byte_count != bytes )
 		    p_data++;
-		delay_us(1);
 	}
 
    /** TO DO: Disable the CS */
