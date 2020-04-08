@@ -57,7 +57,9 @@ extern bool volatile temperatureReadFlag;
 /******************************************************************************
 * Macros
 *******************************************************************************/
-
+#ifndef DEBUG
+#define DEBUG       1
+#endif
 
 
 /******************************************************************************
@@ -78,6 +80,14 @@ typedef struct
     float cd1_corr_slope;           /** <<Slope for temperature correction for cd1 reading */
 
     float cd2_corr_slope;           /** <<Slope for temperature correction for cd2 reading */
+
+    uint8_t sns1_off0;              /** <<LSB of Sensor 1 offset */
+
+    uint8_t sns1_off1;              /** <<MSB of Sensor1 offset */
+
+    uint8_t sns2_off0;              /** <<LSB of Sensor 2 offset */
+
+    uint8_t sns2_off1;              /** <<MSB of Sensor 2 offset */
 }top_variables_t;
 
 /******************************************************************************
@@ -96,7 +106,7 @@ void delay_us(uint16_t microseconds);
 bool get_top_variables(top_variables_t*);
 bool set_top_variables(top_variables_t*);
 int8_t absolute(int8_t);
-
+void configure_au20xx(top_variables_t * topVariables);
 #ifdef __cplusplus
 } // extern "C"
 #endif

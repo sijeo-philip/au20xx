@@ -102,6 +102,7 @@ void au20xx_chip_reset(void);
 void au20xx_send_command(uint8_t sub_command);
 void au20xx_write_reg(uint8_t reg_addr, uint8_t data);
 void au20xx_read_reg( uint8_t reg_addr, void * const data);
+void au20xx_calibrate(top_variables_t* topVariables);
 
 #ifdef __cplusplus
 } // extern "C"

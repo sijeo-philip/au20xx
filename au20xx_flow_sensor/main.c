@@ -61,6 +61,7 @@
 /******************************************************************************
 * Module Variable Definitions
 *******************************************************************************/
+uint8_t reg_data=0;
 top_variables_t system_settings;
 static int8_t cd1_value;
 static int8_t cd2_value;
@@ -135,9 +136,14 @@ void aura_hw_init ( void )
     spi_init();                 /**<< Initialize the SPI peripheral */
     timerA_init();
     get_top_variables(&system_settings);
-    au20xx_write_reg(INTF_CFG_REG, 0x7B);
+    timerA_load_time(system_settings.sampleTime);
+#if DEBUG == 1
+    au20xx_calibrate(&system_settings);
+#endif
+    configure_au20xx(&system_settings);
     refa_init();
     adc_init();
+    au20xx_read_reg(INTF_CFG_REG, &reg_data);
    _BIS_SR(GIE);
 }
 
@@ -160,6 +166,7 @@ int main(void) {
        {
           if ( true == sensENFlag)
           {
+              configure_au20xx(&system_settings);
               valid_data = 0;
               SNS_EN_HIGH;
               delay_us(system_settings.sensEnTime_us);

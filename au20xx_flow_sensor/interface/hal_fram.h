@@ -63,6 +63,14 @@
 #define CD1_CORR_SLOPE_ADD                      (uint8_t*)0x00180A   /**<< CD1_correction Slope (float) */
 
 #define CD2_CORR_SLOPE_ADD                      (uint8_t*)0x00180E   /** << CD2_Correction Slope (float) */
+
+#define SNS1_OFF0                               (uint8_t*)0x001812
+
+#define SNS1_OFF1                               (uint8_t*)0x001813
+
+#define SNS2_OFF0                               (uint8_t*)0x001814
+
+#define SNS2_OFF1                               (uint8_t*)0x001815
 /******************************************************************************
 * Configuration Constants
 *******************************************************************************/

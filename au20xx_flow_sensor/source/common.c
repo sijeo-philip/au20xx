@@ -40,7 +40,7 @@
 #include "common.h"             /* For common functions such as delays */
 #include "hal_fram.h"           /* For top variable address locations */
 #include "hal_timerA.h"
-
+#include "au20xx_api.h"
 /******************************************************************************
 * Module Preprocessor Constants
 *******************************************************************************/
@@ -99,8 +99,10 @@
 void delay_us( uint16_t microseconds )
 {
    static uint16_t i =0;
+   static uint16_t j = 0;
    for ( i = 0; i < microseconds; i ++ )
-       __no_operation();
+       for (j = 0; j <2400; j ++)
+               __no_operation();
 }
 
 
@@ -141,6 +143,18 @@ void delay_us( uint16_t microseconds )
 bool get_top_variables(top_variables_t * topVariable)
 {
     static bool retVal = false;
+#if DEBUG == 1
+    topVariable->samplesPerTemp = 100;
+    topVariable->sensEnTime = 3;
+    topVariable->sensEnTime_us = 384;
+    topVariable->lastRotCount =0;
+    topVariable->sampleTime = 20;
+    topVariable->cd1_corr_slope = 1.054;
+    topVariable->cd1_corr_slope = 2.0034;
+
+
+#else
+
     retVal =  fram_read (&topVariable->samplesPerTemp , 4, SAMPLES_PER_TEMP_READ_ADDRESS);
     if( false == retVal )
         return retVal;
@@ -189,6 +203,12 @@ bool get_top_variables(top_variables_t * topVariable)
     retVal = fram_read(&topVariable->cd2_corr_slope, 4, CD2_CORR_SLOPE_ADD);
     if( false == retVal )
         return retVal;
+    au20xx_read_reg(SNS1_OFF0_REG, &topVariables->sns1_off0);
+    au20xx_read_reg(SNS1_OFF1_REG, &topVariables->sns1_off0);
+    au20xx_read_reg(SNS2_OFF0_REG, &topVariables->sns2_off0);
+    au20xx_read_reg(SNS2_OFF1_REG, &topVariables->sns2_off1);
+
+#endif
   return retVal;
 }
 
@@ -231,6 +251,52 @@ int8_t absolute(int8_t value)
         return (-1 * value);
     else
         return value;
+}
+
+/******************************************************************************
+* Function : configure_au20xx
+*//**
+* \b Description:
+*
+* This writes to all the registers of the au20xx
+*
+* PRE-CONDITION: Clocks should be initialized for 1MHz Source
+*
+* POST-CONDITION: absolute value of the input is returned
+*
+* @param[in]   variable whose absolute value has to be returned.
+*
+* @return       absolute value of the input variable.
+*
+* \b Example Example:
+* @code
+*  top_variable_t system_settings
+*  configure_au20xx(&system_settings)
+*
+* @endcode
+*
+* @see system_clock_init
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 8/04/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+
+void configure_au20xx(top_variables_t * topVariables)
+{
+
+    au20xx_write_reg(SNS1_OFF0_REG, topVariables->sns1_off0);
+    au20xx_write_reg(SNS1_OFF1_REG, topVariables->sns1_off0);
+    au20xx_write_reg(SNS2_OFF0_REG, topVariables->sns2_off0);
+    au20xx_write_reg(SNS2_OFF1_REG, topVariables->sns2_off1);
+
+    au20xx_write_reg(INTF_CFG_REG, (0x78|topVariables->sensEnTime));
+
 }
 
 /*************** END OF FUNCTIONS ***************************************************************************/

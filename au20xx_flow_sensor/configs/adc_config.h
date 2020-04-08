@@ -214,7 +214,7 @@
  * <0x0200=>    SAMPCON signal is sourced from the sampling timer
  */
 #ifndef CONF_ADC12CTL1_ADC12SHP
-#define CONF_ADC12CTL1_ADC12SHP     0x0000
+#define CONF_ADC12CTL1_ADC12SHP     0x0200
 #endif
 
 /**
@@ -250,7 +250,7 @@
  * <0x0018=>        SMCLK
  */
 #ifndef CONF_ADC12CTL1_ADC12SSEL
-#define CONF_ADC12CTL1_ADC12SSEL        0x0000
+#define CONF_ADC12CTL1_ADC12SSEL        0x0008
 #endif
 
 
@@ -472,7 +472,7 @@
 
 #define ADC_CONV_DISABLE  \
     do{     \
-        ADC12CTL0 &= 0xFFFD; \
+        ADC12CTL0 &= 0xFFFC; \
     }while(0)
 
 
