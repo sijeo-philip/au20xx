@@ -132,11 +132,12 @@ void aura_hw_init ( void )
 {
 
     system_clock_init();        /**<< Set the Frequency of the system */
+    _BIS_SR(GIE);
     gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
     spi_init();                 /**<< Initialize the SPI peripheral */
     timerA_init();
     get_top_variables(&system_settings);
-    timerA_load_time(system_settings.sampleTime);
+
 #if DEBUG == 1
     au20xx_calibrate(&system_settings);
 #endif
@@ -144,7 +145,8 @@ void aura_hw_init ( void )
     refa_init();
     adc_init();
     au20xx_read_reg(INTF_CFG_REG, &reg_data);
-   _BIS_SR(GIE);
+    timerA0_load_time(system_settings.sampleTime);
+
 }
 
 
@@ -158,8 +160,12 @@ int main(void) {
    /*TODO : Check for the IO pin after Power ON to work in normal measurment mode
      or Calibration Mode, wherein the UART will be active and ready to recieve the
      Top Variable settings and store the same in the respective FRAM locations */
+#if DEBUG ==1
+   currTempValue = 25;
+#else
    while(!read_temp_sensor( &currTempValue )) {} /** << After ADC Initialization the First Temperature
-                                                        Value is read*/
+                                                         Value is read*/
+#endif
    for(;;){
 
        if(true == normal_operation_mode)
@@ -169,14 +175,13 @@ int main(void) {
               configure_au20xx(&system_settings);
               valid_data = 0;
               SNS_EN_HIGH;
-              delay_us(system_settings.sensEnTime_us);
+              sensEn_delay_us();
               while( 0 == valid_data )
               {
                 au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
                 delay_us(2);
               }
-              SNS_EN_LOW;
-              sensENFlag = false;
+             sensENFlag = false;
              if(valid_data)
               {
                  valid_data =0;

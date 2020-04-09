@@ -67,7 +67,19 @@
     do{         \
         TA##instance##CTL |= 0x0004; \
     }while(0)
+/**
+ * @brief Disable the Timer
+ *
+ */
+#define TIMERA_STOP_MODE(instance)\
+    do{ \
+        TA##instance##CTL &= 0xFFCF; \
+    }while(0)
 
+#define TIMERA_UP_MODE(instance) \
+    do{ \
+        TA##instance##CTL |= 0x0010; \
+    }while(0)
 /**
  * @brief Timer used for setting the Measurement Interval
  */
@@ -107,7 +119,8 @@ extern "C"{
 #endif
 
 void timerA_init(void);
-void timerA_load_time(uint16_t);
+void timerA0_load_time(uint16_t);
+void timerA1_load_time(uint16_t);
 uint32_t * get_samples_per_temperature_read( void );
 void set_samples_per_temperature_read( uint32_t samples);
 

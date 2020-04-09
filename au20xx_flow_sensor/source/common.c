@@ -56,7 +56,8 @@
 /******************************************************************************
 * Module Variable Definitions
 *******************************************************************************/
-
+static uint16_t sensEn_timer_delay = 0;
+static bool sensEn_delay_flag = false;
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -64,6 +65,47 @@
 /******************************************************************************
 * Function Definitions
 *******************************************************************************/
+
+/******************************************************************************
+* Function : sensEn_delay_us()
+*//**
+* \b Description:
+*
+* This function is used to generate delay in micro seconds
+*
+*
+* PRE-CONDITION: Clocks should be initialized for 1MHz Source
+*
+* POST-CONDITION: Delay in Microsecond is generated;
+*
+* @return       A pointer to the configuration table.
+*
+* \b Example Example:
+* @code
+*
+*   sensEn_delay_us()
+* @endcode
+*
+* @see system_clock_init
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 20/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void sensEn_delay_us( void )
+{
+     timerA1_load_time( 0 );
+    timerA1_load_time(sensEn_timer_delay);
+    sensEn_delay_flag = true;
+    while ( true == sensEn_delay_flag){}
+    SNS_EN_LOW;
+    timerA1_load_time(0);
+}
 
 /******************************************************************************
 * Function : delay_us()
@@ -82,7 +124,7 @@
 * \b Example Example:
 * @code
 *
-*   delay_us(100)
+*   delay_us(300)
 * @endcode
 *
 * @see system_clock_init
@@ -96,15 +138,13 @@
 * <hr>
 *
 *******************************************************************************/
-void delay_us( uint16_t microseconds )
+void delay_us(uint16_t microseconds )
 {
-   static uint16_t i =0;
-   static uint16_t j = 0;
-   for ( i = 0; i < microseconds; i ++ )
-       for (j = 0; j <2400; j ++)
-               __no_operation();
-}
+    static uint16_t i=0;
+    for (i = 0; i < microseconds; i++)
+          __no_operation();
 
+}
 
 /******************************************************************************
 * Function : get_top_variables
@@ -147,6 +187,7 @@ bool get_top_variables(top_variables_t * topVariable)
     topVariable->samplesPerTemp = 100;
     topVariable->sensEnTime = 3;
     topVariable->sensEnTime_us = 384;
+    sensEn_timer_delay = 300;
     topVariable->lastRotCount =0;
     topVariable->sampleTime = 20;
     topVariable->cd1_corr_slope = 1.054;
@@ -172,18 +213,24 @@ bool get_top_variables(top_variables_t * topVariable)
         {
         case 0:
             topVariable->sensEnTime_us = 48;
+            sensEn_timer_delay = 3;
         break;
         case 1:
             topVariable->sensEnTime_us = 96;
+            sensEn_timer_delay = 5;
         break;
         case 2:
             topVariable->sensEnTime_us = 192;
+            sensEn_timer_delay = 10;
         break;
         case 3:
             topVariable->sensEnTime_us = 384;
+            sensEn_timer_delay = 300;
+
         break;
         default:
             topVariable->sensEnTime_us = 384;
+            sensEn_timer_delay = 300;
         break;
         }
     }
@@ -298,5 +345,17 @@ void configure_au20xx(top_variables_t * topVariables)
     au20xx_write_reg(INTF_CFG_REG, (0x78|topVariables->sensEnTime));
 
 }
+
+
+/**********************************
+ * TIMERA1 ISR
+ */
+#pragma vector=TIMER1_A0_VECTOR
+__interrupt void TIMER1_ISR ( void )
+{
+     sensEn_delay_flag = false;
+     AU20xx_CAP_COMP_REG(1) = 0;  /** << This is to stop the timer by loading 0
+                                           to the timer register */
+  }
 
 /*************** END OF FUNCTIONS ***************************************************************************/

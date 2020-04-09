@@ -1,0 +1,318 @@
+/*******************************************************************************
+* Title                 :   hal_timerA
+* Filename              :   hal_timerA.c
+* Author                :   Sijeo Philip
+* Origin Date           :   23/03/2020
+* Version               :   1.0.0
+* Compiler              :   mspx_eabi
+* Target                :   MSP430FR6989
+* Notes                 :   This module is used to intialize and load the timer value
+*
+* THIS SOFTWARE IS PROVIDED BY UNISEM ELECTRONICS "AS IS" AND ANY EXPRESSED
+* OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL UNISEM ELECTRONICS OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+*******************************************************************************/
+/*************** SOURCE REVISION LOG *****************************************
+*
+*    Date    Version   Author         Description
+*  23/03/15   1.0.0    Sijeo Philip   Initial Release.
+*
+*******************************************************************************/
+/** @file hal_timerA.c
+ *  @brief This is the source file for Initializing the Timer and reloading
+ *  value if needed
+ */
+/******************************************************************************
+* Includes
+*******************************************************************************/
+#include <stdint.h>             /* For portable types */
+#include <stdbool.h>
+
+//TODO: UPDATE MY INCLUDE
+#include "hal_timerA.h"             /* For timer intializing */
+#include "msp430.h"
+#include "hal_gpio.h"
+#include "hal_adc.h"
+#include "hal_fram.h"
+/******************************************************************************
+* Module Preprocessor Constants
+*******************************************************************************/
+/**
+ * AU20xx Timer Value for 1ms Interrupt
+ */
+#define   AU20xx_TIMER_COMP_VAL             50  /**<< The clock source is selected
+                                                      as SMCLK i.e. 1MHz, the ID is
+                                                      selected as divide by 4 and
+                                                      TAxEX0 is selected as divide
+                                                      by 5 */
+bool volatile sensENFlag = false;
+bool volatile readTemperatureFlag = false;
+
+static uint32_t volatile samplesPerTempReading = 100;
+static uint32_t volatile sampleCount = 0;
+/******************************************************************************
+* Module Preprocessor Macros
+*******************************************************************************/
+
+/******************************************************************************
+* Module Typedefs
+*******************************************************************************/
+
+/******************************************************************************
+* Module Variable Definitions
+*******************************************************************************/
+
+/******************************************************************************
+* Function Prototypes
+*******************************************************************************/
+
+/******************************************************************************
+* Function Definitions
+*******************************************************************************/
+/******************************************************************************
+* Function : timerA_init()
+*//**
+* \b Description:
+*
+* This function is used to initialize the timerA which is used for sensor measurement
+* interval as per the configurations defined in the timerA_config.h file.
+*
+* PRE-CONDITION: The clocks should be intialized
+*
+* POST-CONDITION: The Intialized timer will be in running mode
+*
+* @return       None
+*
+* \b Example Example:
+* @code
+*
+*   timerA_init();
+* @endcode
+*
+* @see system_clk_init()
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void timerA_init( void )
+{
+    AU20xx_CAP_COMP_REG(0) = AU20xx_TIMER_COMP_VAL * 2; /**<< For minimum interval of 2ms*/
+    AU20xx_TIMER_CTRL_REG(0) |= CONF_TACTL0_ID | CONF_TACTL0_TASSEL;
+    AU20xx_TIMER_EXP_REG(0) = CONF_TAEX0_TAIDEX;
+    TIMERA_CLR(0);
+    AU20xx_TIMER_CTRL_REG(0) |= CONF_TACTL0_MC | CONF_TACTL0_TAIE;
+    AU20xx_CAP_COMP_CTRL_REG(0) |= CONF_TACCTL0_OUT | CONF_TACCTL0_CCIE |
+                                   CONF_TACCTL0_OUTMOD | CONF_TACCTL0_CAP |
+                                   CONF_TACCTL0_SCS | CONF_TACCTL0_CCIS |
+                                   CONF_TACCTL0_CM;
+
+}
+
+/******************************************************************************
+* Function : timerA_load_time()
+*//**
+* \b Description:
+*
+* This function is used to load the timer compare register with new value
+*
+* PRE-CONDITION: The clocks should be intialized
+*
+* POST-CONDITION: The Intialized timer will be in running mode with new compare
+*                 value
+*
+* @param[in]    millisecs     New Compare Value to be loaded in Timer in ms
+* @return       None
+*
+* \b Example Example:
+* @code
+*
+*   timerA_load_time(300)
+* @endcode
+*
+* @see system_clk_init()
+*
+* Note : This function has to  be called immediately after timerA_init function
+* else it will assume 2ms as default time
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void timerA_load_time(uint16_t millisecs)
+{
+    AU20xx_CAP_COMP_REG(0) = 0;  /** << This is to stop the timer by loading 0
+                                        to the timer register */
+    if ( millisecs > 512 )
+      millisecs  = 512;
+    AU20xx_CAP_COMP_REG(0) = AU20xx_TIMER_COMP_VAL * millisecs;
+    /* New value is loaded to the timer register */
+}
+
+
+/******************************************************************************
+* Function : TIMER0_A0_VECTOR
+*//**
+* \b Description:
+*
+* This function is interrupt Service routine for TIMERA0
+*
+* PRE-CONDITION: The clocks should be intialized
+*
+* POST-CONDITION: Interrupt Occurs
+*
+*
+* @return       None
+*
+*
+* @see system_clk_init()
+*
+*  <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void TIMER0_ISR ( void )
+{
+
+    TOGGLE_GPIO_OUTPUT(P1, BIT1);    /**<< Set SENS_EN to high */
+    sensENFlag = true;
+
+    /* TODO: In main function the the sensENFlag is checked for
+     * true if it is true blocking delay of prescribed duration is
+     * done post which the flag is reset to false and the SENS_EN
+     * IO is also cleared.
+     */
+    /**
+     * TODO : Software Timer to be built on at which the ADC for temperature
+     *  sensor should be triggered via software.. Both conversion enable and
+     *  conversion start has to be done here.
+     */
+    if ( sampleCount <= 0)
+    {
+        readTemperatureFlag = true;  /** << This flag is checked in main to initiate
+                                            Temperature Reading along with return value of
+                                            read_temp_sensor() if both are true new updated value is read*/
+        sampleCount = samplesPerTempReading;
+        sampleCount--;
+        __start_adc_conv();
+    }
+    else
+    {
+        sampleCount-- ;
+    }
+}
+
+
+/******************************************************************************
+* Function : get_samples_per_temperature_read
+*//**
+* \b Description:
+*
+* This function is used to read from NVM memory and update the samplesPerTempReading
+* variable.. and return the address of the same to the caller
+*
+* PRE-CONDITION: The clocks should be initialized
+* PRE-CONDITION: ADC should be initialized
+* PRE-CONDITION: Timer should be initialized
+* PRE-CONDITION: GPIO and thus SPI should be initialized
+*
+* POST-CONDITION: value of samples Per Temperature Reading stored in the NVM is returned
+*
+*
+* @return       uint32_t*
+*
+*
+* @see system_clk_init()
+* @see adc_init()
+* @see timerA_init()
+* @see gpio_init()
+*
+*  <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+uint32_t* get_samples_per_temperature_read( void )
+{
+    //TODO: Read the memory and store the same to samplePerTempReading
+    fram_read((void*)&samplesPerTempReading, 4, SAMPLES_PER_TEMP_READ_ADDRESS );
+    if ((samplesPerTempReading == 0xFFFFFFFF) || (samplesPerTempReading == 0))
+        samplesPerTempReading = 100;
+    return &samplesPerTempReading;
+}
+
+
+/******************************************************************************
+* Function : set_samples_per_temperature_read
+*//**
+* \b Description:
+*
+* This function is used to set value to samplePerTempReading and store the same to
+* the NVM memory
+*
+* PRE-CONDITION: The clocks should be initialized
+* PRE-CONDITION: ADC should be initialized
+* PRE-CONDITION: Timer should be initialized
+* PRE-CONDITION: GPIO and thus SPI should be initialized
+*
+* POST-CONDITION: value of samples Per Temperature Reading stored in the NVM is returned
+*
+*
+* @param[in]    samples     Number of samples per Temperature reading
+*
+* @return       None
+*
+*
+* @see system_clk_init()
+* @see adc_init()
+* @see timerA_init()
+* @see gpio_init()
+*
+*  <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+
+void set_samples_per_temperature_read( uint32_t  samples)
+{
+    if ( samples < 1)
+        samples = 10;
+    samplesPerTempReading = samples;
+    //TODO: Store the value to NVM memory for further use.
+ }
+
+/*************** END OF FUNCTIONS ***************************************************************************/

@@ -111,7 +111,7 @@ static uint32_t volatile sampleCount = 0;
 *******************************************************************************/
 void timerA_init( void )
 {
-    AU20xx_CAP_COMP_REG(0) = AU20xx_TIMER_COMP_VAL * 2; /**<< For minimum interval of 2ms*/
+    AU20xx_CAP_COMP_REG(0) = 0; /**<< For minimum interval of 2ms*/
     AU20xx_TIMER_CTRL_REG(0) |= CONF_TACTL0_ID | CONF_TACTL0_TASSEL;
     AU20xx_TIMER_EXP_REG(0) = CONF_TAEX0_TAIDEX;
     TIMERA_CLR(0);
@@ -120,6 +120,17 @@ void timerA_init( void )
                                    CONF_TACCTL0_OUTMOD | CONF_TACCTL0_CAP |
                                    CONF_TACCTL0_SCS | CONF_TACCTL0_CCIS |
                                    CONF_TACCTL0_CM;
+
+
+        AU20xx_CAP_COMP_REG(1) = 1; /**<< stop timer*/
+       AU20xx_TIMER_CTRL_REG(1) |= CONF_TACTL1_ID | CONF_TACTL1_TASSEL;
+       AU20xx_TIMER_EXP_REG(1) = CONF_TAEX1_TAIDEX;
+       TIMERA_CLR(1);
+       AU20xx_TIMER_CTRL_REG(1) |= CONF_TACTL1_MC | CONF_TACTL1_TAIE;
+       AU20xx_CAP_COMP_CTRL_REG(1) |= CONF_TACCTL1_OUT | CONF_TACCTL1_CCIE |
+                                      CONF_TACCTL1_OUTMOD | CONF_TACCTL1_CAP |
+                                      CONF_TACCTL1_SCS | CONF_TACCTL1_CCIS |
+                                      CONF_TACCTL1_CM;
 
 }
 
@@ -141,7 +152,7 @@ void timerA_init( void )
 * \b Example Example:
 * @code
 *
-*   timerA_load_time(300)
+*   timerA0_load_time(300)
 * @endcode
 *
 * @see system_clk_init()
@@ -158,14 +169,62 @@ void timerA_init( void )
 * <hr>
 *
 *******************************************************************************/
-void timerA_load_time(uint16_t millisecs)
+void timerA0_load_time(uint16_t millisecs)
 {
+    TIMERA_STOP_MODE(0);
     AU20xx_CAP_COMP_REG(0) = 0;  /** << This is to stop the timer by loading 0
                                         to the timer register */
     if ( millisecs > 512 )
       millisecs  = 512;
     AU20xx_CAP_COMP_REG(0) = AU20xx_TIMER_COMP_VAL * millisecs;
     /* New value is loaded to the timer register */
+    TIMERA_UP_MODE(0);
+}
+
+
+/******************************************************************************
+* Function : timerA1_load_time()
+*//**
+* \b Description:
+*
+* This function is used to load the timer compare register with new value
+*
+* PRE-CONDITION: The clocks should be intialized
+*
+* POST-CONDITION: The Intialized timer will be in running mode with new compare
+*                 value
+*
+* @param[in]    millisecs     New Compare Value to be loaded in Timer in ms
+* @return       None
+*
+* \b Example Example:
+* @code
+*
+*   timerA1_load_time(300)
+* @endcode
+*
+* @see system_clk_init()
+*
+* Note : This function has to  be called immediately after timerA_init function
+* else it will assume 2ms as default time
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 23/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void timerA1_load_time(uint16_t usecs)
+{
+    TIMERA_STOP_MODE(1);
+    AU20xx_CAP_COMP_REG(1) = 0;  /** << This is to stop the timer by loading 0
+                                      to the timer register */
+    AU20xx_CAP_COMP_REG(1) =  usecs;
+    /* New value is loaded to the timer register */
+    TIMERA_UP_MODE(1);
 }
 
 
@@ -199,10 +258,8 @@ void timerA_load_time(uint16_t millisecs)
 __interrupt void TIMER0_ISR ( void )
 {
 
-    SET_GPIO_OUTPUT(P1, BIT3);    /**<< Set SENS_EN to high */
     sensENFlag = true;
-
-    /* TODO: In main function the the sensENFlag is checked for
+     /* TODO: In main function the the sensENFlag is checked for
      * true if it is true blocking delay of prescribed duration is
      * done post which the flag is reset to false and the SENS_EN
      * IO is also cleared.
