@@ -102,8 +102,8 @@ void sensEn_delay_us( void )
      timerA1_load_time( 0 );
     timerA1_load_time(sensEn_timer_delay);
     sensEn_delay_flag = true;
+    SNS_EN_HIGH;
     while ( true == sensEn_delay_flag){}
-    SNS_EN_LOW;
     timerA1_load_time(0);
 }
 
@@ -187,7 +187,7 @@ bool get_top_variables(top_variables_t * topVariable)
     topVariable->samplesPerTemp = 100;
     topVariable->sensEnTime = 3;
     topVariable->sensEnTime_us = 384;
-    sensEn_timer_delay = 300;
+    sensEn_timer_delay = 380;
     topVariable->lastRotCount =0;
     topVariable->sampleTime = 20;
     topVariable->cd1_corr_slope = 1.054;
@@ -213,24 +213,24 @@ bool get_top_variables(top_variables_t * topVariable)
         {
         case 0:
             topVariable->sensEnTime_us = 48;
-            sensEn_timer_delay = 3;
+            sensEn_timer_delay = 42;
         break;
         case 1:
             topVariable->sensEnTime_us = 96;
-            sensEn_timer_delay = 5;
+            sensEn_timer_delay = 90;
         break;
         case 2:
             topVariable->sensEnTime_us = 192;
-            sensEn_timer_delay = 10;
+            sensEn_timer_delay = 184;
         break;
         case 3:
             topVariable->sensEnTime_us = 384;
-            sensEn_timer_delay = 300;
+            sensEn_timer_delay = 380;
 
         break;
         default:
             topVariable->sensEnTime_us = 384;
-            sensEn_timer_delay = 300;
+            sensEn_timer_delay = 380;
         break;
         }
     }
@@ -355,7 +355,8 @@ __interrupt void TIMER1_ISR ( void )
 {
      sensEn_delay_flag = false;
      AU20xx_CAP_COMP_REG(1) = 0;  /** << This is to stop the timer by loading 0
-                                           to the timer register */
+                                         to the timer register */
+     SNS_EN_LOW;
   }
 
 /*************** END OF FUNCTIONS ***************************************************************************/

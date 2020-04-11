@@ -284,7 +284,6 @@ void au20xx_calibrate(top_variables_t* topVariables)
 {
         static uint8_t valid_data = 0;
         au20xx_chip_reset();
-        SNS_EN_HIGH;
         sensEn_delay_us();
 #if 0
         while( 0 == valid_data )
@@ -293,7 +292,6 @@ void au20xx_calibrate(top_variables_t* topVariables)
              delay_us(1);
         }
 
-        SNS_EN_LOW;
 #endif
         au20xx_read_reg( SNS1_OUT_Q16_LSB_REG, &topVariables->sns1_off0);
         au20xx_read_reg( SNS1_OUT_Q16_MSB_REG, &topVariables->sns1_off1);

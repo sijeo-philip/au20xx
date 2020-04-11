@@ -61,7 +61,9 @@ extern bool volatile temperatureReadFlag;
 #define DEBUG       1
 #endif
 
-
+#ifndef CONSTANT_TEMP
+#define CONSTANT_TEMP  1
+#endif
 /******************************************************************************
 * Typedefs
 *******************************************************************************/

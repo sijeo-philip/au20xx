@@ -160,11 +160,11 @@ int main(void) {
    /*TODO : Check for the IO pin after Power ON to work in normal measurment mode
      or Calibration Mode, wherein the UART will be active and ready to recieve the
      Top Variable settings and store the same in the respective FRAM locations */
-#if DEBUG ==1
+#if CONSTANT_TEMP == 1
    currTempValue = 25;
 #else
    while(!read_temp_sensor( &currTempValue )) {} /** << After ADC Initialization the First Temperature
-                                                         Value is read*/
+                                                   Value is read*/
 #endif
    for(;;){
 
@@ -174,7 +174,6 @@ int main(void) {
           {
               configure_au20xx(&system_settings);
               valid_data = 0;
-              SNS_EN_HIGH;
               sensEn_delay_us();
               while( 0 == valid_data )
               {
