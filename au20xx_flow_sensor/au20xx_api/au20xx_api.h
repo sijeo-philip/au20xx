@@ -66,6 +66,11 @@
                                                   quantized to 16 bits */
 #define SNS2_OUT_Q16_MSB_REG    0x10       /** << Sensor 2 output read back register, Soft decision
                                                   quantized to 16 bits */
+#if FPGA_CONNECT == 1
+#define TEMP_REG_ADD            0x2B
+#define CD1_OFFSET              5733
+#define CD2_OFFSET              5708
+#endif
 
 #define SNS_EN_HIGH             SET_GPIO_OUTPUT(P1, BIT3)
 #define SNS_EN_LOW              CLEAR_GPIO_OUTPUT(P1, BIT3)

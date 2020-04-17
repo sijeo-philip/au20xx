@@ -37,8 +37,9 @@
 #include <stdint.h>             /* For portable types */
 #include <stdbool.h>
 //TODO: UPDATE MY INCLUDE
-#include "hal_adc.h"             /* For TODO: WHY ME? */
-
+#include "hal_adc.h"             /* For ADC routines */
+#include "common.h"
+#include "au20xx_api.h"         /* For AU20xx IC routines */
 
 
 /******************************************************************************
@@ -272,16 +273,27 @@ __interrupt void ADC12_ISR(void)
 *
 *******************************************************************************/
 
-bool read_temp_sensor( int * degrees )
+bool read_temp_sensor( void * degrees )
 {
+#if FPGA_CONNECT == 1
     static bool retVal;
     retVal = temperatureReadFlag;
+    if (true == temperatureReadFlag)
+    {
+      au20xx_read_reg( TEMP_REG_ADD, degrees);
+      temperatureReadFlag = false;
+    }
+    return retVal;
+#elif FPGA_CONNECT == 0
+    static bool retVal;
+    int * degCel = (int*) degrees;
+    retVal = temperatureReadFlag;
 
-    *degrees = degC;
+    *degCel = degC;
     if (true == temperatureReadFlag)
         temperatureReadFlag = false;
     return retVal;
-
+#endif
 }
 /*************** END OF FUNCTIONS ***************************************************************************/
 

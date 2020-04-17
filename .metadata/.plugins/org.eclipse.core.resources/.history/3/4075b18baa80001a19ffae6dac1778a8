@@ -91,11 +91,6 @@ float volatile delta_previous_XC = 0;
 float volatile delta_previous_YC = 0;
 long volatile cd_rot_direction_x = 0;
 
-#if FPGA_CONNECT ==1
-uint16_t cd1_value_q16 = 0;
-uint16_t cd2_value_q16 = 0;
-#endif
-
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -152,11 +147,7 @@ void aura_hw_init ( void )
 #if EN_CALIBRATE == 1
     au20xx_calibrate(&system_settings);
 #endif
-#if FPGA_CONNECT == 0
     configure_au20xx(&system_settings);
-#endif
-
-#if FPGA_CONNECT == 0
     refa_init();
     adc_init();
     au20xx_read_reg(INTF_CFG_REG, &reg_data);
@@ -164,8 +155,8 @@ void aura_hw_init ( void )
     au20xx_read_reg(SNS1_OFF1_REG, &offset_reg_values[1]);
     au20xx_read_reg(SNS2_OFF0_REG, &offset_reg_values[2]);
     au20xx_read_reg(SNS2_OFF1_REG, &offset_reg_values[3]);
-#endif
     timerA0_load_time(system_settings.sampleTime);
+
 }
 
 
@@ -182,7 +173,7 @@ int main(void) {
      Top Variable settings and store the same in the respective FRAM locations */
 #if CONSTANT_TEMP == 1
    currTempValue = 25;
-#elif FPGA_CONNECT == 0
+#else
    while(!read_temp_sensor( &currTempValue )) {} /** << After ADC Initialization the First Temperature
                                                   Value is read*/
 #endif
@@ -190,31 +181,21 @@ int main(void) {
 
        if(true == normal_operation_mode)
        {
-#if CONSTANT_TEMP == 0
-          if ( true == temperatureReadFlag )
-          {
-              read_temp_sensor(&currTempValue);
-          }
-#endif
           if ( true == sensENFlag)
           {
-#if FPGA_CONNECT == 0
               set_au20xx_regs(&system_settings);
-#endif
               sensENFlag = false;
               valid_data = 0;
               sensEn_delay_us();
-              while(0 == valid_data)
                au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
                //delay_us(2);
 
              if(valid_data)
               {
                  valid_data =0;
-#if 0
+
                  au20xx_read_reg(SNS1_OUT_Q8_REG, &cd1_value);
                  au20xx_read_reg(SNS2_OUT_Q8_REG, &cd2_value);
-#endif
 #if 0
                  if ( i <= 150)
                  {
@@ -230,17 +211,12 @@ int main(void) {
           }
 #endif
 
-#if FPGA_CONNECT ==1
+#if 0
                  au20xx_read_reg( SNS1_OUT_Q16_LSB_REG, &offset_reg_values[0]);
                  au20xx_read_reg( SNS1_OUT_Q16_MSB_REG, &offset_reg_values[1]);
                  au20xx_read_reg( SNS2_OUT_Q16_LSB_REG, &offset_reg_values[2]);
                  au20xx_read_reg( SNS2_OUT_Q16_MSB_REG, &offset_reg_values[3]);
-
-                /** Temperature Compensate the Values */
-                 cd1_value_q16 = offset_reg_values[1] << 8 | offset_reg_values[0];
-                 cd2_value_q16 = offset_reg_values[3] << 8 | offset_reg_values[2];
-                 cd1_value = (int8_t)(cd1_value_q16 - CD1_OFFSET);
-                 cd2_value = (int8_t)(cd2_value_q16 - CD2_OFFSET);
+                 /** Temperature Compensate the Values */
 #endif
 #if 1
                  if ( i <= 150)
@@ -286,7 +262,12 @@ int main(void) {
               cd2_previous_value = cd2_value_corr;
           }
 #endif
-
+#if CONSTANT_TEMP == 0
+          if ( true == temperatureReadFlag )
+          {
+              read_temp_sensor(&currTempValue);
+          }
+#endif
        }
        else
        {

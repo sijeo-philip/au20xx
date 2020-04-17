@@ -184,7 +184,7 @@ bool get_top_variables(top_variables_t * topVariable)
 {
     static bool retVal = false;
 #if DEBUG == 1
-    topVariable->samplesPerTemp = 0;
+    topVariable->samplesPerTemp = 1;
     topVariable->sensEnTime = 3;
     topVariable->sensEnTime_us = 384;
     sensEn_timer_delay = 380 * 4;

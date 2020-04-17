@@ -1,12 +1,12 @@
 /****************************************************************************
-* Title                 :   hal_adc
-* Filename              :   hal_adc.h
+* Title                 :   common
+* Filename              :   common.h
 * Author                :   Sijeo Philip
-* Origin Date           :   26/03/2020
+* Origin Date           :   20/03/2020
 * Version               :   1.0.0
 * Compiler              :   mspx_eabi
 * Target                :   MSP430FR6989
-* Notes                 :   This module is used to initialize the ADC and APIs for ADC
+* Notes                 :   This module is used for common functionality used accross the application
 *
 * THIS SOFTWARE IS PROVIDED BY UNISEM ELECTRONICS "AS IS" AND ANY EXPRESSED
 * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -21,37 +21,34 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 *
 *****************************************************************************/
+
 /*************** INTERFACE CHANGE LIST **************************************
 *
 *    Date    Version   Author         Description
-*  26/03/20   1.0.0    Sijeo Philip   Interface Created.
+*  20/03/20   1.0.0    Sijeo Philip   Interface Created.
 *
 *****************************************************************************/
-/** @file hal_adc.h
- *  @brief This module is used to initialize and use the ADC module
+/** @file common.h
+ *  @brief This module is for common functionalities such as delay or string
+ *  manipulation routines etc..
  *
- *  This is the header file for the definition to initialize ADC and
- *  read from the ADC after conversion
+ *  This is the header file for the definition of common functions such as delays
  */
 //TODO: UPDATE MACRO BELOW
-#ifndef HAL_ADC_H_
-#define HAL_ADC_H_
+#ifndef COMMON_H_
+#define COMMON_H_
+
 
 /******************************************************************************
 * Includes
 *******************************************************************************/
-#include "msp430.h"
+#include <stdbool.h>
 #include <stdint.h>
-#include "adc_config.h"
-
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
-
-// See device datasheet for TLV table memory mapping
-#define CALADC_12V_30C  *((unsigned int *)0x1A1A)       // Temperature Sensor Calibration-30 C
-#define CALADC_12V_85C  *((unsigned int *)0x1A1C)       // Temperature Sensor Calibration-85 C
-
+extern bool volatile sensENFlag;
+extern bool volatile temperatureReadFlag;
 /******************************************************************************
 * Configuration Constants
 *******************************************************************************/
@@ -60,25 +57,48 @@
 /******************************************************************************
 * Macros
 *******************************************************************************/
+#ifndef DEBUG
+#define DEBUG       1
+#endif
 
-/******************************************************************************
- * Inline Functions
- ******************************************************************************/
-/**
- * This function to be called while conversion should be start i.e when
- * the Conversions are Software Triggered
- * ADC12SC and ADC12ENC can be set together with one instruction the
- * Start conversion bit is reset automatically
- */
-inline void __start_adc_conv( void )
-{
-    ADC12CTL0 |= 0x0003;
-}
+#ifndef CONSTANT_TEMP
+#define CONSTANT_TEMP  0
+#endif
 
+#ifndef EN_CALIBRATE
+#define EN_CALIBRATE    1
+#endif
+
+#ifndef FPGA_CONNECT
+#define FPGA_CONNECT    1
+#endif
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
+typedef struct
+{
+    uint32_t samplesPerTemp;        /**<< This variable stores the value of when to read
+                                          Temperature from ADC */
+    uint16_t sensEnTime;            /**<< This variable stores the duration for which the
+                                          SENSEN should be asserted 0 - 4 i.e. Accuracy setting*/
+    uint16_t lastRotCount;          /**<< This variable stores the last Rotation Count
+                                          before Power Down */
+    uint16_t sampleTime;            /**<< This variable stores the Sampling Time of the
+                                          system for au20xx chip Measurement Delay */
+    uint16_t sensEnTime_us;          /**<< Accuracy Setting Delay in microseconds */
 
+    float cd1_corr_slope;           /** <<Slope for temperature correction for cd1 reading */
+
+    float cd2_corr_slope;           /** <<Slope for temperature correction for cd2 reading */
+
+    uint8_t sns1_off0;              /** <<LSB of Sensor 1 offset */
+
+    uint8_t sns1_off1;              /** <<MSB of Sensor1 offset */
+
+    uint8_t sns2_off0;              /** <<LSB of Sensor 2 offset */
+
+    uint8_t sns2_off1;              /** <<MSB of Sensor 2 offset */
+}top_variables_t;
 
 /******************************************************************************
 * Variables
@@ -92,14 +112,18 @@ inline void __start_adc_conv( void )
 extern "C"{
 #endif
 
-void adc_init( void );
-bool read_temp_sensor( void * degrees );
-
+void sensEn_delay_us( void );
+void delay_us(uint16_t microseconds );
+bool get_top_variables(top_variables_t*);
+bool set_top_variables(top_variables_t*);
+int8_t absolute(int8_t);
+void configure_au20xx(top_variables_t * topVariables);
+void set_au20xx_regs(top_variables_t * topVariables);
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
 //TODO: UPDATE COMMENT BELOW
-#endif /*HAL_ADC_H_*/
+#endif /*File_H_*/
 
 /*** End of File **************************************************************/

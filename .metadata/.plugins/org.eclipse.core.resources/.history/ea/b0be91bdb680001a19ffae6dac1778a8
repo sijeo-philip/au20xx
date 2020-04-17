@@ -198,9 +198,7 @@ int main(void) {
 #endif
           if ( true == sensENFlag)
           {
-#if FPGA_CONNECT == 0
               set_au20xx_regs(&system_settings);
-#endif
               sensENFlag = false;
               valid_data = 0;
               sensEn_delay_us();

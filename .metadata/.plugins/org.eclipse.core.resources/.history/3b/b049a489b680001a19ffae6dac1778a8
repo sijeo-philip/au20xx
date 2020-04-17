@@ -155,10 +155,9 @@ void aura_hw_init ( void )
 #if FPGA_CONNECT == 0
     configure_au20xx(&system_settings);
 #endif
-
-#if FPGA_CONNECT == 0
     refa_init();
     adc_init();
+#if FPGA_CONNECT == 0
     au20xx_read_reg(INTF_CFG_REG, &reg_data);
     au20xx_read_reg(SNS1_OFF0_REG, &offset_reg_values[0]);
     au20xx_read_reg(SNS1_OFF1_REG, &offset_reg_values[1]);
@@ -182,7 +181,7 @@ int main(void) {
      Top Variable settings and store the same in the respective FRAM locations */
 #if CONSTANT_TEMP == 1
    currTempValue = 25;
-#elif FPGA_CONNECT == 0
+#else
    while(!read_temp_sensor( &currTempValue )) {} /** << After ADC Initialization the First Temperature
                                                   Value is read*/
 #endif
@@ -190,17 +189,9 @@ int main(void) {
 
        if(true == normal_operation_mode)
        {
-#if CONSTANT_TEMP == 0
-          if ( true == temperatureReadFlag )
-          {
-              read_temp_sensor(&currTempValue);
-          }
-#endif
           if ( true == sensENFlag)
           {
-#if FPGA_CONNECT == 0
               set_au20xx_regs(&system_settings);
-#endif
               sensENFlag = false;
               valid_data = 0;
               sensEn_delay_us();
@@ -286,7 +277,12 @@ int main(void) {
               cd2_previous_value = cd2_value_corr;
           }
 #endif
-
+#if CONSTANT_TEMP == 0
+          if ( true == temperatureReadFlag )
+          {
+              read_temp_sensor(&currTempValue);
+          }
+#endif
        }
        else
        {

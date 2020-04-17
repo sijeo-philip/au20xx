@@ -280,7 +280,7 @@ __interrupt void TIMER0_ISR ( void )
                                             read_temp_sensor() if both are true new updated value is read*/
 #endif
         sampleCount = samplesPerTempReading;
-        if ( sampleCount > 0)
+        if (0 != sampleCount)
            sampleCount--;
 #if FPGA_CONNECT == 0
         __start_adc_conv();
