@@ -62,9 +62,15 @@
 * Module Variable Definitions
 *******************************************************************************/
 uint8_t reg_data=0;
+uint8_t offset_reg_values[5];
+int8_t cd1_values_array[150];
+int8_t cd2_values_array[150];
+
 top_variables_t system_settings;
 static int8_t cd1_value;
 static int8_t cd2_value;
+static int8_t cd1_value_corr=0;
+static int8_t cd2_value_corr=0;
 static int8_t cd1_previous_value=0;
 static int8_t cd2_previous_value=0;
 static uint8_t volatile valid_data = 0;
@@ -138,13 +144,17 @@ void aura_hw_init ( void )
     timerA_init();
     get_top_variables(&system_settings);
 
-#if DEBUG == 1
+#if EN_CALIBRATE == 1
     au20xx_calibrate(&system_settings);
 #endif
     configure_au20xx(&system_settings);
     refa_init();
     adc_init();
     au20xx_read_reg(INTF_CFG_REG, &reg_data);
+    au20xx_read_reg(SNS1_OFF0_REG, &offset_reg_values[0]);
+    au20xx_read_reg(SNS1_OFF1_REG, &offset_reg_values[1]);
+    au20xx_read_reg(SNS2_OFF0_REG, &offset_reg_values[2]);
+    au20xx_read_reg(SNS2_OFF1_REG, &offset_reg_values[3]);
     timerA0_load_time(system_settings.sampleTime);
 
 }
@@ -155,6 +165,7 @@ void aura_hw_init ( void )
  * ENTRY POINT
  */
 int main(void) {
+    static uint32_t i=0;
     WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer
    aura_hw_init();
    /*TODO : Check for the IO pin after Power ON to work in normal measurment mode
@@ -172,30 +183,59 @@ int main(void) {
        {
           if ( true == sensENFlag)
           {
-              configure_au20xx(&system_settings);
+              set_au20xx_regs(&system_settings);
+              sensENFlag = false;
               valid_data = 0;
               sensEn_delay_us();
-              while( 0 == valid_data )
-              {
-                au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
-                delay_us(2);
-              }
-             sensENFlag = false;
+               au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
+               //delay_us(2);
+
              if(valid_data)
               {
                  valid_data =0;
+
                  au20xx_read_reg(SNS1_OUT_Q8_REG, &cd1_value);
                  au20xx_read_reg(SNS2_OUT_Q8_REG, &cd2_value);
+#if 0
+                 if ( i <= 150)
+                 {
+                     cd1_values_array[i] = cd1_value;
+                     cd2_values_array[i] = cd2_value;
+                     sensEn_delay_us();
+                     i++;
+                     if( i >= 150)
+                         i =0;
+                 }
+
+              }
+          }
+#endif
+
+#if 0
+                 au20xx_read_reg( SNS1_OUT_Q16_LSB_REG, &offset_reg_values[0]);
+                 au20xx_read_reg( SNS1_OUT_Q16_MSB_REG, &offset_reg_values[1]);
+                 au20xx_read_reg( SNS2_OUT_Q16_LSB_REG, &offset_reg_values[2]);
+                 au20xx_read_reg( SNS2_OUT_Q16_MSB_REG, &offset_reg_values[3]);
                  /** Temperature Compensate the Values */
+#endif
+#if 1
+                 if ( i <= 150)
+                 {
+                    cd1_values_array[i] = cd1_value;
+                    cd2_values_array[i] = cd2_value;
+                     i++;
+                     if( i >= 150)
+                     i =0;
+                 }
                  tempNorm = currTempValue - tempInit;
-                 cd1_value = (int8_t)(cd1_value - (system_settings.cd1_corr_slope * tempNorm));
-                 cd2_value = (int8_t)(cd2_value - (system_settings.cd2_corr_slope * tempNorm));
-                 if ((absolute(cd1_value - cd1_previous_value)) <=1)
-                     cd1_value = cd1_previous_value;
-                 if ((absolute(cd2_value - cd2_previous_value)) <=1)
-                     cd2_value = cd2_previous_value;
-                 delta_x = cd1_value - x0;
-                 delta_y = cd2_value - y0;
+                 cd1_value_corr = (int8_t)(cd1_value - (system_settings.cd1_corr_slope * tempNorm));
+                 cd2_value_corr = (int8_t)(cd2_value - (system_settings.cd2_corr_slope * tempNorm));
+                 if (((absolute(cd1_value_corr - cd1_previous_value)) <=1))
+                     cd1_value_corr = cd1_previous_value;
+                 if (((absolute(cd2_value_corr - cd2_previous_value)) <=1))
+                     cd2_value_corr = cd2_previous_value;
+                 delta_x = cd1_value_corr - x0;
+                 delta_y = cd2_value_corr - y0;
                  delta_x_abs = absolute(delta_x);
                  delta_y_abs = absolute(delta_y);
                  if((delta_x == 0) && (delta_y == 0))
@@ -204,8 +244,8 @@ int main(void) {
                  delta_r = delta_x_abs + delta_y_abs;
                  delta_XC = (2*delta_x)/delta_r;           // We can convert to integer based on the decimal places.
                  delta_YC = (2*delta_y)/delta_r;           // We can convert to integer based on the decimal places.
-                 x0 = (int8_t)(cd1_value - delta_XC);
-                 y0 = (int8_t)(cd2_value - delta_YC);
+                 x0 = (int8_t)(cd1_value_corr - delta_XC);
+                 y0 = (int8_t)(cd2_value_corr - delta_YC);
                  if (( delta_XC >=0 ) && ( delta_previous_XC < 0 ))
                  {
                      if(delta_YC < 0)
@@ -218,13 +258,16 @@ int main(void) {
               }
               delta_previous_XC = delta_XC;
               delta_previous_YC = delta_YC;
-              cd1_previous_value = cd1_value;
-              cd2_previous_value = cd2_value;
+              cd1_previous_value = cd1_value_corr;
+              cd2_previous_value = cd2_value_corr;
           }
+#endif
+#if CONSTANT_TEMP == 0
           if ( true == temperatureReadFlag )
           {
               read_temp_sensor(&currTempValue);
           }
+#endif
        }
        else
        {

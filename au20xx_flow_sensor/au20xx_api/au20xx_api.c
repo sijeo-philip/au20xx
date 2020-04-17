@@ -284,15 +284,15 @@ void au20xx_calibrate(top_variables_t* topVariables)
 {
         static uint8_t valid_data = 0;
         au20xx_chip_reset();
+        au20xx_write_reg(INTF_CFG_REG, (0x78|topVariables->sensEnTime));
+        valid_data = 0;
         sensEn_delay_us();
-#if 0
         while( 0 == valid_data )
         {
              au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
              delay_us(1);
         }
-
-#endif
+        valid_data = 0;
         au20xx_read_reg( SNS1_OUT_Q16_LSB_REG, &topVariables->sns1_off0);
         au20xx_read_reg( SNS1_OUT_Q16_MSB_REG, &topVariables->sns1_off1);
         au20xx_read_reg( SNS2_OUT_Q16_LSB_REG, &topVariables->sns2_off0);

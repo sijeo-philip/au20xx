@@ -210,7 +210,7 @@ static uint8_t spi_byte_read(void)
 														 peripheral */
 	CLR_SPI_RX_INT_FLAG(B0);
 	ENABLE_SPI_CS;									/* Enable the SPI Slave chip */
-	SPI_TX_BUF(B0) = 0xAA;							/* Dummy Data is written over SPI to shift out the data to be read */
+	SPI_TX_BUF(B0) = 0x00;							/* Dummy Data is written over SPI to shift out the data to be read */
 	while ( 0 == SPI_RX_INT_FLAG(B0) ) {}           /* Waiting to receive a byte of data in SPI Register */
 
 	return SPI_RX_BUF(B0);

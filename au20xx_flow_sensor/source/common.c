@@ -187,12 +187,15 @@ bool get_top_variables(top_variables_t * topVariable)
     topVariable->samplesPerTemp = 100;
     topVariable->sensEnTime = 3;
     topVariable->sensEnTime_us = 384;
-    sensEn_timer_delay = 380;
+    sensEn_timer_delay = 380 * 4;
     topVariable->lastRotCount =0;
-    topVariable->sampleTime = 20;
-    topVariable->cd1_corr_slope = 1.054;
-    topVariable->cd1_corr_slope = 2.0034;
-
+    topVariable->sampleTime = 80;
+    topVariable->cd1_corr_slope = 2.004;
+    topVariable->cd2_corr_slope = 1.802;
+    fram_read(&topVariable->sns1_off0, 1, SNS1_OFF0);
+    fram_read(&topVariable->sns1_off1, 1, SNS1_OFF1);
+    fram_read(&topVariable->sns2_off0, 1, SNS2_OFF0);
+    fram_read(&topVariable->sns2_off1, 1, SNS2_OFF1);
 
 #else
 
@@ -250,10 +253,12 @@ bool get_top_variables(top_variables_t * topVariable)
     retVal = fram_read(&topVariable->cd2_corr_slope, 4, CD2_CORR_SLOPE_ADD);
     if( false == retVal )
         return retVal;
-    au20xx_read_reg(SNS1_OFF0_REG, &topVariables->sns1_off0);
-    au20xx_read_reg(SNS1_OFF1_REG, &topVariables->sns1_off0);
-    au20xx_read_reg(SNS2_OFF0_REG, &topVariables->sns2_off0);
-    au20xx_read_reg(SNS2_OFF1_REG, &topVariables->sns2_off1);
+
+    fram_read(&topVariable->sns1_off0, 1, SNS1_OFF0);
+    fram_read(&topVariable->sns1_off1, 1, SNS1_OFF1);
+    fram_read(&topVariable->sns2_off0, 1, SNS2_OFF0);
+    fram_read(&topVariable->sns2_off1, 1, SNS2_OFF1);
+
 
 #endif
   return retVal;
@@ -336,9 +341,22 @@ int8_t absolute(int8_t value)
 
 void configure_au20xx(top_variables_t * topVariables)
 {
+    au20xx_chip_reset();
+    au20xx_write_reg(SNS1_OFF0_REG, topVariables->sns1_off0);
+    au20xx_write_reg(SNS1_OFF1_REG, topVariables->sns1_off1);
+    au20xx_write_reg(SNS2_OFF0_REG, topVariables->sns2_off0);
+    au20xx_write_reg(SNS2_OFF1_REG, topVariables->sns2_off1);
+
+    au20xx_write_reg(INTF_CFG_REG, (0x78|topVariables->sensEnTime));
+
+}
+
+
+void set_au20xx_regs(top_variables_t * topVariables)
+{
 
     au20xx_write_reg(SNS1_OFF0_REG, topVariables->sns1_off0);
-    au20xx_write_reg(SNS1_OFF1_REG, topVariables->sns1_off0);
+    au20xx_write_reg(SNS1_OFF1_REG, topVariables->sns1_off1);
     au20xx_write_reg(SNS2_OFF0_REG, topVariables->sns2_off0);
     au20xx_write_reg(SNS2_OFF1_REG, topVariables->sns2_off1);
 
