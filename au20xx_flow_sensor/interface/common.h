@@ -62,7 +62,7 @@ extern bool volatile temperatureReadFlag;
 #endif
 
 #ifndef CONSTANT_TEMP
-#define CONSTANT_TEMP  0
+#define CONSTANT_TEMP  1
 #endif
 
 #ifndef EN_CALIBRATE
@@ -116,7 +116,7 @@ void sensEn_delay_us( void );
 void delay_us(uint16_t microseconds );
 bool get_top_variables(top_variables_t*);
 bool set_top_variables(top_variables_t*);
-int8_t absolute(int8_t);
+float absolute(float);
 void configure_au20xx(top_variables_t * topVariables);
 void set_au20xx_regs(top_variables_t * topVariables);
 #ifdef __cplusplus

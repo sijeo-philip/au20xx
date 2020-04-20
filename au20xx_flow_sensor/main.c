@@ -63,28 +63,28 @@
 *******************************************************************************/
 uint8_t reg_data=0;
 uint8_t offset_reg_values[5];
-int8_t cd1_values_array[150];
-int8_t cd2_values_array[150];
+float dxc_values_array[150];
+float dyc_values_array[150];
 
 top_variables_t system_settings;
 static int8_t cd1_value;
 static int8_t cd2_value;
-static int8_t cd1_value_corr=0;
-static int8_t cd2_value_corr=0;
-static int8_t cd1_previous_value=0;
-static int8_t cd2_previous_value=0;
+float cd1_value_corr=0;
+float cd2_value_corr=0;
+float cd1_previous_value=0;
+float cd2_previous_value=0;
 static uint8_t volatile valid_data = 0;
 static bool volatile normal_operation_mode = true;
 static int8_t const tempInit = 25;
 static int currTempValue = 0;
 static int volatile tempNorm = 0;
-static int8_t volatile delta_x =0;
-static int8_t volatile delta_y = 0;
-int8_t volatile delta_x_abs = 0;
-int8_t volatile delta_y_abs = 0;
-static int8_t volatile x0 =0;
-static int8_t volatile y0 = 0;
-static int8_t volatile delta_r = 0;
+static float volatile delta_x =0;
+static float volatile delta_y = 0;
+float volatile delta_x_abs = 0;
+float volatile delta_y_abs = 0;
+static float volatile x0 =0;
+static float volatile y0 = 0;
+static float volatile delta_r = 0;
 float volatile delta_XC;
 float volatile delta_YC;
 float volatile delta_previous_XC = 0;
@@ -181,7 +181,7 @@ int main(void) {
      or Calibration Mode, wherein the UART will be active and ready to recieve the
      Top Variable settings and store the same in the respective FRAM locations */
 #if CONSTANT_TEMP == 1
-   currTempValue = 25;
+   currTempValue = 30;
 #elif FPGA_CONNECT == 0
    while(!read_temp_sensor( &currTempValue )) {} /** << After ADC Initialization the First Temperature
                                                   Value is read*/
@@ -243,17 +243,10 @@ int main(void) {
                  cd2_value = (int8_t)(cd2_value_q16 - CD2_OFFSET);
 #endif
 #if 1
-                 if ( i <= 150)
-                 {
-                    cd1_values_array[i] = cd1_value;
-                    cd2_values_array[i] = cd2_value;
-                     i++;
-                     if( i >= 150)
-                     i =0;
-                 }
+
                  tempNorm = currTempValue - tempInit;
-                 cd1_value_corr = (int8_t)(cd1_value - (system_settings.cd1_corr_slope * tempNorm));
-                 cd2_value_corr = (int8_t)(cd2_value - (system_settings.cd2_corr_slope * tempNorm));
+                 cd1_value_corr = (cd1_value - (system_settings.cd1_corr_slope * tempNorm));
+                 cd2_value_corr = (cd2_value - (system_settings.cd2_corr_slope * tempNorm));
                  if (((absolute(cd1_value_corr - cd1_previous_value)) <=1))
                      cd1_value_corr = cd1_previous_value;
                  if (((absolute(cd2_value_corr - cd2_previous_value)) <=1))
@@ -268,14 +261,22 @@ int main(void) {
                  delta_r = delta_x_abs + delta_y_abs;
                  delta_XC = (2*delta_x)/delta_r;           // We can convert to integer based on the decimal places.
                  delta_YC = (2*delta_y)/delta_r;           // We can convert to integer based on the decimal places.
-                 x0 = (int8_t)(cd1_value_corr - delta_XC);
-                 y0 = (int8_t)(cd2_value_corr - delta_YC);
+                 if ( i <= 150)
+                  {
+                    dxc_values_array[i] = delta_XC;
+                    dyc_values_array[i] = delta_YC;
+                    i++;
+                    if( i >= 150)
+                      i =0;
+                  }
+                 x0 = (cd1_value_corr - delta_XC);
+                 y0 = (cd2_value_corr - delta_YC);
                  if (( delta_XC >=0 ) && ( delta_previous_XC < 0 ))
                  {
                      if(delta_YC < 0)
                          cd_rot_direction_x = cd_rot_direction_x + 1;
                      else
-                         cd_rot_direction_x = cd_rot_direction_x - 1;
+                         cd_rot_direction_x = cd_rot_direction_x + 1;
                      // TODO: Need to understand when to reset the value... (Ask Nigesh or Sandeep)
                  }
 

@@ -58,6 +58,8 @@
 *******************************************************************************/
 static uint16_t sensEn_timer_delay = 0;
 static bool sensEn_delay_flag = false;
+
+extern uint32_t volatile samplesPerTempReading;
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -185,18 +187,20 @@ bool get_top_variables(top_variables_t * topVariable)
     static bool retVal = false;
 #if DEBUG == 1
     topVariable->samplesPerTemp = 0;
+    samplesPerTempReading = topVariable->samplesPerTemp;
     topVariable->sensEnTime = 3;
     topVariable->sensEnTime_us = 384;
     sensEn_timer_delay = 380 * 4;
     topVariable->lastRotCount =0;
-    topVariable->sampleTime = 50;
+    topVariable->sampleTime = 100;
     topVariable->cd1_corr_slope = 2.004;
     topVariable->cd2_corr_slope = 1.802;
+#if FPGA_CONNECT == 0
     fram_read(&topVariable->sns1_off0, 1, SNS1_OFF0);
     fram_read(&topVariable->sns1_off1, 1, SNS1_OFF1);
     fram_read(&topVariable->sns2_off0, 1, SNS2_OFF0);
     fram_read(&topVariable->sns2_off1, 1, SNS2_OFF1);
-
+#endif
 #else
 
     retVal =  fram_read (&topVariable->samplesPerTemp , 4, SAMPLES_PER_TEMP_READ_ADDRESS);
@@ -297,7 +301,7 @@ bool get_top_variables(top_variables_t * topVariable)
 * <hr>
 *
 *******************************************************************************/
-int8_t absolute(int8_t value)
+float absolute(float value)
 {
     if ( value < 0 )
         return (-1 * value);

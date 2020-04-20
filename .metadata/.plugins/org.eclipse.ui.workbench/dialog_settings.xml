@@ -3,8 +3,8 @@
 	<section name="MemoryDumperFillAction">
 	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="1025" key="dialogWidth"/>
-		<item value="525" key="dialogHeight"/>
+		<item key="dialogWidth" value="1025"/>
+		<item key="dialogHeight" value="525"/>
 		<list key="orderedProviders">
 		</list>
 		<list key="textArray">
@@ -13,5 +13,9 @@
 		</list>
 		<list key="textEntries">
 		</list>
+	</section>
+	<section name="WorkbenchPreferenceDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="349"/>
+		<item key="DIALOG_Y_ORIGIN" value="8"/>
 	</section>
 </section>

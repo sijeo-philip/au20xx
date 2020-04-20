@@ -58,7 +58,7 @@
 bool volatile sensENFlag = false;
 bool volatile readTemperatureFlag = false;
 
-static uint32_t volatile samplesPerTempReading = 100;
+uint32_t volatile samplesPerTempReading = 0;
 static uint32_t volatile sampleCount = 0;
 /******************************************************************************
 * Module Preprocessor Macros
@@ -280,8 +280,6 @@ __interrupt void TIMER0_ISR ( void )
                                             read_temp_sensor() if both are true new updated value is read*/
 #endif
         sampleCount = samplesPerTempReading;
-        if ( sampleCount > 0)
-           sampleCount--;
 #if FPGA_CONNECT == 0
         __start_adc_conv();
 #endif
