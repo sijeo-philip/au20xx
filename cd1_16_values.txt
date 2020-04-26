@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExportImportMemento.1>
+<VarMeta IMemento.internal.id="system_settings"/>
+<VarMeta IMemento.internal.id="currTempValue"/>
+<VarMeta IMemento.internal.id="delta_YC"/>
+<VarMeta IMemento.internal.id="cd1_value_q16"/>
+<VarMeta IMemento.internal.id="cd2_value_q16"/>
+<VarMeta IMemento.internal.id="cd_rot_direction_x"/>
+<VarMeta IMemento.internal.id="offset_reg_values"/>
+<VarMeta IMemento.internal.id="dxc_values_array"/>
+<VarMeta IMemento.internal.id="dyc_values_array"/>
+<VarMeta IMemento.internal.id="temperature_values"/>
+</ExportImportMemento.1>
