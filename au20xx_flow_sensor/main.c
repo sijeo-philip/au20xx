@@ -64,6 +64,7 @@
 uint8_t reg_data=0;
 uint8_t offset_reg_values[5];
 int8_t dxc_values_array[150];
+int8_t temperature_values[150];
 float dyc_values_array[150];
 
 top_variables_t system_settings;
@@ -159,11 +160,13 @@ void aura_hw_init ( void )
 #if FPGA_CONNECT == 0
     refa_init();
     adc_init();
+#if DEBUG == 1
     au20xx_read_reg(INTF_CFG_REG, &reg_data);
     au20xx_read_reg(SNS1_OFF0_REG, &offset_reg_values[0]);
     au20xx_read_reg(SNS1_OFF1_REG, &offset_reg_values[1]);
     au20xx_read_reg(SNS2_OFF0_REG, &offset_reg_values[2]);
     au20xx_read_reg(SNS2_OFF1_REG, &offset_reg_values[3]);
+#endif
 #endif
     timerA0_load_time(system_settings.sampleTime);
 }
@@ -188,14 +191,12 @@ int main(void) {
 #endif
    for(;;){
 
+
        if(true == normal_operation_mode)
        {
 
           if ( true == sensENFlag)
           {
-#if FPGA_CONNECT == 0
-              set_au20xx_regs(&system_settings);
-#endif
               sensENFlag = false;
               valid_data = 0;
               sensEn_delay_us();
@@ -234,8 +235,9 @@ int main(void) {
                 /** Temperature Compensate the Values */
                  cd1_value_q16 = offset_reg_values[1] << 8 | offset_reg_values[0];
                  cd2_value_q16 = offset_reg_values[3] << 8 | offset_reg_values[2];
-                 cd1_value = (int8_t)(cd1_value_q16 - CD1_OFFSET);
-                 cd2_value = (int8_t)(cd2_value_q16 - CD2_OFFSET);
+
+                 cd1_value = (int8_t)(cd1_value_q16 );  //CD1_OFFSET need to be subtracted
+                 cd2_value = (int8_t)(cd2_value_q16 );  //CD2_OFFSET need to be subtracted
 #endif
 #if CONSTANT_TEMP == 0
                  if ( true == temperatureReadFlag )
@@ -252,10 +254,11 @@ int main(void) {
                      cd1_value_corr = cd1_previous_value;
                  if (((absolute(cd2_value_corr - cd2_previous_value)) <=1))
                      cd2_value_corr = cd2_previous_value;
-                 if ( i <= 150)
-                {
-                   dxc_values_array[i] = cd1_value;
-                   dyc_values_array[i] = cd1_value_corr;
+                if ( i <= 150)
+                 {
+                   dxc_values_array[i] = cd2_value;
+                   dyc_values_array[i] = cd2_value_corr;
+                   temperature_values[i] = currTempValue;
                    i++;
                    if( i >= 150)
                      i =0;
@@ -278,7 +281,7 @@ int main(void) {
                      if(delta_YC < 0)
                          cd_rot_direction_x = cd_rot_direction_x + 1;
                      else
-                         cd_rot_direction_x = cd_rot_direction_x + 1;
+                         cd_rot_direction_x = cd_rot_direction_x - 1;
                      // TODO: Need to understand when to reset the value... (Ask Nigesh or Sandeep)
                  }
 

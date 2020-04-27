@@ -100,10 +100,7 @@ void gpio_init( void )
 
 	SET_GPIO_OUTPUT(P1, BIT5);				/* << CS to start HI to avoid possible glitches */
 	SET_GPIO_DIR_OUT(P1, BIT5);				/* << Make CS pin an output */
-#if 0
-	CLEAR_GPIO_OUTPUT(P3, BIT4);            /*<< ** SENS_EN PIN to the AU20XX chip CLEARED */
-	SET_GPIO_DIR_OUT(P3, BIT4);             /*<< ** SENS_EN is Set as output */
-#endif
+
 	SET_GPIO_DIR_OUT(P1, BIT6);
 	CLEAR_GPIO_OUTPUT(P1, BIT6);
 
@@ -116,8 +113,13 @@ void gpio_init( void )
 
 	SET_GPIO_PRI_FUN(PJ, BIT4|BIT5);		/* Enable some clock pins for SPIs synch operation */
 
+	SET_GPIO_PRI_FUN(P4, BIT2);             /* UART TXD */
+	SET_GPIO_PRI_FUN(P4, BIT3);             /* UART RXD */
+
 	CLEAR_GPIO_OUTPUT(P1, BIT3);              /* << P1.3==> SENS_EN to high */
 	SET_GPIO_DIR_OUT(P1, BIT3);            /* << Make SENS_EN to output */
+
+
 }
 
 /*************** END OF FUNCTIONS ***************************************************************************/

@@ -191,6 +191,7 @@ int main(void) {
 #endif
    for(;;){
 
+
        if(true == normal_operation_mode)
        {
 
@@ -206,7 +207,7 @@ int main(void) {
              if(valid_data)
               {
                  valid_data =0;
-#if 1
+#if 0
                  au20xx_read_reg(SNS1_OUT_Q8_REG, &cd1_value);
                  au20xx_read_reg(SNS2_OUT_Q8_REG, &cd2_value);
 #endif
@@ -235,8 +236,8 @@ int main(void) {
                  cd1_value_q16 = offset_reg_values[1] << 8 | offset_reg_values[0];
                  cd2_value_q16 = offset_reg_values[3] << 8 | offset_reg_values[2];
 
-                 cd1_value = (int8_t)(cd1_value_q16 - CD1_OFFSET);
-                 cd2_value = (int8_t)(cd2_value_q16 - CD2_OFFSET);
+                 cd1_value = (int8_t)(cd1_value_q16 );  //CD1_OFFSET need to be subtracted
+                 cd2_value = (int8_t)(cd2_value_q16 );  //CD2_OFFSET need to be subtracted
 #endif
 #if CONSTANT_TEMP == 0
                  if ( true == temperatureReadFlag )

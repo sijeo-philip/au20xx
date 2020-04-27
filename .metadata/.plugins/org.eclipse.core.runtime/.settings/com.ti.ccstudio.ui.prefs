@@ -1,6 +1,6 @@
-CCStudioUIStartup.CCS_IMAGE_INFO=E\:/AuraSemi/au20xx|C\:/ti/ccs1000/ccs|10.0.0.00010
+CCStudioUIStartup.CCS_IMAGE_INFO=E\:/AuraSemi/au20xx/au20xx_uart_fixedpoint|C\:/ti/ccs1000/ccs|10.0.0.00010
 com.ti.ccstudio.ui.CCS_INSTALL_LOCATION=C\:/ti/ccs1000/ccs
 com.ti.ccstudio.ui.CCS_VERSION=10.0.0.00010
-com.ti.ccstudio.ui.CCS_WORKSPACE_LOCATION=E\:/AuraSemi/au20xx
+com.ti.ccstudio.ui.CCS_WORKSPACE_LOCATION=E\:/AuraSemi/au20xx/au20xx_uart_fixedpoint
 com.ti.ccstudio.ui.IS_NOT_FIRST_CCS_LAUNCH=true
 eclipse.preferences.version=1
