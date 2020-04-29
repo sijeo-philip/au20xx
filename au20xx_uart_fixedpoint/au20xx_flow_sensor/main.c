@@ -194,7 +194,6 @@ int main(void) {
 
        if(true == normal_operation_mode)
        {
-
           if ( true == sensENFlag)
           {
               sensENFlag = false;

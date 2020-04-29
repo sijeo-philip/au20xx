@@ -1,0 +1,99 @@
+/*******************************************************************************
+* Title                 :   hal_uart
+* Filename              :   hal_uart.c
+* Author                :   Sijeo Philip
+* Origin Date           :   04/29/2015
+* Version               :   1.0.0
+* Compiler              :   mspx_eabi
+* Target                :   MSP430FRXX
+* Notes                 :   This module is used to access the UART peripheral
+*
+* THIS SOFTWARE IS PROVIDED BY UNISEM ELECTRONICS "AS IS" AND ANY EXPRESSED
+* OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL UNISEM ELECTRONICS OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+*******************************************************************************/
+/*************** SOURCE REVISION LOG *****************************************
+*
+*    Date    Version   Author         Description
+*  04/29/15   1.0.0    Sijeo Philip   Initial Release.
+*
+*******************************************************************************/
+/** @file hal_uart.c
+ *  @brief This is the source file for initializing and communicating using
+ *         UART Peripheral
+ */
+/******************************************************************************
+* Includes
+*******************************************************************************/
+#include "hal_uart_ucsi.h"
+
+/******************************************************************************
+* Module Preprocessor Constants
+*******************************************************************************/
+
+/******************************************************************************
+* Module Preprocessor Macros
+*******************************************************************************/
+
+/******************************************************************************
+* Module Typedefs
+*******************************************************************************/
+
+/******************************************************************************
+* Module Variable Definitions
+*******************************************************************************/
+
+/******************************************************************************
+* Function Prototypes
+*******************************************************************************/
+
+/******************************************************************************
+* Function Definitions
+*******************************************************************************/
+
+/******************************************************************************
+* Function : uart_init()
+*//**
+* \b Description:
+*
+* This function is used to initialize the UART peripheral
+*
+* PRE-CONDITION: The clock should be configured for the system
+* PRE-CONDITION: The GPIOs should be configured
+*
+* POST-CONDITION: The UART will be configured as per the configuration header
+*                 and ready to use.
+*
+* @return       None
+*
+* \b Example Example:
+* @code
+*    uart_init(DioConfig);
+* @endcode
+*
+* @see  aura_hw_init()
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 29/04/2015 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+void uart_init( void )
+{
+
+}
+
+/*************** END OF FUNCTIONS ***************************************************************************/
