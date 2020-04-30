@@ -107,44 +107,4 @@ void uart_init( void )
   UART_DISABLE_SW_RST(A0);
 }
 
-/******************************************************************************
-* Function : UART_ISR()
-*//**
-* \b Description:
-*
-* This function is UART INTERRUPT HANDLER FOR A0 peripheral
-*
-*
-* PRE-CONDITION: The clock should be configured for the system
-* PRE-CONDITION: The GPIOs should be configured
-* PRE-CONDIITON: UART interrupt should be enabled
-*
-* POST-CONDITION: This ISR will be triggered on Event of Enabled Interrupt
-*
-* @return       None
-*
-* \b Example Example:
-* @code
-*    __interrupt void UART_ISR(void)
-* @endcode
-*
-* @see  uart_init()
-*
-* <br><b> - HISTORY OF CHANGES - </b>
-*
-* <table align="left" style="width:800px">
-* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
-* <tr><td> 29/04/2015 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
-* </table><br><br>
-* <hr>
-*
-*******************************************************************************/
-#pragma vector = USCI_A0_VECTOR
-__interrupt void UART_ISR(void)
-{
-    if(UART_RX_END_INT_FLG(A0))
-    {
-        UART_CLR_RXIFG(A0);
-    }
-}
 /*************** END OF FUNCTIONS ***************************************************************************/

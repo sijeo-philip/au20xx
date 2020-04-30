@@ -98,53 +98,8 @@ void uart_init( void )
                              CONF_UCACTLW0_UC7BIT| CONF_UCACTLW0_UCSPB | CONF_UCACTLW0_UCMODE|
                              CONF_UCACTLW0_UCSYNC| CONF_UCACTLW0_UCSSEL| CONF_UCACTLW0_UCRXEIE |
                              CONF_UCACTLW0_UCBRKIE | CONF_UCACTLW0_UCDORM ;
-  UART_CTRL_WORD_REG1(A0) |= CONF_UCACTLW1_UCGLIT;
+  UART_CTRL_WORD_REG1(A0) |= CONF_UCACTLW0_UCGLIT;
   UART_BAUD_RATE_REG(A0) |= CONF_UCABRW_UCABRW;
-  UART_MOD_CTRL_REG(A0) |= CONF_UCAMCTLW_UCBRS | CONF_UCAMCTLW_UCBRF | CONF_UCAMCTLW_UCOS16;
-  UART_STATW_REG(A0) |= CONF_UCASTATW_UCLISTEN;
-  UART_INT_ENABLE_REG(A0) |= CONF_UCAIE_UCRXIE | CONF_UCAIE_UCTXIE | CONF_UCAIE_UCSTTIE |
-                             CONF_UCAIE_UCTXCPTIE;
-  UART_DISABLE_SW_RST(A0);
 }
 
-/******************************************************************************
-* Function : UART_ISR()
-*//**
-* \b Description:
-*
-* This function is UART INTERRUPT HANDLER FOR A0 peripheral
-*
-*
-* PRE-CONDITION: The clock should be configured for the system
-* PRE-CONDITION: The GPIOs should be configured
-* PRE-CONDIITON: UART interrupt should be enabled
-*
-* POST-CONDITION: This ISR will be triggered on Event of Enabled Interrupt
-*
-* @return       None
-*
-* \b Example Example:
-* @code
-*    __interrupt void UART_ISR(void)
-* @endcode
-*
-* @see  uart_init()
-*
-* <br><b> - HISTORY OF CHANGES - </b>
-*
-* <table align="left" style="width:800px">
-* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
-* <tr><td> 29/04/2015 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
-* </table><br><br>
-* <hr>
-*
-*******************************************************************************/
-#pragma vector = USCI_A0_VECTOR
-__interrupt void UART_ISR(void)
-{
-    if(UART_RX_END_INT_FLG(A0))
-    {
-        UART_CLR_RXIFG(A0);
-    }
-}
 /*************** END OF FUNCTIONS ***************************************************************************/
