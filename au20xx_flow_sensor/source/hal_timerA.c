@@ -71,7 +71,8 @@ static uint32_t volatile sampleCount = 0;
 /******************************************************************************
 * Module Variable Definitions
 *******************************************************************************/
-
+extern bool uart_rx_flag;
+extern uint16_t uart_rx_timeout;
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -287,6 +288,15 @@ __interrupt void TIMER0_ISR ( void )
     else
     {
         sampleCount-- ;
+    }
+
+    if(true == uart_rx_flag)
+    {
+        uart_rx_timeout--;
+        if(0 == uart_rx_timeout)
+        {
+            uart_rx_flag = false;
+        }
     }
 }
 

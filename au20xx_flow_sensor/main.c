@@ -45,6 +45,7 @@
 #include "hal_spi_ucsi.h"       /* For SPI Peripheral */
 #include "hal_timerA.h"         /* For TimerA */
 #include "hal_fram.h"           /* For FRAM */
+#include "hal_uart_ucsi.h"      /* For UART */
 #include "au20xx_api.h"         /* For Au20xx chip */
 /******************************************************************************
 * Module Preprocessor Constants
@@ -63,9 +64,8 @@
 *******************************************************************************/
 uint8_t reg_data=0;
 uint8_t offset_reg_values[5];
-int8_t dxc_values_array[150];
-int8_t temperature_values[150];
-float dyc_values_array[150];
+static uint8_t uart_top_variable[UART_BUFF_SIZE];
+static uint16_t uart_byte_count = 0;
 
 top_variables_t system_settings;
 static int8_t cd1_value;
@@ -194,7 +194,6 @@ int main(void) {
 
        if(true == normal_operation_mode)
        {
-
           if ( true == sensENFlag)
           {
               sensENFlag = false;
@@ -254,15 +253,7 @@ int main(void) {
                      cd1_value_corr = cd1_previous_value;
                  if (((absolute(cd2_value_corr - cd2_previous_value)) <=1))
                      cd2_value_corr = cd2_previous_value;
-                if ( i <= 150)
-                 {
-                   dxc_values_array[i] = cd2_value;
-                   dyc_values_array[i] = cd2_value_corr;
-                   temperature_values[i] = currTempValue;
-                   i++;
-                   if( i >= 150)
-                     i =0;
-                }
+
                  delta_x = cd1_value_corr - x0;
                  delta_y = cd2_value_corr - y0;
                  delta_x_abs = absolute(delta_x);
@@ -298,7 +289,22 @@ int main(void) {
        }
        else
        {
+           timerA0_load_time(2);
           //TODO: Write for Calibration Mode of operation
+           uart_byte_count = uart_read(uart_top_variable);
+           if (uart_byte_count > 0)
+           {
+               if('#' == uart_top_variable[uart_byte_count-1])
+               {
+                    //if(process_data(uart_top_variable);)
+                   //TODO : process data function to be written to parse the data recieved and store in FRAM
+                   // if the data is OK it will return 'true' else 'false'
+                      uart_send("OK", 2);
+
+               }
+               else
+                   uart_send("ERROR", 5);
+           }
        }
        //TODO : Get to Low Power Mode.. On timer Interrupt switch to Active Mode.
        //TODO : Feed the Watchdog. Mechanism
@@ -309,3 +315,4 @@ int main(void) {
 
 
 /*************** END OF FUNCTIONS ***************************************************************************/
+
