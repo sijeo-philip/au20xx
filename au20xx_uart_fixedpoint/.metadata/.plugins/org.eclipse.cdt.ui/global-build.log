@@ -20578,3 +20578,67 @@ Finished building target: "au20xx_flow_sensor.out"
  
 
 **** Build Finished ****
+
+**** Build of configuration Debug for project au20xx_flow_sensor ****
+
+"C:\\ti\\ccs1000\\ccs\\utils\\bin\\gmake" -k all 
+ 
+Building file: "../main.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx/au20xx_flow_sensor/au20xx_api" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor/configs" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor/interface" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
+"../main.c", line 183: warning #179-D: variable "i" was declared but never referenced
+"../main.c", line 268: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 269: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 183: remark #1535-D: (ULP 8.1) variable "i" is used as a constant. Recommend declaring variable as either 'static const' or 'const'
+"../main.c", line 65: remark #1535-D: (ULP 8.1) variable "reg_data" is used as a constant. Recommend declaring variable as either 'static const' or 'const'
+"../main.c", line 68: remark #1534-D: (ULP 7.1) Detected use of global variable "uart_byte_count" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 71: remark #1534-D: (ULP 7.1) Detected use of global variable "cd1_value" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 72: remark #1534-D: (ULP 7.1) Detected use of global variable "cd2_value" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 77: remark #1534-D: (ULP 7.1) Detected use of global variable "valid_data" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 78: remark #1534-D: (ULP 7.1) Detected use of global variable "normal_operation_mode" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 79: remark #1534-D: (ULP 7.1) Detected use of global variable "tempInit" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 80: remark #1534-D: (ULP 7.1) Detected use of global variable "currTempValue" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 81: remark #1534-D: (ULP 7.1) Detected use of global variable "tempNorm" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 82: remark #1534-D: (ULP 7.1) Detected use of global variable "delta_x" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 83: remark #1534-D: (ULP 7.1) Detected use of global variable "delta_y" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 86: remark #1534-D: (ULP 7.1) Detected use of global variable "x0" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 87: remark #1534-D: (ULP 7.1) Detected use of global variable "y0" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 88: remark #1534-D: (ULP 7.1) Detected use of global variable "delta_r" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 253 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 254 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 255 (col. 71): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 256 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 257 (col. 71): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 258 (col. 37): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 260 (col. 26): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 261 (col. 26): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 262 (col. 30): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 263 (col. 30): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 264 (col. 30): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 265 (col. 29): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 267 (col. 26): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 268 (col. 27): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 269 (col. 27): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 271 (col. 21): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 272 (col. 21): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 273 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 275 (col. 34): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 283 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 284 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 285 (col. 34): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 286 (col. 34): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+Finished building: "../main.c"
+ 
+Building target: "au20xx_flow_sensor.out"
+Invoking: MSP430 Linker
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 -z -m"au20xx_flow_sensor.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccs1000/ccs/ccs_base/msp430/include" -i"E:/AuraSemi/au20xx/au20xx_flow_sensor/au20xx_api" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/lib" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/FR59xx" --priority --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="au20xx_flow_sensor_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "au20xx_flow_sensor.out" "./main.obj" "./au20xx_api/au20xx_api.obj" "./source/common.obj" "./source/hal_adc.obj" "./source/hal_fram.obj" "./source/hal_gpio.obj" "./source/hal_osc.obj" "./source/hal_refa.obj" "./source/hal_spi.obj" "./source/hal_timerA.obj" "./source/hal_uart.obj" "../lnk_msp430fr6972.cmd"  -llibmath.a -llibc.a   C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/IQmathLib.a C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/QmathLib.a 
+<Linking>
+remark #10372-D: (ULP 4.1) Detected uninitialized Port A in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port B in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port C in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port D in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port E in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+Finished building target: "au20xx_flow_sensor.out"
+ 
+
+**** Build Finished ****

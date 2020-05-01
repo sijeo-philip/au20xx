@@ -148,6 +148,8 @@ void aura_hw_init ( void )
     gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
     spi_init();                 /**<< Initialize the SPI peripheral */
     timerA_init();
+    //TODO : an GPIO has to read of HIGH or LOW , if HIGH normal_operation flag is to
+    //       be set to true else false
     get_top_variables(&system_settings);
 
 #if EN_CALIBRATE == 1
@@ -168,6 +170,7 @@ void aura_hw_init ( void )
     au20xx_read_reg(SNS2_OFF1_REG, &offset_reg_values[3]);
 #endif
 #endif
+
     timerA0_load_time(system_settings.sampleTime);
 }
 
@@ -289,6 +292,7 @@ int main(void) {
        }
        else
        {
+           uart_init();
            timerA0_load_time(2);
           //TODO: Write for Calibration Mode of operation
            uart_byte_count = uart_read(uart_top_variable);
