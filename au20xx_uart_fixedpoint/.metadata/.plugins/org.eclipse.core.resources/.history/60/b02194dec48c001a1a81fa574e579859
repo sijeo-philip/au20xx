@@ -1,0 +1,74 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../source/common.c \
+../source/hal_adc.c \
+../source/hal_fram.c \
+../source/hal_gpio.c \
+../source/hal_osc.c \
+../source/hal_refa.c \
+../source/hal_spi.c \
+../source/hal_timerA.c \
+../source/hal_uart.c 
+
+C_DEPS += \
+./source/common.d \
+./source/hal_adc.d \
+./source/hal_fram.d \
+./source/hal_gpio.d \
+./source/hal_osc.d \
+./source/hal_refa.d \
+./source/hal_spi.d \
+./source/hal_timerA.d \
+./source/hal_uart.d 
+
+OBJS += \
+./source/common.obj \
+./source/hal_adc.obj \
+./source/hal_fram.obj \
+./source/hal_gpio.obj \
+./source/hal_osc.obj \
+./source/hal_refa.obj \
+./source/hal_spi.obj \
+./source/hal_timerA.obj \
+./source/hal_uart.obj 
+
+OBJS__QUOTED += \
+"source\common.obj" \
+"source\hal_adc.obj" \
+"source\hal_fram.obj" \
+"source\hal_gpio.obj" \
+"source\hal_osc.obj" \
+"source\hal_refa.obj" \
+"source\hal_spi.obj" \
+"source\hal_timerA.obj" \
+"source\hal_uart.obj" 
+
+C_DEPS__QUOTED += \
+"source\common.d" \
+"source\hal_adc.d" \
+"source\hal_fram.d" \
+"source\hal_gpio.d" \
+"source\hal_osc.d" \
+"source\hal_refa.d" \
+"source\hal_spi.d" \
+"source\hal_timerA.d" \
+"source\hal_uart.d" 
+
+C_SRCS__QUOTED += \
+"../source/common.c" \
+"../source/hal_adc.c" \
+"../source/hal_fram.c" \
+"../source/hal_gpio.c" \
+"../source/hal_osc.c" \
+"../source/hal_refa.c" \
+"../source/hal_spi.c" \
+"../source/hal_timerA.c" \
+"../source/hal_uart.c" 
+
+

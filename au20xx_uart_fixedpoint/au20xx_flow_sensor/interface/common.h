@@ -54,7 +54,9 @@ extern bool volatile temperatureReadFlag;
 *******************************************************************************/
 #define UART_INTERBYTE_DELAY    10
 #define UART_BUFF_SIZE          100
+#define GLOBAL_Q                8
 
+#include "QmathLib.h"
 /******************************************************************************
 * Macros
 *******************************************************************************/
@@ -73,6 +75,8 @@ extern bool volatile temperatureReadFlag;
 #ifndef FPGA_CONNECT
 #define FPGA_CONNECT    1
 #endif
+
+
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
@@ -117,7 +121,7 @@ void sensEn_delay_us( void );
 void delay_us(uint16_t microseconds );
 bool get_top_variables(top_variables_t*);
 bool set_top_variables(top_variables_t*);
-float absolute(float);
+_q8 absolute(_q8);
 void configure_au20xx(top_variables_t * topVariables);
 void set_au20xx_regs(top_variables_t * topVariables);
 #ifdef __cplusplus

@@ -301,10 +301,10 @@ bool get_top_variables(top_variables_t * topVariable)
 * <hr>
 *
 *******************************************************************************/
-float absolute(float value)
+_q8 absolute(_q8 value)
 {
     if ( value < 0 )
-        return (-1 * value);
+        return _Q8mpy(-1 , value);
     else
         return value;
 }

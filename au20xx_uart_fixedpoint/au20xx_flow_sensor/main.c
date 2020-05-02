@@ -47,6 +47,7 @@
 #include "hal_fram.h"           /* For FRAM */
 #include "hal_uart_ucsi.h"      /* For UART */
 #include "au20xx_api.h"         /* For Au20xx chip */
+#include "QmathLib.h"
 /******************************************************************************
 * Module Preprocessor Constants
 *******************************************************************************/
@@ -70,24 +71,24 @@ static uint16_t uart_byte_count = 0;
 top_variables_t system_settings;
 static int8_t cd1_value;
 static int8_t cd2_value;
-float cd1_value_corr=0;
-float cd2_value_corr=0;
-float cd1_previous_value=0;
-float cd2_previous_value=0;
+_q8 cd1_value_corr=0;
+_q8 cd2_value_corr=0;
+_q8 cd1_previous_value=0;
+_q8 cd2_previous_value=0;
 static uint8_t volatile valid_data = 0;
 static bool volatile normal_operation_mode = true;
 static int8_t const tempInit = 30;
 static int8_t currTempValue = 0;
 static int8_t volatile tempNorm = 0;
-static float volatile delta_x =0;
-static float volatile delta_y = 0;
-float volatile delta_x_abs = 0;
-float volatile delta_y_abs = 0;
-static float volatile x0 =0;
-static float volatile y0 = 0;
-static float volatile delta_r = 0;
-float volatile delta_XC;
-float volatile delta_YC;
+static _q8 volatile delta_x =0;
+static _q8 volatile delta_y = 0;
+_q8 volatile delta_x_abs = 0;
+_q8 volatile delta_y_abs = 0;
+static _q8 volatile x0 =0;
+static _q8 volatile y0 = 0;
+static _q8 volatile delta_r = 0;
+_q8 volatile delta_XC;
+_q8 volatile delta_YC;
 float volatile delta_previous_XC = 0;
 float volatile delta_previous_YC = 0;
 long volatile cd_rot_direction_x = 0;
@@ -180,7 +181,6 @@ void aura_hw_init ( void )
  * ENTRY POINT
  */
 int main(void) {
-    static uint32_t i=0;
     WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer
    aura_hw_init();
    /*TODO : Check for the IO pin after Power ON to work in normal measurment mode
@@ -250,8 +250,8 @@ int main(void) {
 #if 1
 
                  tempNorm = currTempValue - tempInit;
-                 cd1_value_corr = (cd1_value - (system_settings.cd1_corr_slope * tempNorm));
-                 cd2_value_corr = (cd2_value - (system_settings.cd2_corr_slope * tempNorm));
+                 cd1_value_corr = (cd1_value - _Q8(system_settings.cd1_corr_slope * tempNorm));
+                 cd2_value_corr = (cd2_value - _Q8(system_settings.cd2_corr_slope * tempNorm));
                  if (((absolute(cd1_value_corr - cd1_previous_value)) <=1))
                      cd1_value_corr = cd1_previous_value;
                  if (((absolute(cd2_value_corr - cd2_previous_value)) <=1))
@@ -265,8 +265,10 @@ int main(void) {
                     delta_r = 1;
                  else
                  delta_r = delta_x_abs + delta_y_abs;
-                 delta_XC = (2*delta_x)/delta_r;           // We can convert to integer based on the decimal places.
-                 delta_YC = (2*delta_y)/delta_r;           // We can convert to integer based on the decimal places.
+                 delta_x = _Q8mpy(_Q8(2), delta_x);
+                 delta_y = _Q8mpy(_Q8(2), delta_y);
+                 delta_XC = _Q8div(delta_x, delta_r);           // We can convert to integer based on the decimal places.
+                 delta_YC = _Q8div(delta_y, delta_r);           // We can convert to integer based on the decimal places.
 
                  x0 = (cd1_value_corr - delta_XC);
                  y0 = (cd2_value_corr - delta_YC);
