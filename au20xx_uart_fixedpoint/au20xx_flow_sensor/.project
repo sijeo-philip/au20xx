@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>au20xx_flow_sensor</name>
+	<name>aura_au20xx</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -28,7 +28,7 @@
 		<link>
 			<name>QmathLib.a</name>
 			<type>1</type>
-			<location>C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPYsoftware/QmathLib.a</location>
+			<location>C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/QmathLib.a</location>
 		</link>
 		<link>
 			<name>QmathLib.h</name>

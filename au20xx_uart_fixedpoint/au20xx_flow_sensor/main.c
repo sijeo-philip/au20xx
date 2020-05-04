@@ -69,8 +69,8 @@ static uint8_t uart_top_variable[UART_BUFF_SIZE];
 static uint16_t uart_byte_count = 0;
 
 top_variables_t system_settings;
-static int8_t cd1_value;
-static int8_t cd2_value;
+static _q8 cd1_value;
+static _q8 cd2_value;
 _q8 cd1_value_corr=0;
 _q8 cd2_value_corr=0;
 _q8 cd1_previous_value=0;
@@ -238,8 +238,10 @@ int main(void) {
                  cd1_value_q16 = offset_reg_values[1] << 8 | offset_reg_values[0];
                  cd2_value_q16 = offset_reg_values[3] << 8 | offset_reg_values[2];
 
-                 cd1_value = (int8_t)(cd1_value_q16 );  //CD1_OFFSET need to be subtracted
-                 cd2_value = (int8_t)(cd2_value_q16 );  //CD2_OFFSET need to be subtracted
+                 cd1_value = (cd1_value_q16 );  //CD1_OFFSET need to be subtracted
+                 cd2_value = (cd2_value_q16 );  //CD2_OFFSET need to be subtracted
+                 cd1_value = cd1_value << 8;
+                 cd2_value = cd2_value << 8;
 #endif
 #if CONSTANT_TEMP == 0
                  if ( true == temperatureReadFlag )
@@ -250,11 +252,12 @@ int main(void) {
 #if 1
 
                  tempNorm = currTempValue - tempInit;
-                 cd1_value_corr = (cd1_value - _Q8(system_settings.cd1_corr_slope * tempNorm));
+                 cd1_value_corr = _Q8(system_settings.cd1_corr_slope * tempNorm);
+                 cd1_value_corr = (cd1_value - cd1_value_corr);
                  cd2_value_corr = (cd2_value - _Q8(system_settings.cd2_corr_slope * tempNorm));
-                 if (((absolute(cd1_value_corr - cd1_previous_value)) <=1))
+                 if (((absolute(cd1_value_corr - cd1_previous_value)) <=_Q8(1.0)))
                      cd1_value_corr = cd1_previous_value;
-                 if (((absolute(cd2_value_corr - cd2_previous_value)) <=1))
+                 if (((absolute(cd2_value_corr - cd2_previous_value)) <=_Q8(1.0)))
                      cd2_value_corr = cd2_previous_value;
 
                  delta_x = cd1_value_corr - x0;
@@ -262,17 +265,17 @@ int main(void) {
                  delta_x_abs = absolute(delta_x);
                  delta_y_abs = absolute(delta_y);
                  if((delta_x == 0) && (delta_y == 0))
-                    delta_r = 1;
+                    delta_r = _Q8(1.0);
                  else
                  delta_r = delta_x_abs + delta_y_abs;
-                 delta_x = _Q8mpy(_Q8(2), delta_x);
-                 delta_y = _Q8mpy(_Q8(2), delta_y);
+                 delta_x = _Q8mpy(_Q8(2.0), delta_x);
+                 delta_y = _Q8mpy(_Q8(2.0), delta_y);
                  delta_XC = _Q8div(delta_x, delta_r);           // We can convert to integer based on the decimal places.
                  delta_YC = _Q8div(delta_y, delta_r);           // We can convert to integer based on the decimal places.
 
                  x0 = (cd1_value_corr - delta_XC);
                  y0 = (cd2_value_corr - delta_YC);
-                 if (( delta_XC >=0 ) && ( delta_previous_XC < 0 ))
+                 if ((delta_XC >= 0 ) && (delta_previous_XC < 0 ))
                  {
                      if(delta_YC < 0)
                          cd_rot_direction_x = cd_rot_direction_x + 1;
