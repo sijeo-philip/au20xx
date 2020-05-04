@@ -13,7 +13,8 @@ C_SRCS += \
 ../source/hal_osc.c \
 ../source/hal_refa.c \
 ../source/hal_spi.c \
-../source/hal_timerA.c 
+../source/hal_timerA.c \
+../source/hal_uart.c 
 
 C_DEPS += \
 ./source/common.d \
@@ -23,7 +24,8 @@ C_DEPS += \
 ./source/hal_osc.d \
 ./source/hal_refa.d \
 ./source/hal_spi.d \
-./source/hal_timerA.d 
+./source/hal_timerA.d \
+./source/hal_uart.d 
 
 OBJS += \
 ./source/common.obj \
@@ -33,7 +35,8 @@ OBJS += \
 ./source/hal_osc.obj \
 ./source/hal_refa.obj \
 ./source/hal_spi.obj \
-./source/hal_timerA.obj 
+./source/hal_timerA.obj \
+./source/hal_uart.obj 
 
 OBJS__QUOTED += \
 "source\common.obj" \
@@ -43,7 +46,8 @@ OBJS__QUOTED += \
 "source\hal_osc.obj" \
 "source\hal_refa.obj" \
 "source\hal_spi.obj" \
-"source\hal_timerA.obj" 
+"source\hal_timerA.obj" \
+"source\hal_uart.obj" 
 
 C_DEPS__QUOTED += \
 "source\common.d" \
@@ -53,7 +57,8 @@ C_DEPS__QUOTED += \
 "source\hal_osc.d" \
 "source\hal_refa.d" \
 "source\hal_spi.d" \
-"source\hal_timerA.d" 
+"source\hal_timerA.d" \
+"source\hal_uart.d" 
 
 C_SRCS__QUOTED += \
 "../source/common.c" \
@@ -63,6 +68,7 @@ C_SRCS__QUOTED += \
 "../source/hal_osc.c" \
 "../source/hal_refa.c" \
 "../source/hal_spi.c" \
-"../source/hal_timerA.c" 
+"../source/hal_timerA.c" \
+"../source/hal_uart.c" 
 
 

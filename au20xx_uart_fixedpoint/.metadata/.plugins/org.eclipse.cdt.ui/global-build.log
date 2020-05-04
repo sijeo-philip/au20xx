@@ -21425,3 +21425,126 @@ gmake: *** [au20xx_flow_sensor.out] Error 1
 gmake: Target 'all' not remade because of errors.
 
 **** Build Finished ****
+
+**** Clean-only build of configuration Debug for project au20xx_flow_sensor ****
+
+"C:\\ti\\ccs1000\\ccs\\utils\\bin\\gmake" -k -j 4 clean -O 
+ 
+DEL /F  "aura_au20xx.hex"  "aura_au20xx.out" 
+DEL /F "main.obj" "au20xx_api\au20xx_api.obj" "source\common.obj" "source\hal_adc.obj" "source\hal_fram.obj" "source\hal_gpio.obj" "source\hal_osc.obj" "source\hal_refa.obj" "source\hal_spi.obj" "source\hal_timerA.obj" "source\hal_uart.obj" 
+DEL /F "main.d" "au20xx_api\au20xx_api.d" "source\common.d" "source\hal_adc.d" "source\hal_fram.d" "source\hal_gpio.d" "source\hal_osc.d" "source\hal_refa.d" "source\hal_spi.d" "source\hal_timerA.d" "source\hal_uart.d" 
+Finished clean
+ 
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project au20xx_flow_sensor ****
+
+"C:\\ti\\ccs1000\\ccs\\utils\\bin\\gmake" -k -j 4 all -O 
+ 
+Building file: "../main.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
+"../main.c", line 66: remark #1535-D: (ULP 8.1) variable "reg_data" is used as a constant. Recommend declaring variable as either 'static const' or 'const'
+"../main.c", line 69: remark #1534-D: (ULP 7.1) Detected use of global variable "uart_byte_count" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 72: remark #1534-D: (ULP 7.1) Detected use of global variable "cd1_value" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 73: remark #1534-D: (ULP 7.1) Detected use of global variable "cd2_value" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 78: remark #1534-D: (ULP 7.1) Detected use of global variable "valid_data" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 79: remark #1534-D: (ULP 7.1) Detected use of global variable "normal_operation_mode" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 80: remark #1534-D: (ULP 7.1) Detected use of global variable "tempInit" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 81: remark #1534-D: (ULP 7.1) Detected use of global variable "currTempValue" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 82: remark #1534-D: (ULP 7.1) Detected use of global variable "tempNorm" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 83: remark #1534-D: (ULP 7.1) Detected use of global variable "delta_x" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 84: remark #1534-D: (ULP 7.1) Detected use of global variable "delta_y" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 87: remark #1534-D: (ULP 7.1) Detected use of global variable "x0" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 88: remark #1534-D: (ULP 7.1) Detected use of global variable "y0" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 89: remark #1534-D: (ULP 7.1) Detected use of global variable "delta_r" within one function "main". Recommend placing variable in the function locally
+"../main.c", line 255 (col. 35): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 257 (col. 48): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 278 (col. 61): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 288 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 289 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+Finished building: "../main.c"
+ 
+Building file: "../au20xx_api/au20xx_api.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="au20xx_api/au20xx_api.d_raw" --obj_directory="au20xx_api"  "../au20xx_api/au20xx_api.c"
+Finished building: "../au20xx_api/au20xx_api.c"
+ 
+Building file: "../source/common.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/common.d_raw" --obj_directory="source"  "../source/common.c"
+"../source/common.c", line 108: remark #1527-D: (ULP 2.1) Detected SW delay loop using empty loop. Recommend using a timer module instead
+"../source/common.c", line 146: remark #1544-D: (ULP 13.1) Detected loop counting up. Recommend loops count down as detecting zeros is easier
+"../source/common.c", line 146: remark #1527-D: (ULP 2.1) Detected SW delay loop using __no_operation. Recommend using a timer module instead
+"../source/common.c", line 187: remark #1535-D: (ULP 8.1) variable "retVal" is used as a constant. Recommend declaring variable as either 'static const' or 'const'
+"../source/common.c", line 196 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../source/common.c", line 197 (col. 33): remark #1531-D: (ULP 5.2) Detected floating point operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+Finished building: "../source/common.c"
+ 
+Building file: "../source/hal_adc.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_adc.d_raw" --obj_directory="source"  "../source/hal_adc.c"
+"../source/hal_adc.c", line 184: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../source/hal_adc.c", line 190: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../source/hal_adc.c", line 61: remark #1534-D: (ULP 7.1) Detected use of global variable "tempValue" within one function "ADC12_ISR". Recommend placing variable in the function locally
+"../source/hal_adc.c", line 62: remark #1534-D: (ULP 7.1) Detected use of global variable "degC" within one function "ADC12_ISR". Recommend placing variable in the function locally
+"../source/hal_adc.c", line 63: remark #1534-D: (ULP 7.1) Detected use of global variable "voltValue" within one function "ADC12_ISR". Recommend placing variable in the function locally
+Finished building: "../source/hal_adc.c"
+ 
+Building file: "../source/hal_fram.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_fram.d_raw" --obj_directory="source"  "../source/hal_fram.c"
+Finished building: "../source/hal_fram.c"
+ 
+Building file: "../source/hal_gpio.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_gpio.d_raw" --obj_directory="source"  "../source/hal_gpio.c"
+Finished building: "../source/hal_gpio.c"
+ 
+Building file: "../source/hal_osc.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_osc.d_raw" --obj_directory="source"  "../source/hal_osc.c"
+Finished building: "../source/hal_osc.c"
+ 
+Building file: "../source/hal_refa.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_refa.d_raw" --obj_directory="source"  "../source/hal_refa.c"
+"../source/hal_refa.c", line 179: remark #1527-D: (ULP 2.1) Detected SW delay loop using empty loop. Recommend using a timer module instead
+Finished building: "../source/hal_refa.c"
+ 
+Building file: "../source/hal_spi.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_spi.d_raw" --obj_directory="source"  "../source/hal_spi.c"
+"../source/hal_spi.c", line 160: remark #1528-D: (ULP 3.1) Detected flag polling using CHECK_SPI_BUSY. Recommend using an interrupt combined with enter LPMx and ISR
+"../source/hal_spi.c", line 166: remark #1528-D: (ULP 3.1) Detected flag polling using UCB0IFG. Recommend using an interrupt combined with enter LPMx and ISR
+"../source/hal_spi.c", line 208: remark #1528-D: (ULP 3.1) Detected flag polling using CHECK_SPI_BUSY. Recommend using an interrupt combined with enter LPMx and ISR
+"../source/hal_spi.c", line 214: remark #1528-D: (ULP 3.1) Detected flag polling using UCB0IFG. Recommend using an interrupt combined with enter LPMx and ISR
+Finished building: "../source/hal_spi.c"
+ 
+Building file: "../source/hal_uart.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_uart.d_raw" --obj_directory="source"  "../source/hal_uart.c"
+"../source/hal_uart.c", line 160: remark #1528-D: (ULP 3.1) Detected flag polling using UCA0IFG. Recommend using an interrupt combined with enter LPMx and ISR
+Finished building: "../source/hal_uart.c"
+ 
+Building file: "../source/hal_timerA.c"
+Invoking: MSP430 Compiler
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccs1000/ccs/ccs_base/msp430/include" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" --include_path="E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" --include_path="E:/AuraSemi/au20xx/au20xx_uart_fixedpoint/au20xx_flow_sensor" --include_path="C:/ti/msp430/IQMATHLIB_01_10_00_05/include" --include_path="C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="source/hal_timerA.d_raw" --obj_directory="source"  "../source/hal_timerA.c"
+"../source/hal_timerA.c", line 343: warning #121-D: return value type does not match the function type
+"../source/hal_timerA.c", line 62: remark #1534-D: (ULP 7.1) Detected use of global variable "sampleCount" within one function "TIMER0_ISR". Recommend placing variable in the function locally
+Finished building: "../source/hal_timerA.c"
+ 
+Building target: "au20xx_flow_sensor.out"
+Invoking: MSP430 Linker
+"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 -z -m"au20xx_flow_sensor.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccs1000/ccs/ccs_base/msp430/include" -i"E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" -i"E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" -i"E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/lib" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/FR59xx" --priority --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="au20xx_flow_sensor_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "au20xx_flow_sensor.out" "./main.obj" "./au20xx_api/au20xx_api.obj" "./source/common.obj" "./source/hal_adc.obj" "./source/hal_fram.obj" "./source/hal_gpio.obj" "./source/hal_osc.obj" "./source/hal_refa.obj" "./source/hal_spi.obj" "./source/hal_timerA.obj" "./source/hal_uart.obj" "../lnk_msp430fr6972.cmd"  -llibmath.a -llibc.a   C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/QmathLib.a 
+<Linking>
+remark #10372-D: (ULP 4.1) Detected uninitialized Port A in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port B in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port C in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port D in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port E in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+Finished building target: "au20xx_flow_sensor.out"
+ 
+
+**** Build Finished ****

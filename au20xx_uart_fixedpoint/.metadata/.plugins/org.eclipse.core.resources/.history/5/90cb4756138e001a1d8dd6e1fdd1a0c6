@@ -20,6 +20,7 @@ ORDERED_OBJS += \
 "./source/hal_refa.obj" \
 "./source/hal_spi.obj" \
 "./source/hal_timerA.obj" \
+"./source/hal_uart.obj" \
 "../lnk_msp430fr6972.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibmath.a \
@@ -134,41 +135,42 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-au20xx_flow_sensor.out \
+aura_au20xx.out \
 
 EXE_OUTPUTS__QUOTED += \
-"au20xx_flow_sensor.out" \
+"aura_au20xx.out" \
 
 BIN_OUTPUTS += \
-au20xx_flow_sensor.hex \
+aura_au20xx.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"au20xx_flow_sensor.hex" \
+"aura_au20xx.hex" \
 
 
 # All Target
-all: au20xx_flow_sensor.out
+all: $(OBJS) $(CMD_SRCS) $(A_SRCS) $(GEN_CMDS)
+	@$(MAKE) --no-print-directory -Onone "aura_au20xx.out"
 
 # Tool invocations
-au20xx_flow_sensor.out: $(OBJS) $(CMD_SRCS) $(A_SRCS) $(GEN_CMDS)
+aura_au20xx.out: $(OBJS) $(CMD_SRCS) $(A_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: MSP430 Linker'
-	"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 -z -m"au20xx_flow_sensor.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccs1000/ccs/ccs_base/msp430/include" -i"E:/AuraSemi/au20xx/au20xx_flow_sensor/au20xx_api" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/lib" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/FR59xx" --priority --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="au20xx_flow_sensor_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "au20xx_flow_sensor.out" $(ORDERED_OBJS) $(A_SRCS)
+	"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --advice:hw_config=all --define=__MSP430FR6972__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 -z -m"aura_au20xx.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccs1000/ccs/ccs_base/msp430/include" -i"E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/configs" -i"E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/au20xx_api" -i"E:/AuraSemi/au20xx_fixedpoint/aura_au20xx/interface" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/lib" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/include" -i"C:/ti/ccs1000/ccs/ccs_base/msp430/lib/FR59xx" --priority --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="aura_au20xx_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "aura_au20xx.out" $(ORDERED_OBJS) $(A_SRCS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
-au20xx_flow_sensor.hex: $(EXE_OUTPUTS)
+aura_au20xx.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: MSP430 Hex Utility'
-	"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/hex430" --memwidth=8 --romwidth=8 -o "au20xx_flow_sensor.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-msp430_20.2.0.LTS/bin/hex430" --memwidth=8 --romwidth=8 -o "aura_au20xx.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "au20xx_api\au20xx_api.obj" "source\common.obj" "source\hal_adc.obj" "source\hal_fram.obj" "source\hal_gpio.obj" "source\hal_osc.obj" "source\hal_refa.obj" "source\hal_spi.obj" "source\hal_timerA.obj" 
-	-$(RM) "main.d" "au20xx_api\au20xx_api.d" "source\common.d" "source\hal_adc.d" "source\hal_fram.d" "source\hal_gpio.d" "source\hal_osc.d" "source\hal_refa.d" "source\hal_spi.d" "source\hal_timerA.d" 
+	-$(RM) "main.obj" "au20xx_api\au20xx_api.obj" "source\common.obj" "source\hal_adc.obj" "source\hal_fram.obj" "source\hal_gpio.obj" "source\hal_osc.obj" "source\hal_refa.obj" "source\hal_spi.obj" "source\hal_timerA.obj" "source\hal_uart.obj" 
+	-$(RM) "main.d" "au20xx_api\au20xx_api.d" "source\common.d" "source\hal_adc.d" "source\hal_fram.d" "source\hal_gpio.d" "source\hal_osc.d" "source\hal_refa.d" "source\hal_spi.d" "source\hal_timerA.d" "source\hal_uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
