@@ -26,6 +26,16 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>IQmathLib.a</name>
+			<type>1</type>
+			<location>C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/IQmathLib.a</location>
+		</link>
+		<link>
+			<name>IQmathLib.h</name>
+			<type>1</type>
+			<location>C:/ti/msp430/IQMATHLIB_01_10_00_05/include/IQmathLib.h</location>
+		</link>
+		<link>
 			<name>QmathLib.a</name>
 			<type>1</type>
 			<location>C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/QmathLib.a</location>

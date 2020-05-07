@@ -301,10 +301,10 @@ bool get_top_variables(top_variables_t * topVariable)
 * <hr>
 *
 *******************************************************************************/
-_q8 absolute(_q8 value)
+_iq24 absolute(_iq24 value)
 {
     if ( value < 0 )
-        return _Q8mpy(_Q8(-1.0) , value);
+        return _IQ24mpy(_IQ24(-1.0) , value);
     else
         return value;
 }

@@ -180,7 +180,7 @@ void aura_hw_init ( void )
  * ENTRY POINT
  */
 int main(void) {
-
+    static uint32_t i=0;
     WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer
    aura_hw_init();
    /*TODO : Check for the IO pin after Power ON to work in normal measurment mode
