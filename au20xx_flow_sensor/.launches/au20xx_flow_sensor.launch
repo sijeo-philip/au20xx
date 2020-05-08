@@ -7,7 +7,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP430FR6972.ccxml.TI MSP430 USB1/MSP430" value="au20xx_flow_sensor"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP430FR6989.ccxml.TI MSP430 USB1/MSP430" value="au20xx_flow_sensor"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:au20xx_flow_sensor}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430FR6972.ccxml.TI MSP430 USB1/MSP430" value="E:\AuraSemi\au20xx\au20xx_uart_fixedpoint\au20xx_flow_sensor\Debug\au20xx_flow_sensor.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430FR6972.ccxml.TI MSP430 USB1/MSP430" value="E:\AuraSemi\au20xx\au20xx_flow_sensor\Debug\au20xx_flow_sensor.out"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430FR6989.ccxml.TI MSP430 USB1/MSP430" value="E:\AuraSemi\au20xx\au20xx_flow_sensor\Debug\au20xx_flow_sensor.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/au20xx_flow_sensor"/>

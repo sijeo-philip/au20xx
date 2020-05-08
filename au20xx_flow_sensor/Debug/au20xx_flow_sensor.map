@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v20.2.0                     
 ******************************************************************************
->> Linked Sat May  2 02:01:02 2020
+>> Linked Fri May  8 17:09:54 2020
 
 OUTPUT FILE NAME:   <au20xx_flow_sensor.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00004524
@@ -18,7 +18,7 @@ MEMORY CONFIGURATION
   INFOC                 00001880   00000080  00000000  00000080  RWIX
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
-  RAM                   00001c00   00000800  00000212  000005ee  RWIX
+  RAM                   00001c00   00000800  0000020e  000005f2  RWIX
   FRAM                  00004400   0000bb80  00000193  0000b9ed  RWIX
   JTAGSIGNATURE         0000ff80   00000004  00000004  00000000  RWIX  ffff 
   BSLSIGNATURE          0000ff84   00000004  00000004  00000000  RWIX  ffff 
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00004000  00000c80  00003380  RWIX
+  FRAM2                 00010000   00004000  00000ca6  0000335a  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -129,27 +129,27 @@ section   page    origin      length       input sections
                   00004540    0000000e     common.obj (.text:_isr:TIMER1_ISR)
                   0000454e    00000008     rts430x_lc_rd_eabi.lib : isr_trap.asm.obj (.text:_isr:__TI_ISR_TRAP)
 
-.bss       0    00001c00    0000010a     UNINITIALIZED
+.bss       0    00001c00    00000106     UNINITIALIZED
                   00001c00    00000064     hal_uart.obj (.bss:uart_rx_buffer)
                   00001c64    00000064     main.obj (.bss:uart_top_variable)
                   00001cc8    00000018     (.common:system_settings)
                   00001ce0    0000000c     hal_spi.obj (.bss)
                   00001cec    00000007     hal_adc.obj (.bss)
                   00001cf3    00000001     --HOLE--
-                  00001cf4    00000006     main.obj (.bss)
-                  00001cfa    00000006     (.common:offset_reg_values)
-                  00001d00    00000004     (.common:delta_XC)
-                  00001d04    00000004     (.common:delta_YC)
-                  00001d08    00000002     hal_uart.obj (.bss)
+                  00001cf4    00000006     (.common:offset_reg_values)
+                  00001cfa    00000004     (.common:delta_XC)
+                  00001cfe    00000004     (.common:delta_YC)
+                  00001d02    00000002     hal_uart.obj (.bss)
+                  00001d04    00000002     main.obj (.bss)
 
-.data      0    00001d0a    00000068     UNINITIALIZED
-                  00001d0a    00000044     main.obj (.data)
-                  00001d4e    0000000a     hal_timerA.obj (.data)
-                  00001d58    00000008     hal_uart.obj (.data)
-                  00001d60    00000007     au20xx_api.obj (.data)
-                  00001d67    00000001     --HOLE--
-                  00001d68    00000006     common.obj (.data)
-                  00001d6e    00000004     hal_adc.obj (.data)
+.data      0    00001d06    00000068     UNINITIALIZED
+                  00001d06    00000044     main.obj (.data)
+                  00001d4a    0000000a     hal_timerA.obj (.data)
+                  00001d54    00000008     hal_uart.obj (.data)
+                  00001d5c    00000007     au20xx_api.obj (.data)
+                  00001d63    00000001     --HOLE--
+                  00001d64    00000006     common.obj (.data)
+                  00001d6a    00000004     hal_adc.obj (.data)
 
 .stack     0    00002360    000000a0     UNINITIALIZED
                   00002360    00000004     rts430x_lc_rd_eabi.lib : boot.c.obj (.stack)
@@ -262,57 +262,56 @@ SYSNMI     0    0000fffc    00000002
                   00004556    0000000a     main.obj (.const:.string)
                   00004560    00000001     common.obj (.const)
 
-.text      0    00010000    00000c80     
-                  00010000    00000392     main.obj (.text:main)
-                  00010392    00000132     rts430x_lc_rd_eabi.lib : fs_add.asm.obj (.text)
-                  000104c4    000000b8                            : fs_mpy.asm.obj (.text)
-                  0001057c    00000090                            : fs_div.asm.obj (.text)
-                  0001060c    00000076                            : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  00010682    00000074     hal_gpio.obj (.text:gpio_init)
-                  000106f6    00000058     rts430x_lc_rd_eabi.lib : div32u.asm.obj (.text)
-                  0001074e    00000054                            : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit_hold_wdt:__TI_auto_init_nobinit_nopinit_hold_wdt)
-                  000107a2    0000004c     common.obj (.text:get_top_variables)
-                  000107ee    0000004a     rts430x_lc_rd_eabi.lib : fs_cmp.asm.obj (.text)
-                  00010838    0000004a     hal_uart.obj (.text:uart_read)
-                  00010882    00000046     hal_spi.obj (.text:spi_write)
-                  000108c8    00000040     rts430x_lc_rd_eabi.lib : div32s.asm.obj (.text)
-                  00010908    0000003e     hal_timerA.obj (.text:timerA_init)
-                  00010946    00000036     au20xx_api.obj (.text:au20xx_read_reg)
-                  0001097c    00000036     rts430x_lc_rd_eabi.lib : fs_itof.asm.obj (.text)
-                  000109b2    00000034     hal_spi.obj (.text:spi_read)
-                  000109e6    00000032     rts430x_lc_rd_eabi.lib : strncpy.c.obj (.text:strncpy)
-                  00010a18    0000002c     hal_uart.obj (.text:uart_init)
-                  00010a44    0000002a     common.obj (.text:sensEn_delay_us)
-                  00010a6e    00000028     main.obj (.text:aura_hw_init)
-                  00010a96    00000028     hal_timerA.obj (.text:timerA0_load_time)
-                  00010abe    00000026     hal_osc.obj (.text:system_clock_init)
-                  00010ae4    00000024     common.obj (.text:absolute)
-                  00010b08    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
-                  00010b2c    00000024                            : mult32_f5hw.asm.obj (.text)
-                  00010b50    00000022     hal_spi.obj (.text:spi_byte_read)
-                  00010b72    00000020     hal_adc.obj (.text:read_temp_sensor)
-                  00010b92    00000020     hal_spi.obj (.text:spi_init)
-                  00010bb2    0000001e     hal_uart.obj (.text:uart_send)
-                  00010bd0    00000018     common.obj (.text:delay_us)
-                  00010be8    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.asm.obj (.text)
-                  00010c00    00000018     hal_spi.obj (.text:spi_byte_write)
-                  00010c18    00000016     rts430x_lc_rd_eabi.lib : memset.c.obj (.text:memset)
-                  00010c2e    00000016     hal_timerA.obj (.text:timerA1_load_time)
-                  00010c44    00000014     rts430x_lc_rd_eabi.lib : memcpy.c.obj (.text:memcpy)
-                  00010c58    00000012                            : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
-                  00010c6a    0000000a                            : fs_neg.asm.obj (.text)
-                  00010c74    00000006                            : exit.c.obj (.text:abort)
-                  00010c7a    00000004                            : pre_init.c.obj (.text:_system_pre_init)
-                  00010c7e    00000002                            : startup.c.obj (.text:_system_post_cinit)
+.text      0    00010000    00000ca6     
+                  00010000    000003d8     main.obj (.text:main)
+                  000103d8    00000132     rts430x_lc_rd_eabi.lib : fs_add.asm.obj (.text)
+                  0001050a    000000b8                            : fs_mpy.asm.obj (.text)
+                  000105c2    00000090                            : fs_div.asm.obj (.text)
+                  00010652    00000076                            : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  000106c8    00000074     hal_gpio.obj (.text:gpio_init)
+                  0001073c    00000058     rts430x_lc_rd_eabi.lib : div32u.asm.obj (.text)
+                  00010794    00000054                            : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit_hold_wdt:__TI_auto_init_nobinit_nopinit_hold_wdt)
+                  000107e8    0000004c     common.obj (.text:get_top_variables)
+                  00010834    0000004a     rts430x_lc_rd_eabi.lib : fs_cmp.asm.obj (.text)
+                  0001087e    0000004a     hal_uart.obj (.text:uart_read)
+                  000108c8    00000046     hal_spi.obj (.text:spi_write)
+                  0001090e    00000040     rts430x_lc_rd_eabi.lib : div32s.asm.obj (.text)
+                  0001094e    0000003e     hal_timerA.obj (.text:timerA_init)
+                  0001098c    00000036     au20xx_api.obj (.text:au20xx_read_reg)
+                  000109c2    00000036     rts430x_lc_rd_eabi.lib : fs_itof.asm.obj (.text)
+                  000109f8    00000034     hal_spi.obj (.text:spi_read)
+                  00010a2c    00000032     rts430x_lc_rd_eabi.lib : strncpy.c.obj (.text:strncpy)
+                  00010a5e    0000002c     hal_uart.obj (.text:uart_init)
+                  00010a8a    0000002a     common.obj (.text:sensEn_delay_us)
+                  00010ab4    00000028     main.obj (.text:aura_hw_init)
+                  00010adc    00000028     hal_timerA.obj (.text:timerA0_load_time)
+                  00010b04    00000026     hal_osc.obj (.text:system_clock_init)
+                  00010b2a    00000024     common.obj (.text:absolute)
+                  00010b4e    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
+                  00010b72    00000024                            : mult32_f5hw.asm.obj (.text)
+                  00010b96    00000022     hal_spi.obj (.text:spi_byte_read)
+                  00010bb8    00000020     hal_spi.obj (.text:spi_init)
+                  00010bd8    0000001e     hal_uart.obj (.text:uart_send)
+                  00010bf6    00000018     common.obj (.text:delay_us)
+                  00010c0e    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.asm.obj (.text)
+                  00010c26    00000018     hal_spi.obj (.text:spi_byte_write)
+                  00010c3e    00000016     rts430x_lc_rd_eabi.lib : memset.c.obj (.text:memset)
+                  00010c54    00000016     hal_timerA.obj (.text:timerA1_load_time)
+                  00010c6a    00000014     rts430x_lc_rd_eabi.lib : memcpy.c.obj (.text:memcpy)
+                  00010c7e    00000012                            : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
+                  00010c90    0000000a                            : fs_neg.asm.obj (.text)
+                  00010c9a    00000006                            : exit.c.obj (.text:abort)
+                  00010ca0    00000004                            : pre_init.c.obj (.text:_system_pre_init)
+                  00010ca4    00000002                            : startup.c.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                       code   ro data   rw data
        ------                       ----   -------   -------
     .\
-       main.obj                     954    10        212    
+       main.obj                     1024   10        208    
     +--+----------------------------+------+---------+---------+
-       Total:                       954    10        212    
+       Total:                       1024   10        208    
                                                             
     .\au20xx_api\
        au20xx_api.obj               54     0         7      
@@ -324,11 +323,11 @@ MODULE SUMMARY
        hal_spi.obj                  212    0         12     
        common.obj                   192    3         6      
        hal_timerA.obj               184    2         10     
-       hal_adc.obj                  180    2         11     
+       hal_adc.obj                  148    2         11     
        hal_gpio.obj                 116    0         0      
        hal_osc.obj                  38     0         0      
     +--+----------------------------+------+---------+---------+
-       Total:                       1154   9         149    
+       Total:                       1122   9         149    
                                                             
     C:\ti\ccs1000\ccs\tools\compiler\ti-cgt-msp430_20.2.0.LTS\lib\rts430x_lc_rd_eabi.lib
        fs_add.asm.obj               306    0         0      
@@ -382,14 +381,14 @@ MODULE SUMMARY
        Stack:                       0      0         160    
        Linker Generated:            0      49        0      
     +--+----------------------------+------+---------+---------+
-       Grand Total:                 3542   116       528    
+       Grand Total:                 3580   116       524    
 
 
 LINKER GENERATED COPY TABLES
 
 __TI_cinit_table @ 00004584 records: 2, size/record: 8, table size: 16
-	.data: load addr=00004562, load size=0000000f bytes, run addr=00001d0a, run size=00000068 bytes, compression=lzss
-	.bss: load addr=0000457e, load size=00000006 bytes, run addr=00001c00, run size=0000010a bytes, compression=zero_init
+	.data: load addr=00004562, load size=0000000f bytes, run addr=00001d06, run size=00000068 bytes, compression=lzss
+	.bss: load addr=0000457e, load size=00000006 bytes, run addr=00001c00, run size=00000106 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
@@ -662,7 +661,7 @@ address   name
 000009ce  AESAXIN_L                              
 000004be  BCD2BIN                                
 000004bc  BIN2BCD                                
-00010c74  C$$EXIT                                
+00010c9a  C$$EXIT                                
 0000043e  CAPTIO0CTL                             
 0000043f  CAPTIO0CTL_H                           
 0000043e  CAPTIO0CTL_L                           
@@ -1460,9 +1459,9 @@ address   name
 00004572  __TI_Handler_Table_Base                
 0000457e  __TI_Handler_Table_Limit               
 0000454e  __TI_ISR_TRAP                          
-0001074e  __TI_auto_init_nobinit_nopinit_hold_wdt
-0001060c  __TI_decompress_lzss                   
-00010c58  __TI_decompress_none                   
+00010794  __TI_auto_init_nobinit_nopinit_hold_wdt
+00010652  __TI_decompress_lzss                   
+00010c7e  __TI_decompress_none                   
 0000ffc6  __TI_int27                             
 0000ffc8  __TI_int28                             
 0000ffca  __TI_int29                             
@@ -1493,75 +1492,74 @@ address   name
 ffffffff  __TI_pprof_out_hndl                    
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
-00010b08  __TI_zero_init_nomemset                
+00010b4e  __TI_zero_init_nomemset                
 ffffffff  __c_args__                             
-00010398  __mspabi_addf                          
-000107ee  __mspabi_cmpf                          
-0001057c  __mspabi_divf                          
-000108c8  __mspabi_divli                         
-000106f6  __mspabi_divul                         
-0001097c  __mspabi_fltif                         
-000104c4  __mspabi_mpyf                          
-00010be8  __mspabi_mpyi_f5hw                     
-00010b2c  __mspabi_mpyl_f5hw                     
-00010c6a  __mspabi_negf                          
-000108c8  __mspabi_remli                         
-000106f6  __mspabi_remul                         
-00010392  __mspabi_subf                          
+000103de  __mspabi_addf                          
+00010834  __mspabi_cmpf                          
+000105c2  __mspabi_divf                          
+0001090e  __mspabi_divli                         
+0001073c  __mspabi_divul                         
+000109c2  __mspabi_fltif                         
+0001050a  __mspabi_mpyf                          
+00010c0e  __mspabi_mpyi_f5hw                     
+00010b72  __mspabi_mpyl_f5hw                     
+00010c90  __mspabi_negf                          
+0001090e  __mspabi_remli                         
+0001073c  __mspabi_remul                         
+000103d8  __mspabi_subf                          
 00004524  _c_int00_noargs                        
 0000fffe  _reset_vector                          
 00002360  _stack                                 
-00010c7e  _system_post_cinit                     
-00010c7a  _system_pre_init                       
-00010c74  abort                                  
-00010ae4  absolute                               
-00010946  au20xx_read_reg                        
-00010a6e  aura_hw_init                           
-00001d16  cd1_previous_value                     
-00001d0e  cd1_value_corr                         
-00001d4a  cd1_value_q16                          
-00001d1a  cd2_previous_value                     
-00001d12  cd2_value_corr                         
-00001d4c  cd2_value_q16                          
-00001d46  cd_rot_direction_x                     
-00010bd0  delay_us                               
-00001d00  delta_XC                               
-00001d04  delta_YC                               
-00001d3e  delta_previous_XC                      
-00001d42  delta_previous_YC                      
-00001d2a  delta_x_abs                            
-00001d2e  delta_y_abs                            
+00010ca4  _system_post_cinit                     
+00010ca0  _system_pre_init                       
+00010c9a  abort                                  
+00010b2a  absolute                               
+0001098c  au20xx_read_reg                        
+00010ab4  aura_hw_init                           
+00001d12  cd1_previous_value                     
+00001d0a  cd1_value_corr                         
+00001d46  cd1_value_q16                          
+00001d16  cd2_previous_value                     
+00001d0e  cd2_value_corr                         
+00001d48  cd2_value_q16                          
+00001d42  cd_rot_direction_x                     
+00010bf6  delay_us                               
+00001cfa  delta_XC                               
+00001cfe  delta_YC                               
+00001d3a  delta_previous_XC                      
+00001d3e  delta_previous_YC                      
+00001d26  delta_x_abs                            
+00001d2a  delta_y_abs                            
 00004400  fram_ipe_end                           
 00004400  fram_ipe_start                         
 00004400  fram_rw_start                          
 00004400  fram_rx_start                          
-000107a2  get_top_variables                      
-00010682  gpio_init                              
+000107e8  get_top_variables                      
+000106c8  gpio_init                              
 00010000  main                                   
-00010c44  memcpy                                 
-00010c18  memset                                 
-00001cfa  offset_reg_values                      
-00001d4f  readTemperatureFlag                    
-00010b72  read_temp_sensor                       
-00001d0a  reg_data                               
-00001d50  samplesPerTempReading                  
-00001d4e  sensENFlag                             
-00010a44  sensEn_delay_us                        
-00010b92  spi_init                               
-000109b2  spi_read                               
-00010882  spi_write                              
-000109e6  strncpy                                
-00010abe  system_clock_init                      
+00010c6a  memcpy                                 
+00010c3e  memset                                 
+00001cf4  offset_reg_values                      
+00001d4b  readTemperatureFlag                    
+00001d06  reg_data                               
+00001d4c  samplesPerTempReading                  
+00001d4a  sensENFlag                             
+00010a8a  sensEn_delay_us                        
+00010bb8  spi_init                               
+000109f8  spi_read                               
+000108c8  spi_write                              
+00010a2c  strncpy                                
+00010b04  system_clock_init                      
 00001cc8  system_settings                        
-00001d6e  temperatureReadFlag                    
-00010a96  timerA0_load_time                      
-00010c2e  timerA1_load_time                      
-00010908  timerA_init                            
-00010a18  uart_init                              
-00010838  uart_read                              
-00001d58  uart_rx_flag                           
-00001d5a  uart_rx_timeout                        
-00010bb2  uart_send                              
+00001d6a  temperatureReadFlag                    
+00010adc  timerA0_load_time                      
+00010c54  timerA1_load_time                      
+0001094e  timerA_init                            
+00010a5e  uart_init                              
+0001087e  uart_read                              
+00001d54  uart_rx_flag                           
+00001d56  uart_rx_timeout                        
+00010bd8  uart_send                              
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -2614,27 +2612,27 @@ address   name
 00000a54  LCDBM21                                
 00000a55  LCDBM22                                
 00001cc8  system_settings                        
-00001cfa  offset_reg_values                      
-00001d00  delta_XC                               
-00001d04  delta_YC                               
-00001d0a  reg_data                               
-00001d0e  cd1_value_corr                         
-00001d12  cd2_value_corr                         
-00001d16  cd1_previous_value                     
-00001d1a  cd2_previous_value                     
-00001d2a  delta_x_abs                            
-00001d2e  delta_y_abs                            
-00001d3e  delta_previous_XC                      
-00001d42  delta_previous_YC                      
-00001d46  cd_rot_direction_x                     
-00001d4a  cd1_value_q16                          
-00001d4c  cd2_value_q16                          
-00001d4e  sensENFlag                             
-00001d4f  readTemperatureFlag                    
-00001d50  samplesPerTempReading                  
-00001d58  uart_rx_flag                           
-00001d5a  uart_rx_timeout                        
-00001d6e  temperatureReadFlag                    
+00001cf4  offset_reg_values                      
+00001cfa  delta_XC                               
+00001cfe  delta_YC                               
+00001d06  reg_data                               
+00001d0a  cd1_value_corr                         
+00001d0e  cd2_value_corr                         
+00001d12  cd1_previous_value                     
+00001d16  cd2_previous_value                     
+00001d26  delta_x_abs                            
+00001d2a  delta_y_abs                            
+00001d3a  delta_previous_XC                      
+00001d3e  delta_previous_YC                      
+00001d42  cd_rot_direction_x                     
+00001d46  cd1_value_q16                          
+00001d48  cd2_value_q16                          
+00001d4a  sensENFlag                             
+00001d4b  readTemperatureFlag                    
+00001d4c  samplesPerTempReading                  
+00001d54  uart_rx_flag                           
+00001d56  uart_rx_timeout                        
+00001d6a  temperatureReadFlag                    
 00002360  _stack                                 
 00002400  __STACK_END                            
 00004400  ADC12_ISR                              
@@ -2680,51 +2678,50 @@ address   name
 0000fffc  __TI_int54                             
 0000fffe  _reset_vector                          
 00010000  main                                   
-00010392  __mspabi_subf                          
-00010398  __mspabi_addf                          
-000104c4  __mspabi_mpyf                          
-0001057c  __mspabi_divf                          
-0001060c  __TI_decompress_lzss                   
-00010682  gpio_init                              
-000106f6  __mspabi_divul                         
-000106f6  __mspabi_remul                         
-0001074e  __TI_auto_init_nobinit_nopinit_hold_wdt
-000107a2  get_top_variables                      
-000107ee  __mspabi_cmpf                          
-00010838  uart_read                              
-00010882  spi_write                              
-000108c8  __mspabi_divli                         
-000108c8  __mspabi_remli                         
-00010908  timerA_init                            
-00010946  au20xx_read_reg                        
-0001097c  __mspabi_fltif                         
-000109b2  spi_read                               
-000109e6  strncpy                                
-00010a18  uart_init                              
-00010a44  sensEn_delay_us                        
-00010a6e  aura_hw_init                           
-00010a96  timerA0_load_time                      
-00010abe  system_clock_init                      
-00010ae4  absolute                               
-00010b08  __TI_zero_init_nomemset                
-00010b2c  __mspabi_mpyl_f5hw                     
-00010b72  read_temp_sensor                       
-00010b92  spi_init                               
-00010bb2  uart_send                              
-00010bd0  delay_us                               
-00010be8  __mspabi_mpyi_f5hw                     
-00010c18  memset                                 
-00010c2e  timerA1_load_time                      
-00010c44  memcpy                                 
-00010c58  __TI_decompress_none                   
-00010c6a  __mspabi_negf                          
-00010c74  C$$EXIT                                
-00010c74  abort                                  
-00010c7a  _system_pre_init                       
-00010c7e  _system_post_cinit                     
+000103d8  __mspabi_subf                          
+000103de  __mspabi_addf                          
+0001050a  __mspabi_mpyf                          
+000105c2  __mspabi_divf                          
+00010652  __TI_decompress_lzss                   
+000106c8  gpio_init                              
+0001073c  __mspabi_divul                         
+0001073c  __mspabi_remul                         
+00010794  __TI_auto_init_nobinit_nopinit_hold_wdt
+000107e8  get_top_variables                      
+00010834  __mspabi_cmpf                          
+0001087e  uart_read                              
+000108c8  spi_write                              
+0001090e  __mspabi_divli                         
+0001090e  __mspabi_remli                         
+0001094e  timerA_init                            
+0001098c  au20xx_read_reg                        
+000109c2  __mspabi_fltif                         
+000109f8  spi_read                               
+00010a2c  strncpy                                
+00010a5e  uart_init                              
+00010a8a  sensEn_delay_us                        
+00010ab4  aura_hw_init                           
+00010adc  timerA0_load_time                      
+00010b04  system_clock_init                      
+00010b2a  absolute                               
+00010b4e  __TI_zero_init_nomemset                
+00010b72  __mspabi_mpyl_f5hw                     
+00010bb8  spi_init                               
+00010bd8  uart_send                              
+00010bf6  delay_us                               
+00010c0e  __mspabi_mpyi_f5hw                     
+00010c3e  memset                                 
+00010c54  timerA1_load_time                      
+00010c6a  memcpy                                 
+00010c7e  __TI_decompress_none                   
+00010c90  __mspabi_negf                          
+00010c9a  C$$EXIT                                
+00010c9a  abort                                  
+00010ca0  _system_pre_init                       
+00010ca4  _system_post_cinit                     
 ffffffff  __TI_pprof_out_hndl                    
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
 ffffffff  __c_args__                             
 
-[1158 symbols]
+[1157 symbols]

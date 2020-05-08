@@ -261,10 +261,11 @@ int main(void) {
                  delta_y = cd2_value_corr - y0;
                  delta_x_abs = absolute(delta_x);
                  delta_y_abs = absolute(delta_y);
-                 if((delta_x == 0) && (delta_y == 0))
-                    delta_r = 1;
-                 else
                  delta_r = delta_x_abs + delta_y_abs;
+
+                 if((delta_x == 0) && (delta_y == 0))
+                    delta_r = 2;
+
                  delta_XC = (2*delta_x)/delta_r;           // We can convert to integer based on the decimal places.
                  delta_YC = (2*delta_y)/delta_r;           // We can convert to integer based on the decimal places.
 
@@ -277,8 +278,19 @@ int main(void) {
                      else
                          cd_rot_direction_x = cd_rot_direction_x - 1;
                      // TODO: Need to understand when to reset the value... (Ask Nigesh or Sandeep)
-                 }
 
+                 }
+#if 1
+                 else
+                 if (( delta_XC < 0 ) && ( delta_previous_XC >= 0 ))
+                 {
+                     if(delta_YC < 0)
+                        cd_rot_direction_x = cd_rot_direction_x - 1;
+                     else
+                        cd_rot_direction_x = cd_rot_direction_x + 1;
+                                      // TODO: Need to understand when to reset the value... (Ask Nigesh or Sandeep)
+                 }
+#endif
               }
               delta_previous_XC = delta_XC;
               delta_previous_YC = delta_YC;

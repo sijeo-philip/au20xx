@@ -1,2 +1,2 @@
-DEFAULT_CCS_TARGET_CONFIGURATION=E\:\\AuraSemi\\au20xx\\au20xx_flow_sensor\\targetConfigs\\MSP430FR6989.ccxml
+DEFAULT_CCS_TARGET_CONFIGURATION=E\:\\AuraSemi\\au20xx\\au20xx_flow_sensor\\targetConfigs\\MSP430FR6972.ccxml
 eclipse.preferences.version=1
