@@ -97,10 +97,6 @@ uint16_t cd1_value_q16 = 0;
 uint16_t cd2_value_q16 = 0;
 #endif
 
-#if DEBUG == 1
-uint32_t sample_count = 0;
-#endif
-
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -203,9 +199,6 @@ int main(void) {
        {
           if ( true == sensENFlag)
           {
-#if DEBUG == 1
-              sample_count++;
-#endif
               sensENFlag = false;
               valid_data = 0;
               sensEn_delay_us();
@@ -276,13 +269,8 @@ int main(void) {
                  delta_XC = (2*delta_x)/delta_r;           // We can convert to integer based on the decimal places.
                  delta_YC = (2*delta_y)/delta_r;           // We can convert to integer based on the decimal places.
 
-
                  x0 = (cd1_value_corr - delta_XC);
                  y0 = (cd2_value_corr - delta_YC);
-
-                 delta_XC = floor_op(delta_XC);
-                 delta_YC = floor_op(delta_YC);
-
                  if (( delta_XC >=0 ) && ( delta_previous_XC < 0 ))
                  {
                      if(delta_YC < 0)

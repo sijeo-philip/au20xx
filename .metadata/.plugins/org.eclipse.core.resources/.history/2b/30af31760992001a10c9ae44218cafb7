@@ -118,7 +118,6 @@ void delay_us(uint16_t microseconds );
 bool get_top_variables(top_variables_t*);
 bool set_top_variables(top_variables_t*);
 float absolute(float);
-float floor_op(float);
 void configure_au20xx(top_variables_t * topVariables);
 void set_au20xx_regs(top_variables_t * topVariables);
 #ifdef __cplusplus

@@ -381,37 +381,7 @@ __interrupt void TIMER1_ISR ( void )
      SNS_EN_LOW;
   }
 
-/******************************************************************************
-* Function : floor_op
-*//**
-* \b Description:
-*
-* This writes to all the registers of the au20xx
-*
-* PRE-CONDITION: Clocks should be initialized for 1MHz Source
-*
-* POST-CONDITION:
-*
-* @param[in]   data which have to be floored
-*
-* @return      floor value of the data
-*
-* \b Example Example:
-* @code
-*  float data
-* @endcode
-*
-*
-*
-* <br><b> - HISTORY OF CHANGES - </b>
-*
-* <table align="left" style="width:800px">
-* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
-* <tr><td> 9/05/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
-* </table><br><br>
-* <hr>
-*
-*******************************************************************************/
+
 
 float floor_op(float data)
 {

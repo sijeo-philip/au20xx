@@ -97,10 +97,6 @@ uint16_t cd1_value_q16 = 0;
 uint16_t cd2_value_q16 = 0;
 #endif
 
-#if DEBUG == 1
-uint32_t sample_count = 0;
-#endif
-
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -203,9 +199,6 @@ int main(void) {
        {
           if ( true == sensENFlag)
           {
-#if DEBUG == 1
-              sample_count++;
-#endif
               sensENFlag = false;
               valid_data = 0;
               sensEn_delay_us();
