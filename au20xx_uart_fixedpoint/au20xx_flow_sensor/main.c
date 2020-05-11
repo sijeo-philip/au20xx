@@ -99,10 +99,22 @@ _iq24 q24_tempNorm;
 _iq24 one = _IQ24(1);
 _iq24 two = _IQ24(2);
 
+_iq24 pi = _IQ24(3.14149);
+_iq24 two_pi = _IQ24(6.2832);
+_iq24 neg_pi = _IQ24(-3.14149);
+_iq24 minus_one = _IQ24(-1.0);
+_iq24 pi_by_2 = _IQ24(1.570796);
+
+_iq24 ang = 0;             /**<< Calculated Arc Tangent of delta_YC and delta_XC */
+_iq24 previous_ang;        /**<< Calculated Angle in previous cycle to determine Step change */
+_iq24 ang_step;            /** << Resultant Angular Step Change */
+_iq24 acc_ang;             /** << Accumulation of calculated angle to determine rotation */
+_iq24 rotation;            /** << Variable to check if the angle of pi is crossed */
+
 
 uint16_t cd1_value_q16 = 0;
 uint16_t cd2_value_q16 = 0;
-
+uint16_t count;
 
 /******************************************************************************
 * Function Prototypes
@@ -292,22 +304,22 @@ int main(void) {
                  delta_XC = _IQ24div(delta_x, delta_r);           // We can convert to integer based on the decimal places.
                  delta_YC = _IQ24div(delta_y, delta_r);           // We can convert to integer based on the decimal places.
 
-                 x0 = (cd1_value_corr - delta_XC);
-                 y0 = (cd2_value_corr - delta_YC);
-                 if ((delta_XC >= 0 ) && (delta_previous_XC < 0 ))
-                 {
-                     if(delta_YC < 0)
-                         cd_rot_direction_x = cd_rot_direction_x + 1;
-                     else
-                         cd_rot_direction_x = cd_rot_direction_x - 1;
-                     // TODO: Need to understand when to reset the value... (Ask Nigesh or Sandeep)
-                 }
+                 ang = _IQ24atan2(delta_YC, delta_XC);
+                 if ((ang <= 0 ) && (previous_ang > pi_by_2))
+                     cd_rot_direction_x = cd_rot_direction_x + 1;
+                 else
+                  if((ang > pi_by_2) && (previous_ang <= 0))
+                      cd_rot_direction_x = cd_rot_direction_x - 1;
 
-              }
+               previous_ang = ang;
+               x0 = (cd1_value_corr - delta_XC);
+               y0 = (cd2_value_corr - delta_YC);
               delta_previous_XC = delta_XC;
               delta_previous_YC = delta_YC;
               cd1_previous_value = cd1_value_corr;
               cd2_previous_value = cd2_value_corr;
+
+   }
           }
 #endif
 
