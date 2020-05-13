@@ -337,7 +337,7 @@ int main(void) {
                if('#' == uart_top_variable[uart_byte_count-1])
                {
                     //if(process_data(uart_top_variable);)
-                   //TODO : process data function to be written to parse the data recieved and store in FRAM
+                   //TODO : process data function to be written to parse the data received and store in FRAM
                    // if the data is OK it will return 'true' else 'false'
                       uart_send("OK", 2);
 
@@ -345,6 +345,144 @@ int main(void) {
                else
                    uart_send("ERROR", 5);
            }
+
+           if (( true == sensENFlag) && (false == calibration_done_flag))
+           {
+              sensENFlag = false;
+              valid_data = 0;
+              sensEn_delay_us();
+              while(0 == valid_data)
+              au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
+              if(valid_data)
+              {
+                valid_data =0;
+                au20xx_read_reg( SNS1_OUT_Q16_LSB_REG, &offset_reg_values[0]);
+                au20xx_read_reg( SNS1_OUT_Q16_MSB_REG, &offset_reg_values[1]);
+                au20xx_read_reg( SNS2_OUT_Q16_LSB_REG, &offset_reg_values[2]);
+                au20xx_read_reg( SNS2_OUT_Q16_MSB_REG, &offset_reg_values[3]);
+
+                        /** Temperature Compensate the Values */
+                cd1_value_q16 = offset_reg_values[1] << 8 | offset_reg_values[0];
+                cd2_value_q16 = offset_reg_values[3] << 8 | offset_reg_values[2];
+
+                if (avg_filter_sample_count < 4)
+                {
+                 sum_cd1_value += cd1_value_q16;
+                 sum_cd2_value += cd2_value_q16;
+                 avg_filter_sample_count ++ ;
+                 if(avg_filter_sample_count > 3)
+                 {
+                     avg_filter_sample_count = 0;
+                     avg_cd1_value += sum_cd1_value>>2;
+                     avg_cd2_value += sum_cd2_value>>2;
+                     if (avg_cd1_value > max_cd1_value)
+                     {
+                        max_cd1_value = avg_cd1_value;
+                        max_sample_count_1 = 0;
+                     }
+                     else
+                     {
+                        max_sample_count_1++;
+                        if(max_sample_count_1 >4 )
+                         {
+                           cd1_offset_value += max_cd1_value;
+                           total_cd1_sample_count++;
+                           max_sample_count_1 = 0;
+                          }
+                      }
+                      if(avg_cd1_value < min_cd1_value )
+                      {
+                        min_cd1_value = avg_cd1_value;
+                        min_sample_count_1 = 0;
+                       }
+                       else
+                       {
+                          min_sample_count_1++;
+                          if(min_sample_count_1 > 4)
+                           {
+                             cd1_offset_value += min_cd1_value;
+                             total_cd1_sample_count++;
+                             min_sample_count_1 = 0;
+                            }
+                        }
+                       if(avg_cd2_value > max_cd2_value )
+                        {
+                           max_cd2_value = avg_cd2_value;
+                           max_sample_count_2 = 0;
+                         }
+                        else
+                        {
+                          max_sample_count_2++;
+                          if( max_sample_count_2 > 4)
+                           {
+                              cd1_offset_value += max_cd2_value;
+                              total_cd2_sample_count++;
+                              max_sample_count_2 = 0;
+                            }
+                         }
+                        if(avg_cd2_value < min_cd2_value )
+                         {
+                            min_cd2_value = avg_cd2_value;
+                            min_sample_count_2 = 0;
+                          }
+                          else
+                          {
+                             min_sample_count_2++;
+                             if(min_sample_count_2 > 4)
+                             {
+                               cd2_offset_value += min_cd2_value;
+                               total_cd2_sample_count++;
+                               min_sample_count_2 = 0;
+                              }
+                           }
+                      }
+                   } /* if (avg_filter_sample_count < 4) */
+
+              }  /* If (valid_data) */
+              if( (total_cd1_sample_count & total_cd2_sample_count) == 16)
+              {
+                   if (((max_cd1_value - min_cd1_value) < 15 ) || (( max_cd2_value - min_cd2_value ) < 15))
+                   {
+                        uart_send("CALIB NOT OK", 12);
+                        total_cd1_sample_count = 0;
+                        total_cd2_sample_count = 0;
+                        sum_cd1_value = 0;
+                        sum_cd2_value = 0;
+                        avg_cd1_value = 0;
+                        avg_cd2_value = 0;
+                        cd1_offset_value = 0;
+                        cd2_offset_value = 0;
+                        max_cd1_value = 0;
+                        min_cd1_value = 0;
+                        max_cd2_value = 0;
+                        min_cd2_value = 0;
+                        calibration_done_flag = false;
+                   }
+                   else
+                   {
+                        uart_send("CALIB DONE", 10);
+                        cd1_offset_value = cd1_offset_value >> 4;
+                        cd2_offset_value = cd2_offset_value >> 4;
+                        system_settings.sns1_off0 = (uint8_t)cd1_offset_value;
+                        system_settings.sns1_off1 = (uint8_t)(cd1_offset_value >> 8);
+                        system_settings.sns2_off0 = (uint8_t)cd2_offset_value;
+                        system_settings.sns2_off1 = (uint8_t)(cd2_offset_value >> 8);
+                        fram_write(&system_settings.sns1_off0, 1, SNS1_OFF0);
+                        fram_write(&system_settings.sns1_off1, 1, SNS1_OFF1);
+                        fram_write(&system_settings.sns2_off0, 1, SNS2_OFF0);
+                        fram_write(&system_settings.sns2_off1, 1, SNS2_OFF1);
+                        calibration_done_flag = true;
+                   }
+
+              }
+           }
+           //TODO : Call configure_au20xx function only if calibration is done by this process
+           /***
+            * In this process the Calibration process is run and the offset value is written to fram so that
+            * on Reset it is read from FRAM and written to OFFSET registers of the chip by calling configure_au20xx()
+            * function ... Should not call calibrate_au20xx() function once calibration is done through this
+            * routine .
+            */
        }
        //TODO : Get to Low Power Mode.. On timer Interrupt switch to Active Mode.
        //TODO : Feed the Watchdog. Mechanism
