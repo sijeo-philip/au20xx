@@ -116,6 +116,35 @@ uint16_t cd1_value_q16 = 0;
 uint16_t cd2_value_q16 = 0;
 uint16_t count;
 
+
+/***
+ *
+ * VARIABLES used for Calibration Routine
+ *
+ */
+
+uint16_t total_cd1_sample_count = 0;
+uint16_t total_cd2_sample_count = 0;
+uint16_t avg_filter_sample_count = 0;
+uint16_t max_sample_count_1 = 0;
+uint16_t min_sample_count_1 = 0;
+uint16_t max_sample_count_2 = 0;
+uint16_t min_sample_count_2 = 0;
+
+uint32_t sum_cd1_value = 0;
+uint32_t sum_cd2_value = 0;
+uint32_t avg_cd1_value = 0;
+uint32_t avg_cd2_value = 0;
+uint32_t cd1_offset_value = 0;
+uint32_t cd2_offset_value = 0;
+uint32_t max_cd1_value = 0;
+uint32_t max_cd2_value = 0;
+uint32_t min_cd1_value = 0;
+uint32_t min_cd2_value = 0;
+
+static bool calibration_done_flag = false;
+
+
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -329,7 +358,9 @@ int main(void) {
        else
        {
            uart_init();
-           timerA0_load_time(2);
+           timerA0_load_time(20);
+
+#100,1,20#
           //TODO: Write for Calibration Mode of operation
            uart_byte_count = uart_read(uart_top_variable);
            if (uart_byte_count > 0)
@@ -365,78 +396,76 @@ int main(void) {
                 cd1_value_q16 = offset_reg_values[1] << 8 | offset_reg_values[0];
                 cd2_value_q16 = offset_reg_values[3] << 8 | offset_reg_values[2];
 
-                if (avg_filter_sample_count < 4)
-                {
-                 sum_cd1_value += cd1_value_q16;
-                 sum_cd2_value += cd2_value_q16;
+                 sum_cd1_value[avg_filter_sample_count] = cd1_value_q16;
+                 sum_cd2_value[avg_filter_sample_count] = cd2_value_q16;
+                 avg_cd1_value = average_by_4(sum_cd1_value);
+                 avg_cd2_value = average_by_4(sum_cd2_value);
                  avg_filter_sample_count ++ ;
+                 if (avg_cd1_value > max_cd1_value)
+                  {
+                    max_cd1_value = avg_cd1_value;
+                    max_sample_count_1 = 0;
+                   }
+                  else
+                  {
+                    max_sample_count_1++;
+                    if(max_sample_count_1 >4 )
+                     {
+                        cd1_offset_value += max_cd1_value;
+                        total_cd1_sample_count++;
+                         max_sample_count_1 = 0;
+                        //Reset max_cd1_value;
+                      }
+                   }
+                   if(( avg_cd1_value < min_cd1_value ) && ( avg_cd1_value < max_cd1_value ))
+                   {
+                      min_cd1_value = avg_cd1_value;
+                      min_sample_count_1 = 0;
+                   }
+                   else
+                   {
+                      min_sample_count_1++;
+                      if(min_sample_count_1 > 4)
+                      {
+                         cd1_offset_value += min_cd1_value;
+                         total_cd1_sample_count++;
+                         min_sample_count_1 = 0;
+                      }
+                   }
+                   if(avg_cd2_value > max_cd2_value )
+                   {
+                      max_cd2_value = avg_cd2_value;
+                      max_sample_count_2 = 0;
+                   }
+                   else
+                   {
+                      max_sample_count_2++;
+                      if( max_sample_count_2 > 4)
+                      {
+                         cd1_offset_value += max_cd2_value;
+                         total_cd2_sample_count++;
+                         max_sample_count_2 = 0;
+                       }
+                     }
+                    if(avg_cd2_value < min_cd2_value )
+                     {
+                        min_cd2_value = avg_cd2_value;
+                        min_sample_count_2 = 0;
+                      }
+                      else
+                      {
+                         min_sample_count_2++;
+                         if(min_sample_count_2 > 4)
+                         {
+                           cd2_offset_value += min_cd2_value;
+                           total_cd2_sample_count++;
+                           min_sample_count_2 = 0;
+                         }
+                       }
                  if(avg_filter_sample_count > 3)
                  {
                      avg_filter_sample_count = 0;
-                     avg_cd1_value += sum_cd1_value>>2;
-                     avg_cd2_value += sum_cd2_value>>2;
-                     if (avg_cd1_value > max_cd1_value)
-                     {
-                        max_cd1_value = avg_cd1_value;
-                        max_sample_count_1 = 0;
-                     }
-                     else
-                     {
-                        max_sample_count_1++;
-                        if(max_sample_count_1 >4 )
-                         {
-                           cd1_offset_value += max_cd1_value;
-                           total_cd1_sample_count++;
-                           max_sample_count_1 = 0;
-                          }
-                      }
-                      if(avg_cd1_value < min_cd1_value )
-                      {
-                        min_cd1_value = avg_cd1_value;
-                        min_sample_count_1 = 0;
-                       }
-                       else
-                       {
-                          min_sample_count_1++;
-                          if(min_sample_count_1 > 4)
-                           {
-                             cd1_offset_value += min_cd1_value;
-                             total_cd1_sample_count++;
-                             min_sample_count_1 = 0;
-                            }
-                        }
-                       if(avg_cd2_value > max_cd2_value )
-                        {
-                           max_cd2_value = avg_cd2_value;
-                           max_sample_count_2 = 0;
-                         }
-                        else
-                        {
-                          max_sample_count_2++;
-                          if( max_sample_count_2 > 4)
-                           {
-                              cd1_offset_value += max_cd2_value;
-                              total_cd2_sample_count++;
-                              max_sample_count_2 = 0;
-                            }
-                         }
-                        if(avg_cd2_value < min_cd2_value )
-                         {
-                            min_cd2_value = avg_cd2_value;
-                            min_sample_count_2 = 0;
-                          }
-                          else
-                          {
-                             min_sample_count_2++;
-                             if(min_sample_count_2 > 4)
-                             {
-                               cd2_offset_value += min_cd2_value;
-                               total_cd2_sample_count++;
-                               min_sample_count_2 = 0;
-                              }
-                           }
-                      }
-                   } /* if (avg_filter_sample_count < 4) */
+                 }
 
               }  /* If (valid_data) */
               if( (total_cd1_sample_count & total_cd2_sample_count) == 16)
