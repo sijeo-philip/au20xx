@@ -131,8 +131,8 @@ uint16_t min_sample_count_1 = 0;
 uint16_t max_sample_count_2 = 0;
 uint16_t min_sample_count_2 = 0;
 
-uint32_t sum_cd1_value = 0;
-uint32_t sum_cd2_value = 0;
+uint32_t sum_cd1_value[5];
+uint32_t sum_cd2_value[5];
 uint32_t avg_cd1_value = 0;
 uint32_t avg_cd2_value = 0;
 uint32_t cd1_offset_value = 0;
@@ -141,6 +141,10 @@ uint32_t max_cd1_value = 0;
 uint32_t max_cd2_value = 0;
 uint32_t min_cd1_value = 0;
 uint32_t min_cd2_value = 0;
+uint32_t avg_max_cd1_value = 0;
+uint32_t avg_max_cd2_value = 0;
+uint32_t avg_min_cd1_value = 0;
+uint32_t avg_min_cd2_value = 0;
 
 static bool calibration_done_flag = false;
 
@@ -358,9 +362,8 @@ int main(void) {
        else
        {
            uart_init();
-           timerA0_load_time(20);
+           timerA0_load_time(50);
 
-#100,1,20#
           //TODO: Write for Calibration Mode of operation
            uart_byte_count = uart_read(uart_top_variable);
            if (uart_byte_count > 0)
@@ -405,6 +408,7 @@ int main(void) {
                   {
                     max_cd1_value = avg_cd1_value;
                     max_sample_count_1 = 0;
+                    min_sample_count_1 = 0;
                    }
                   else
                   {
@@ -412,15 +416,18 @@ int main(void) {
                     if(max_sample_count_1 >4 )
                      {
                         cd1_offset_value += max_cd1_value;
+                        avg_max_cd1_value += max_cd1_value;
+                        min_cd1_value = max_cd1_value;
                         total_cd1_sample_count++;
                          max_sample_count_1 = 0;
-                        //Reset max_cd1_value;
+
                       }
                    }
-                   if(( avg_cd1_value < min_cd1_value ) && ( avg_cd1_value < max_cd1_value ))
+                   if( avg_cd1_value < min_cd1_value )
                    {
                       min_cd1_value = avg_cd1_value;
                       min_sample_count_1 = 0;
+                      max_sample_count_1 = 0;
                    }
                    else
                    {
@@ -428,6 +435,8 @@ int main(void) {
                       if(min_sample_count_1 > 4)
                       {
                          cd1_offset_value += min_cd1_value;
+                         avg_min_cd1_value += min_cd1_value;
+                         max_cd1_value = min_cd1_value;
                          total_cd1_sample_count++;
                          min_sample_count_1 = 0;
                       }
@@ -436,6 +445,7 @@ int main(void) {
                    {
                       max_cd2_value = avg_cd2_value;
                       max_sample_count_2 = 0;
+                      min_sample_count_2 = 0;
                    }
                    else
                    {
@@ -443,6 +453,8 @@ int main(void) {
                       if( max_sample_count_2 > 4)
                       {
                          cd1_offset_value += max_cd2_value;
+                         avg_max_cd2_value += max_cd2_value;
+                         min_cd2_value = max_cd2_value;
                          total_cd2_sample_count++;
                          max_sample_count_2 = 0;
                        }
@@ -451,6 +463,7 @@ int main(void) {
                      {
                         min_cd2_value = avg_cd2_value;
                         min_sample_count_2 = 0;
+                        max_sample_count_2 = 0;
                       }
                       else
                       {
@@ -458,6 +471,8 @@ int main(void) {
                          if(min_sample_count_2 > 4)
                          {
                            cd2_offset_value += min_cd2_value;
+                           avg_min_cd2_value += min_cd2_value;
+                           max_cd2_value = min_cd2_value;
                            total_cd2_sample_count++;
                            min_sample_count_2 = 0;
                          }
@@ -470,13 +485,16 @@ int main(void) {
               }  /* If (valid_data) */
               if( (total_cd1_sample_count & total_cd2_sample_count) == 16)
               {
-                   if (((max_cd1_value - min_cd1_value) < 15 ) || (( max_cd2_value - min_cd2_value ) < 15))
+                  avg_max_cd1_value = avg_max_cd1_value >> 3;
+                  avg_max_cd2_value = avg_max_cd2_value >> 3;
+                  avg_min_cd1_value = avg_min_cd1_value >> 3;
+                  avg_min_cd2_value = avg_min_cd2_value >> 3;
+
+                   if (((avg_max_cd1_value - avg_min_cd1_value) < 15 ) || (( avg_max_cd2_value - avg_min_cd2_value ) < 15))
                    {
                         uart_send("CALIB NOT OK", 12);
                         total_cd1_sample_count = 0;
                         total_cd2_sample_count = 0;
-                        sum_cd1_value = 0;
-                        sum_cd2_value = 0;
                         avg_cd1_value = 0;
                         avg_cd2_value = 0;
                         cd1_offset_value = 0;
