@@ -52,7 +52,7 @@ extern bool volatile temperatureReadFlag;
 /******************************************************************************
 * Configuration Constants
 *******************************************************************************/
-#define UART_INTERBYTE_DELAY    10
+#define UART_INTERBYTE_DELAY    2
 #define UART_BUFF_SIZE          100
 #define GLOBAL_Q                8
 
@@ -76,7 +76,9 @@ extern bool volatile temperatureReadFlag;
 #define FPGA_CONNECT    1
 #endif
 
-
+#ifndef CALIBRATION_TEST_EN
+#define CALIBRATION_TEST_EN     1
+#endif
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
@@ -124,6 +126,7 @@ bool set_top_variables(top_variables_t*);
 _iq24 absolute(_iq24);
 void configure_au20xx(top_variables_t * topVariables);
 void set_au20xx_regs(top_variables_t * topVariables);
+uint32_t average_by_4(uint32_t *, int* );
 #ifdef __cplusplus
 } // extern "C"
 #endif

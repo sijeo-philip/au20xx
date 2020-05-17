@@ -369,6 +369,66 @@ void set_au20xx_regs(top_variables_t * topVariables)
 }
 
 
+
+/******************************************************************************
+* Function : average_by_4
+*//**
+* \b Description:
+*
+* This function returns average value of the array of 4 long unsigned element
+*
+* PRE-CONDITION: Clocks should be initialized for 1MHz Source
+*
+* POST-CONDITION: Average of 4 elements are calculated and returned
+*
+* @param[in]   address to the array of 4 elements
+*
+* @return       average of 4 elements
+*
+* \b Example Example:
+* @code
+*  uint32_t value[5];
+*  uint32_t avg_value;
+* avg_value = absolute (value)
+*
+* @endcode
+*
+* @see system_clock_init
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 30/03/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+uint32_t average_by_4(uint32_t * address_of_array, int* slope_of_slope)
+{
+    static uint8_t i = 0;
+    static uint32_t average_value;
+    int slope2, slope1;
+    slope1 = 0 ; slope2 = 0;
+    average_value = 0;
+    for (i = 0; i < 4; i++ )
+    {
+        average_value += address_of_array[i];
+    }
+    average_value = average_value >> 2;
+
+    slope1 = address_of_array[1] - address_of_array[0];
+    slope2 = address_of_array[3] - address_of_array[2];
+
+    *slope_of_slope = slope2 - slope1;
+    return average_value;
+}
+
+
+
+
+
+
 /**********************************
  * TIMERA1 ISR
  */

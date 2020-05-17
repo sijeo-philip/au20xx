@@ -110,11 +110,17 @@ _iq24 previous_ang;        /**<< Calculated Angle in previous cycle to determine
 _iq24 ang_step;            /** << Resultant Angular Step Change */
 _iq24 acc_ang;             /** << Accumulation of calculated angle to determine rotation */
 _iq24 rotation;            /** << Variable to check if the angle of pi is crossed */
+int up_down_curve1;
+int up_down_curve2;
 
 
 uint16_t cd1_value_q16 = 0;
 uint16_t cd2_value_q16 = 0;
 uint16_t count;
+uint16_t max_cd1_sample_count;
+uint16_t max_cd2_sample_count;
+uint16_t min_cd1_sample_count;
+uint16_t min_cd2_sample_count;
 
 
 /***
@@ -146,8 +152,11 @@ uint32_t avg_max_cd2_value = 0;
 uint32_t avg_min_cd1_value = 0;
 uint32_t avg_min_cd2_value = 0;
 
-static bool calibration_done_flag = false;
+uint32_t sample_count =0;
 
+static bool calibration_done_flag = false;
+static bool get_minima1_flag = false;
+static bool get_minima2_flag = false;
 
 /******************************************************************************
 * Function Prototypes
@@ -226,6 +235,9 @@ void aura_hw_init ( void )
     timerA0_load_time(system_settings.sampleTime);
     cd1_corr_slope = _IQ24(system_settings.cd1_corr_slope);
     cd2_corr_slope = _IQ24(system_settings.cd2_corr_slope);
+#if CALIBRATION_TEST_EN == 1
+    normal_operation_mode = false;
+#endif
 }
 
 
@@ -389,6 +401,7 @@ int main(void) {
               au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
               if(valid_data)
               {
+                sample_count++;
                 valid_data =0;
                 au20xx_read_reg( SNS1_OUT_Q16_LSB_REG, &offset_reg_values[0]);
                 au20xx_read_reg( SNS1_OUT_Q16_MSB_REG, &offset_reg_values[1]);
@@ -401,35 +414,41 @@ int main(void) {
 
                  sum_cd1_value[avg_filter_sample_count] = cd1_value_q16;
                  sum_cd2_value[avg_filter_sample_count] = cd2_value_q16;
-                 avg_cd1_value = average_by_4(sum_cd1_value);
-                 avg_cd2_value = average_by_4(sum_cd2_value);
+                 avg_cd1_value = average_by_4(sum_cd1_value, &up_down_curve1);
+                 avg_cd2_value = average_by_4(sum_cd2_value , &up_down_curve2);
                  avg_filter_sample_count ++ ;
-                 if (avg_cd1_value > max_cd1_value)
+
+
+                 if(total_cd1_sample_count < 16)
+                 {
+                 if ( (avg_cd1_value > max_cd1_value) && (up_down_curve1 <= 0) && ( get_minima1_flag == false) )
                   {
                     max_cd1_value = avg_cd1_value;
                     max_sample_count_1 = 0;
-                    min_sample_count_1 = 0;
+                    //min_sample_count_1 = 0;
                    }
-                  else
+                  else if ((up_down_curve1 <= 0) && (get_minima1_flag == false))
                   {
                     max_sample_count_1++;
-                    if(max_sample_count_1 >4 )
+                    if(max_sample_count_1 > 4 )
                      {
                         cd1_offset_value += max_cd1_value;
                         avg_max_cd1_value += max_cd1_value;
                         min_cd1_value = max_cd1_value;
                         total_cd1_sample_count++;
-                         max_sample_count_1 = 0;
+                        max_sample_count_1 = 0;
+                        max_cd1_sample_count++;
+                        get_minima1_flag = true;
 
                       }
                    }
-                   if( avg_cd1_value < min_cd1_value )
+                   if (( avg_cd1_value < min_cd1_value ) && (up_down_curve1 > 0) && (get_minima1_flag == true))
                    {
                       min_cd1_value = avg_cd1_value;
                       min_sample_count_1 = 0;
-                      max_sample_count_1 = 0;
+                      //max_sample_count_1 = 0;
                    }
-                   else
+                   else if (( up_down_curve1 > 0) && (get_minima1_flag == true))
                    {
                       min_sample_count_1++;
                       if(min_sample_count_1 > 4)
@@ -439,33 +458,40 @@ int main(void) {
                          max_cd1_value = min_cd1_value;
                          total_cd1_sample_count++;
                          min_sample_count_1 = 0;
+                         min_cd1_sample_count++;
+                         get_minima1_flag = false;
                       }
                    }
-                   if(avg_cd2_value > max_cd2_value )
+                 }
+                 if(total_cd2_sample_count < 16)
+                 {
+                   if ((avg_cd2_value > max_cd2_value ) && (up_down_curve2 <=0) && (get_minima2_flag == false))
                    {
                       max_cd2_value = avg_cd2_value;
                       max_sample_count_2 = 0;
-                      min_sample_count_2 = 0;
+                      //min_sample_count_2 = 0;
                    }
-                   else
+                   else if ((up_down_curve2 <= 0) && (get_minima2_flag == false))
                    {
                       max_sample_count_2++;
                       if( max_sample_count_2 > 4)
                       {
-                         cd1_offset_value += max_cd2_value;
+                         cd2_offset_value += max_cd2_value;
                          avg_max_cd2_value += max_cd2_value;
                          min_cd2_value = max_cd2_value;
                          total_cd2_sample_count++;
                          max_sample_count_2 = 0;
+                         max_cd2_sample_count++;
+                         get_minima2_flag = true;
                        }
                      }
-                    if(avg_cd2_value < min_cd2_value )
+                    if ((avg_cd2_value < min_cd2_value ) && (up_down_curve2 > 0) && (get_minima2_flag == true))
                      {
                         min_cd2_value = avg_cd2_value;
                         min_sample_count_2 = 0;
-                        max_sample_count_2 = 0;
+                        //max_sample_count_2 = 0;
                       }
-                      else
+                      else if ((up_down_curve2 > 0) && (get_minima2_flag == true))
                       {
                          min_sample_count_2++;
                          if(min_sample_count_2 > 4)
@@ -475,14 +501,18 @@ int main(void) {
                            max_cd2_value = min_cd2_value;
                            total_cd2_sample_count++;
                            min_sample_count_2 = 0;
+                           min_cd2_sample_count++;
+                           get_minima2_flag = false;
                          }
                        }
+                 }
                  if(avg_filter_sample_count > 3)
                  {
                      avg_filter_sample_count = 0;
                  }
 
               }  /* If (valid_data) */
+           }
               if( (total_cd1_sample_count & total_cd2_sample_count) == 16)
               {
                   avg_max_cd1_value = avg_max_cd1_value >> 3;
@@ -522,7 +552,7 @@ int main(void) {
                    }
 
               }
-           }
+
            //TODO : Call configure_au20xx function only if calibration is done by this process
            /***
             * In this process the Calibration process is run and the offset value is written to fram so that
