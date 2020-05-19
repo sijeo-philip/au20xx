@@ -182,7 +182,7 @@ void delay_us(uint16_t microseconds )
 * <hr>
 *
 *******************************************************************************/
-bool get_top_variables(top_variables_t * topVariable)
+bool get_top_variables(top_variables_t * topVariable, int8_t* initTemp)
 {
     static bool retVal = false;
 #if DEBUG == 1
@@ -195,6 +195,7 @@ bool get_top_variables(top_variables_t * topVariable)
     topVariable->sampleTime = 50;
     topVariable->cd1_corr_slope = 2.004;
     topVariable->cd2_corr_slope = 1.802;
+    fram_read(initTemp, 1, INIT_TEMP_ADD);
 #if FPGA_CONNECT == 0
     fram_read(&topVariable->sns1_off0, 1, SNS1_OFF0);
     fram_read(&topVariable->sns1_off1, 1, SNS1_OFF1);

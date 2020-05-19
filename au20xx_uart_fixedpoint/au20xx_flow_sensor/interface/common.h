@@ -121,7 +121,7 @@ extern "C"{
 
 void sensEn_delay_us( void );
 void delay_us(uint16_t microseconds );
-bool get_top_variables(top_variables_t*);
+bool get_top_variables(top_variables_t*, int8_t*);
 bool set_top_variables(top_variables_t*);
 _iq24 absolute(_iq24);
 void configure_au20xx(top_variables_t * topVariables);

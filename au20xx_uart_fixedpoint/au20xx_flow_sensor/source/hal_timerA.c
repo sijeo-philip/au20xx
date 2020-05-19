@@ -273,13 +273,10 @@ __interrupt void TIMER0_ISR ( void )
      */
     if ( sampleCount <= 0)
     {
-#if FPGA_CONNECT == 1
-        temperatureReadFlag = true;
-#elif FPGA_CONNECT == 0
-        readTemperatureFlag = true;  /** << This flag is checked in main to initiate
+
+       readTemperatureFlag = true;  /** << This flag is checked in main to initiate
                                             Temperature Reading along with return value of
                                             read_temp_sensor() if both are true new updated value is read*/
-#endif
         sampleCount = samplesPerTempReading;
 #if FPGA_CONNECT == 0
         __start_adc_conv();

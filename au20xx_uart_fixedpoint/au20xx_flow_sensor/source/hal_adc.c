@@ -63,6 +63,7 @@ static int volatile degC;
 static uint16_t volatile voltValue;
 
 bool volatile temperatureReadFlag = false;
+extern bool readTemperatureFlag;
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -181,7 +182,7 @@ __interrupt void ADC12_ISR(void)
   case 10: break;
   case 12:
       tempValue = ADC_CONV_MEMORY(0) - CALADC_12V_30C;
-      degC = ((long)tempValue * 10 *(82-30)* 10)/((CALADC_12V_85C - CALADC_12V_30C)*10) + 300;
+      degC = ((long)tempValue * 10 *(85-30)* 10)/((CALADC_12V_85C - CALADC_12V_30C)*10) + 300;
       //TO DO: SAVE Temperature to Holding Register
       ADC12IFGR0 &= 0xFFFE;
       //TO DO: Go to low power mode if needed
@@ -196,6 +197,8 @@ __interrupt void ADC12_ISR(void)
 
     temperatureReadFlag = true;   /** << This flag is set to true once new values are read from
                                         temperature sensor and Battery ADC */
+    readTemperatureFlag = false;  /** << This flag is set to true when ADC conversion is initiated
+                                         on timer expire */
     ADC_CONV_DISABLE;
     //TO DO: Can go to low power mode if needed
    break;
@@ -275,7 +278,7 @@ __interrupt void ADC12_ISR(void)
 
 bool read_temp_sensor( void * degrees )
 {
-#if FPGA_CONNECT == 1
+#if FPGA_CONNECT == 1 && CALIBRATION_TEST_EN == 0
     static bool retVal;
     retVal = temperatureReadFlag;
     if (true == temperatureReadFlag)
@@ -284,7 +287,7 @@ bool read_temp_sensor( void * degrees )
       temperatureReadFlag = false;
     }
     return retVal;
-#elif FPGA_CONNECT == 0
+#elif FPGA_CONNECT == 0 || CALIBRATION_TEST_EN == 1
     static bool retVal;
     int * degCel = (int*) degrees;
     retVal = temperatureReadFlag;

@@ -158,6 +158,8 @@ static bool calibration_done_flag = false;
 static bool get_minima1_flag = false;
 static bool get_minima2_flag = false;
 
+extern bool readTemperatureFlag;
+
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -211,7 +213,7 @@ void aura_hw_init ( void )
     timerA_init();
     //TODO : an GPIO has to read of HIGH or LOW , if HIGH normal_operation flag is to
     //       be set to true else false
-    get_top_variables(&system_settings);
+    get_top_variables(&system_settings, &tempInit);
 
 #if EN_CALIBRATE == 1
     au20xx_calibrate(&system_settings);
@@ -253,9 +255,6 @@ int main(void) {
      Top Variable settings and store the same in the respective FRAM locations */
 #if CONSTANT_TEMP == 1
    currTempValue = 30;
-#elif FPGA_CONNECT == 0
-   while(!read_temp_sensor( &currTempValue )) {} /** << After ADC Initialization the First Temperature
-                                                  Value is read*/
 #endif
    for(;;){
 
@@ -318,9 +317,9 @@ int main(void) {
                  cd2_value = _IQ24(cd2_value_q16 );  //CD2_OFFSET need to be subtracted
 #endif
 #if CONSTANT_TEMP == 0
-                 if ( true == temperatureReadFlag )
+                 if ( true == readTemperatureFlag )
                  {
-                     read_temp_sensor(&currTempValue);
+                     while(!read_temp_sensor(&currTempValue));
                  }
 #endif
 #if 1
@@ -374,6 +373,8 @@ int main(void) {
        else
        {
            uart_init();
+           refa_init();
+           adc_init();
            timerA0_load_time(50);
 
           //TODO: Write for Calibration Mode of operation
@@ -544,6 +545,9 @@ int main(void) {
                         system_settings.sns1_off1 = (uint8_t)(cd1_offset_value >> 8);
                         system_settings.sns2_off0 = (uint8_t)cd2_offset_value;
                         system_settings.sns2_off1 = (uint8_t)(cd2_offset_value >> 8);
+                        __start_adc_conv();
+                        while(!read_temp_sensor(&currTempValue)){}
+                        fram_write(&currTempValue, 1, INIT_TEMP_ADD);
                         fram_write(&system_settings.sns1_off0, 1, SNS1_OFF0);
                         fram_write(&system_settings.sns1_off1, 1, SNS1_OFF1);
                         fram_write(&system_settings.sns2_off0, 1, SNS2_OFF0);
