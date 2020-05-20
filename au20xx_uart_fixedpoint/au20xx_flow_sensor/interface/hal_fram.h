@@ -54,11 +54,11 @@
 
 #define SAMPLES_PER_TEMP_READ_ADDRESS           (uint8_t*)0x001800    /**<< Address of FRAM where
                                                                     samplePerTempReading is stored */
-#define AU20xx_READ_TIME_ADD                    (uin8_t*)0x001804    /**<< Address of FRAM where the
+#define AU20xx_READ_TIME_ADD                    (uint8_t*)0x001804    /**<< Address of FRAM where the
                                                                        au20xx read interval is stored */
 #define LAST_ROT_COUNT_ADD                      (uint8_t*)0x001806   /**<< Last Rotation count before
                                                                        Power down. */
-#define SAMPLE_TIME_ADD                         (uint8_t*)0x001808   /**<< Sampling Time Setting */
+#define SENS_EN_TIME_ADD                         (uint8_t*)0x001808   /**<< Sampling Time Setting */
 
 #define CD1_CORR_SLOPE_ADD                      (uint8_t*)0x00180A   /**<< CD1_correction Slope (float) */
 
@@ -73,6 +73,8 @@
 #define SNS2_OFF1                               (uint8_t*)0x001815
 
 #define INIT_TEMP_ADD                           (uint8_t*)0x001816
+
+#define CALIB_SAMPLE_TIME_ADD                   (uint8_t*)0x001817
 /******************************************************************************
 * Configuration Constants
 *******************************************************************************/

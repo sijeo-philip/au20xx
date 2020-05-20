@@ -396,6 +396,10 @@ int main(void) {
                    if(process_uart_data(uart_top_variable, &system_settings, &start_calibration_flag))
                    {
                        uart_send("OK", 2);
+                       fram_write(&system_settings.samplesPerTemp, 4, SAMPLES_PER_TEMP_READ_ADDRESS);
+                       fram_write(&system_settings.sampleTime, 2, AU20xx_READ_TIME_ADD);
+                       fram_write(&system_settings.sensEnTime, 1, SENS_EN_TIME_ADD);
+                       fram_write(&system_settings.calibSampleTime, 2, CALIB_SAMPLE_TIME_ADD);
                       timerA0_load_time(system_settings.calibSampleTime);
                    }
                    else
