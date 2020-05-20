@@ -105,6 +105,10 @@ typedef struct
     uint8_t sns2_off0;              /** <<LSB of Sensor 2 offset */
 
     uint8_t sns2_off1;              /** <<MSB of Sensor 2 offset */
+
+    int8_t tempInit;                /** << Initial Temperature to be used by the system during Normal Operation*/
+
+    uint16_t calibSampleTime;       /** << This sampling time is used when the system is in calibration mode */
 }top_variables_t;
 
 /******************************************************************************
@@ -121,12 +125,13 @@ extern "C"{
 
 void sensEn_delay_us( void );
 void delay_us(uint16_t microseconds );
-bool get_top_variables(top_variables_t*, int8_t*);
+bool get_top_variables(top_variables_t*);
 bool set_top_variables(top_variables_t*);
 _iq24 absolute(_iq24);
 void configure_au20xx(top_variables_t * topVariables);
 void set_au20xx_regs(top_variables_t * topVariables);
 uint32_t average_by_4(uint32_t *, int* );
+bool process_uart_data(char*, top_variables_t*, bool*);
 #ifdef __cplusplus
 } // extern "C"
 #endif

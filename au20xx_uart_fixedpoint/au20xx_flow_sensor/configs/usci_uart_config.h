@@ -203,7 +203,7 @@
  *                        for BITCLK
  */
 #ifndef CONF_UCAMCTLW_UCBRS
-#define CONF_UCAMCTLW_UCBRS    0x2000    /* << This is for 9600 Baud rate  as per table 3-5 */
+#define CONF_UCAMCTLW_UCBRS    0x2000    /* << This is for 9600 Baud rate  as per table 30-5 */
 #endif
 
 

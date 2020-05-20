@@ -35,7 +35,7 @@
 * Includes
 *******************************************************************************/
 #include <stdint.h>             /* For portable types */
-
+#include <string.h>             /* For String types */
 //TODO: UPDATE MY INCLUDE
 #include "common.h"             /* For common functions such as delays */
 #include "hal_fram.h"           /* For top variable address locations */
@@ -58,6 +58,8 @@
 *******************************************************************************/
 static uint16_t sensEn_timer_delay = 0;
 static bool sensEn_delay_flag = false;
+char data[5];
+
 
 extern uint32_t volatile samplesPerTempReading;
 /******************************************************************************
@@ -182,7 +184,7 @@ void delay_us(uint16_t microseconds )
 * <hr>
 *
 *******************************************************************************/
-bool get_top_variables(top_variables_t * topVariable, int8_t* initTemp)
+bool get_top_variables(top_variables_t * topVariable)
 {
     static bool retVal = false;
 #if DEBUG == 1
@@ -195,7 +197,10 @@ bool get_top_variables(top_variables_t * topVariable, int8_t* initTemp)
     topVariable->sampleTime = 50;
     topVariable->cd1_corr_slope = 2.004;
     topVariable->cd2_corr_slope = 1.802;
-    fram_read(initTemp, 1, INIT_TEMP_ADD);
+    topVariable->tempInit = 30;
+
+
+    //fram_read(&topVariable->tempInit, 1, INIT_TEMP_ADD);
 #if FPGA_CONNECT == 0
     fram_read(&topVariable->sns1_off0, 1, SNS1_OFF0);
     fram_read(&topVariable->sns1_off1, 1, SNS1_OFF1);
@@ -441,5 +446,216 @@ __interrupt void TIMER1_ISR ( void )
                                          to the timer register */
      SNS_EN_LOW;
   }
+
+
+/******************************************************************************
+* Function : strcpymarker()
+*//**
+* \b Description:
+*
+* This function is extract the string in between the startMarker and end Marker
+* from source string and store the the same in the destination array
+*
+* PRE-CONDITION: None
+*
+* POST-CONDITION: The string between the start Marker and End Marker in the
+*                 source string is copied to the destination string.
+*
+* @param[in]    Address of the Source String
+* @param[out]   Address of the Destination String
+* @param[in]    The starting delimiter of the string
+* @param[in]    The Ending delimiter of the String
+
+* @return       Address of the next location to End delimiter
+* \b Example Example:
+* @code
+*  uint8_t SrcString[50] = "sijeo@hotmail.com";
+*   uint8_t destString[20];
+*  uint8_t startMarker = '@';
+* uint8_t EndMarker = '.';
+*   strcpymarker(SrcString, destString, startMarker, EndMarker);
+*  /// The string hotmail will be stored in the dstString
+* @endcode
+*
+*
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 20/05/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+static char * strcpymarker(char * src, char * dest, uint8_t startMarker, uint8_t endMarker)
+{
+
+        char *s, *d;
+        uint16_t bytes=0;
+        while(*src != startMarker)
+        {
+            src++;
+            if(*src == '\0')
+            return 0;
+        }
+        s = src;
+        src++;
+        s++;
+        while(*src != endMarker)
+        {
+            src++;
+            if(*src == '\0')
+            return 0;
+        }
+        d = src;
+        while(s!=d)
+        {
+            *dest = *s;
+            dest++;
+            s++;
+            bytes++;
+        }
+
+        //dest++;
+        *dest = '\0';
+
+        return d;
+}
+
+/******************************************************************************
+* Function : convert_string_to_integer()
+*//**
+* \b Description:
+*
+* This function is used to convert string to integer value
+*
+* PRE-CONDITION: None
+*
+* POST-CONDITION: The string been passed to function is returned as unsigned integer
+*
+* @return       Unsigned Integer up to 255
+
+* @param[in]    address of the String to be converted to number
+*
+* \b Example Example:
+* @code
+*  uint8_t strNumber[2] = "22"
+*  uint8_t number = 0;
+*   number = convert_string_to_integer(strNumber);
+* @endcode
+*
+*
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 21/05/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+uint16_t convert_string_to_integer(char *const number)
+{
+    uint16_t dec = 0, i;
+    uint32_t len = 0;
+    len = strlen(number);
+    for( i = 0; i < len; i++ )
+    dec = dec * 10 + (number[i] - '0');
+
+    return dec;
+}
+
+
+/******************************************************************************
+* Function : bool process_uart_data(char*, top_variables_t*)
+*//**
+* \b Description:
+*
+* This function is used to parse the data received from the UART and set top variables as
+*
+* PRE-CONDITION: None
+*
+* POST-CONDITION: The character array which is passed as input is parsed and stored in the
+* top variable structure
+*
+* @param[in]    Address of the Source String
+* @param[out]   Address of the top variable structure which is been updated
+* @return       True if it is successfully stored else false
+* \b Example Example:
+* @code
+*  top_variable_t system_settings;
+*   bool retVal;
+*   retVal = process_uart_data(&sourceString, &system_settings);
+*  @endcode
+*
+*
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 20/05/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+bool process_uart_data(char* rx_data, top_variables_t* topVariables, bool *calibration_flag)
+{
+    char* temp_ptr;
+
+    temp_ptr = rx_data;
+    memcpy(data, '\0', 5);
+    temp_ptr = strcpymarker(temp_ptr, data, '#', ',');
+    if (temp_ptr == 0)
+        return false;
+    else
+        topVariables->samplesPerTemp = convert_string_to_integer(data);
+    if(topVariables->samplesPerTemp > 512)
+        topVariables->samplesPerTemp = 100; /* if the user tries to set value greater than 512 the value is set to*/
+                                            /* 100 by default */
+    memcpy(data, '\0', 5);
+    temp_ptr = strcpymarker(temp_ptr, data, ',', ',');
+    if(temp_ptr == 0)
+        return false;
+    else
+        topVariables->sensEnTime = convert_string_to_integer(data);
+    if( topVariables->sensEnTime > 3)
+        topVariables->sensEnTime = 3;  /* if the user tries to set value greater than 3 the value is set to */
+                                       /* 3 by default */
+    memcpy(data, '\0', 5);
+    temp_ptr = strcpymarker(temp_ptr, data, ',',',');
+    if(temp_ptr == 0)
+        return false;
+    else
+        topVariables->sampleTime = convert_string_to_integer(data);
+    if(topVariables->sampleTime > 512)
+        topVariables->sampleTime = 50;  /* if the user tries to set value of Sampling time greater than 512ms */
+                                        /* it is reset to 50ms by default */
+    memcpy(data, '\0', 5);
+    temp_ptr = strcpymarker(temp_ptr, data, ',',',');
+    if (temp_ptr == 0)
+        return false;
+    else
+        topVariables->calibSampleTime = convert_string_to_integer(data);
+    if(topVariables->calibSampleTime > 512)
+        topVariables->calibSampleTime  =250;  /* if the user tries to set value of calibration sampling greater than*/
+                                              /* 512ms then the value is reset to 250ms by default */
+    memcpy(data, '\0', 5);
+    temp_ptr = strcpymarker(temp_ptr, data, ',', '#');
+    if (temp_ptr == 0)
+        return false;
+    else
+    {
+        if (convert_string_to_integer(data) == 1)
+            *calibration_flag = true;
+        else *calibration_flag = false;
+
+    }
+    return true;
+}
+
+
 
 /*************** END OF FUNCTIONS ***************************************************************************/

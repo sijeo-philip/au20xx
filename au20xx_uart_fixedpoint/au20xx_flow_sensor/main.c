@@ -65,7 +65,7 @@
 *******************************************************************************/
 uint8_t reg_data=0;
 uint8_t offset_reg_values[5];
-static uint8_t uart_top_variable[UART_BUFF_SIZE];
+static char uart_top_variable[UART_BUFF_SIZE];
 static uint16_t uart_byte_count = 0;
 
 top_variables_t system_settings;
@@ -77,7 +77,6 @@ _iq24 cd1_previous_value=0;
 _iq24 cd2_previous_value=0;
 static uint8_t volatile valid_data = 0;
 static bool volatile normal_operation_mode = true;
-static int8_t const tempInit = 30;
 static int8_t currTempValue = 0;
 static int8_t volatile tempNorm = 0;
 static _iq24 volatile delta_x =0;
@@ -103,7 +102,7 @@ _iq24 pi = _IQ24(3.14149);
 _iq24 two_pi = _IQ24(6.2832);
 _iq24 neg_pi = _IQ24(-3.14149);
 _iq24 minus_one = _IQ24(-1.0);
-_iq24 pi_by_2 = _IQ24(1.570796);
+_iq24 pi_by_2 = _IQ24(2);
 
 _iq24 ang = 0;             /**<< Calculated Arc Tangent of delta_YC and delta_XC */
 _iq24 previous_ang;        /**<< Calculated Angle in previous cycle to determine Step change */
@@ -159,6 +158,7 @@ static bool get_minima1_flag = false;
 static bool get_minima2_flag = false;
 
 extern bool readTemperatureFlag;
+bool start_calibration_flag = false;
 
 /******************************************************************************
 * Function Prototypes
@@ -207,13 +207,12 @@ void aura_hw_init ( void )
 {
 
     system_clock_init();        /**<< Set the Frequency of the system */
-    _BIS_SR(GIE);
     gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
     spi_init();                 /**<< Initialize the SPI peripheral */
     timerA_init();
     //TODO : an GPIO has to read of HIGH or LOW , if HIGH normal_operation flag is to
     //       be set to true else false
-    get_top_variables(&system_settings, &tempInit);
+    get_top_variables(&system_settings);
 
 #if EN_CALIBRATE == 1
     au20xx_calibrate(&system_settings);
@@ -239,7 +238,14 @@ void aura_hw_init ( void )
     cd2_corr_slope = _IQ24(system_settings.cd2_corr_slope);
 #if CALIBRATION_TEST_EN == 1
     normal_operation_mode = false;
+    uart_init();
+    refa_init();
+    adc_init();
+    uart_send("OK", 2);
 #endif
+    _BIS_SR(GIE);
+
+
 }
 
 
@@ -319,12 +325,13 @@ int main(void) {
 #if CONSTANT_TEMP == 0
                  if ( true == readTemperatureFlag )
                  {
-                     while(!read_temp_sensor(&currTempValue));
+                     while(!read_temp_sensor(&currTempValue)){}
+
                  }
 #endif
 #if 1
 
-                 tempNorm = currTempValue - tempInit;
+                 tempNorm = currTempValue - system_settings.tempInit;
                  q24_tempNorm = _IQ24(tempNorm);
                  cd1_value_corr = _IQ24mpy(cd1_corr_slope , q24_tempNorm);
                  cd1_value_corr = (cd1_value - cd1_value_corr);
@@ -372,28 +379,33 @@ int main(void) {
        }
        else
        {
-           uart_init();
-           refa_init();
-           adc_init();
-           timerA0_load_time(50);
+
+           timerA0_load_time(10);
 
           //TODO: Write for Calibration Mode of operation
+
+
            uart_byte_count = uart_read(uart_top_variable);
-           if (uart_byte_count > 0)
+           if ((uart_byte_count > 0) && (start_calibration_flag == false))
            {
                if('#' == uart_top_variable[uart_byte_count-1])
                {
                     //if(process_data(uart_top_variable);)
                    //TODO : process data function to be written to parse the data received and store in FRAM
                    // if the data is OK it will return 'true' else 'false'
-                      uart_send("OK", 2);
-
+                   if(process_uart_data(uart_top_variable, &system_settings, &start_calibration_flag))
+                   {
+                       uart_send("OK", 2);
+                      timerA0_load_time(system_settings.calibSampleTime);
+                   }
+                   else
+                       uart_send("ERROR", 5);
                }
                else
                    uart_send("ERROR", 5);
            }
 
-           if (( true == sensENFlag) && (false == calibration_done_flag))
+           if (( true == sensENFlag) && (false == calibration_done_flag)&&(start_calibration_flag == true))
            {
               sensENFlag = false;
               valid_data = 0;
@@ -553,6 +565,7 @@ int main(void) {
                         fram_write(&system_settings.sns2_off0, 1, SNS2_OFF0);
                         fram_write(&system_settings.sns2_off1, 1, SNS2_OFF1);
                         calibration_done_flag = true;
+                        start_calibration_flag = false;
                    }
 
               }

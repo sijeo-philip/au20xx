@@ -173,7 +173,7 @@ extern "C"{
 
 void uart_init(void);
 void uart_send(uint8_t const * data,  uint16_t bytes);
-uint16_t uart_read(uint8_t* data);
+uint16_t uart_read(char* data);
 
 #ifdef __cplusplus
 } // extern "C"

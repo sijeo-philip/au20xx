@@ -56,7 +56,7 @@ uint16_t uart_rx_timeout = 0;
 
 
 static bool response_ok_flag =false;
-static uint8_t uart_rx_buffer[UART_BUFF_SIZE];
+static char uart_rx_buffer[UART_BUFF_SIZE];
 static uint16_t uart_rx_byte_count = 0;
 /******************************************************************************
 * Function Prototypes
@@ -108,9 +108,8 @@ void uart_init( void )
   UART_BAUD_RATE_REG(A0) |= CONF_UCABRW_UCABRW;
   UART_MOD_CTRL_REG(A0) |= CONF_UCAMCTLW_UCBRS | CONF_UCAMCTLW_UCBRF | CONF_UCAMCTLW_UCOS16;
   UART_STATW_REG(A0) |= CONF_UCASTATW_UCLISTEN;
-  UART_INT_ENABLE_REG(A0) |= CONF_UCAIE_UCRXIE | CONF_UCAIE_UCTXIE | CONF_UCAIE_UCSTTIE |
-                             CONF_UCAIE_UCTXCPTIE;
   UART_DISABLE_SW_RST(A0);
+  UART_INT_ENABLE_REG(A0) |= CONF_UCAIE_UCRXIE | CONF_UCAIE_UCTXIE | CONF_UCAIE_UCSTTIE | CONF_UCAIE_UCTXCPTIE;
 }
 
 /******************************************************************************
@@ -150,14 +149,15 @@ void uart_init( void )
 *******************************************************************************/
 void uart_send(uint8_t const * data,  uint16_t bytes)
 {
-    static uint16_t data_count;
+    uint16_t data_count;
     uint8_t * p_data;
     p_data = (uint8_t*)data;
     data_count = 0;
     while(data_count < bytes)
     {
         UART_TX_BUF(A0) = *p_data;
-        while(!(UART_TX_BYTE_INT_FLG(A0))){}
+        while(!UART_TX_END_INT_FLG(A0)){}
+        UART_CLR_TXIFG(A0);
         p_data++;
         data_count++;
     }
@@ -198,7 +198,7 @@ void uart_send(uint8_t const * data,  uint16_t bytes)
 * <hr>
 *
 *******************************************************************************/
-uint16_t uart_read(uint8_t* data)
+uint16_t uart_read(char* data)
 {
    static uint16_t byte_count;
    if(true == response_ok_flag)
@@ -207,7 +207,7 @@ uint16_t uart_read(uint8_t* data)
      byte_count = uart_rx_byte_count;
      uart_rx_byte_count = 0;
      memset(data, '\0', 100);
-     strncpy((char*)data, (char*)uart_rx_buffer, byte_count);
+     strncpy(data, uart_rx_buffer, byte_count);
      memset(uart_rx_buffer, '\0', 100);
      return byte_count;
    }
