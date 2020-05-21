@@ -280,6 +280,8 @@ __interrupt void TIMER0_ISR ( void )
         sampleCount = samplesPerTempReading;
 #if FPGA_CONNECT == 0
         __start_adc_conv();
+#elif FPGA_CONNECT == 1
+        temperatureReadFlag = true;
 #endif
     }
     else

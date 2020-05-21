@@ -289,10 +289,9 @@ int main(void) {
                  cd1_value_q16 = offset_reg_values[1] << 8 | offset_reg_values[0];
                  cd2_value_q16 = offset_reg_values[3] << 8 | offset_reg_values[2];
 
-                 cd1_value = (cd1_value_q16 );  //CD1_OFFSET need to be subtracted
-                 cd2_value = (cd2_value_q16 );  //CD2_OFFSET need to be subtracted
-                 cd1_value = cd1_value << 24;
-                 cd2_value = cd2_value << 24;
+                 cd1_value = _IQ24(cd1_value_q16 );  //CD1_OFFSET need to be subtracted
+                 cd2_value = _IQ24(cd2_value_q16 );  //CD2_OFFSET need to be subtracted
+
 #endif
 #if 0
                  if ( i <= 150)
@@ -326,7 +325,8 @@ int main(void) {
                  if ( true == readTemperatureFlag )
                  {
                      while(!read_temp_sensor(&currTempValue)){}
-
+                     readTemperatureFlag = false;  /** << This flag is set to true when ADC conversion is initiated
+                                                             on timer expire */
                  }
 #endif
 #if 1

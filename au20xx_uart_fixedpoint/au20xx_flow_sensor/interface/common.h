@@ -65,7 +65,7 @@ extern bool volatile temperatureReadFlag;
 #endif
 
 #ifndef CONSTANT_TEMP
-#define CONSTANT_TEMP  0
+#define CONSTANT_TEMP  1
 #endif
 
 #ifndef EN_CALIBRATE
@@ -77,7 +77,7 @@ extern bool volatile temperatureReadFlag;
 #endif
 
 #ifndef CALIBRATION_TEST_EN
-#define CALIBRATION_TEST_EN     1
+#define CALIBRATION_TEST_EN     0
 #endif
 /******************************************************************************
 * Typedefs

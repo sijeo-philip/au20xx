@@ -197,8 +197,7 @@ __interrupt void ADC12_ISR(void)
 
     temperatureReadFlag = true;   /** << This flag is set to true once new values are read from
                                         temperature sensor and Battery ADC */
-    readTemperatureFlag = false;  /** << This flag is set to true when ADC conversion is initiated
-                                         on timer expire */
+
     ADC_CONV_DISABLE;
     //TO DO: Can go to low power mode if needed
    break;
