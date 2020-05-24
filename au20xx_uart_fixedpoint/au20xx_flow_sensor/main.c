@@ -216,10 +216,7 @@ void aura_hw_init ( void )
     //       be set to true else false
     get_top_variables(&system_settings);
 
-#if EN_CALIBRATE == 1
-    au20xx_calibrate(&system_settings);
-#endif
-#if FPGA_CONNECT == 0
+#if FPGA_CONNECT == 0 && CALIBRATION_TEST_EN == 0
     set_au20xx_regs(&system_settings);
 #endif
 
