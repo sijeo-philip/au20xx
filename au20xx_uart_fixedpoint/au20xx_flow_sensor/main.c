@@ -153,11 +153,12 @@ uint32_t avg_min_cd2_value = 0;
 
 uint32_t sample_count =0;
 
-static bool calibration_done_flag = false;
+ bool calibration_done_flag = false;
 static bool get_minima1_flag = false;
 static bool get_minima2_flag = false;
 
 extern bool readTemperatureFlag;
+extern uint16_t sensEn_timer_delay;
 bool start_calibration_flag = false;
 
 /******************************************************************************
@@ -210,6 +211,7 @@ void aura_hw_init ( void )
     gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
     spi_init();                 /**<< Initialize the SPI peripheral */
     timerA_init();
+    _BIS_SR(GIE);
     //TODO : an GPIO has to read of HIGH or LOW , if HIGH normal_operation flag is to
     //       be set to true else false
     get_top_variables(&system_settings);
@@ -218,7 +220,7 @@ void aura_hw_init ( void )
     au20xx_calibrate(&system_settings);
 #endif
 #if FPGA_CONNECT == 0
-    configure_au20xx(&system_settings);
+    set_au20xx_regs(&system_settings);
 #endif
 
 #if FPGA_CONNECT == 0
@@ -234,8 +236,8 @@ void aura_hw_init ( void )
 #endif
 
     timerA0_load_time(system_settings.sampleTime);
-    cd1_corr_slope = _IQ24(system_settings.cd1_corr_slope);
-    cd2_corr_slope = _IQ24(system_settings.cd2_corr_slope);
+    cd1_corr_slope = _IQ24(2.004);
+    cd2_corr_slope = _IQ24(1.802);
 #if CALIBRATION_TEST_EN == 1
     normal_operation_mode = false;
     uart_init();
@@ -243,7 +245,7 @@ void aura_hw_init ( void )
     adc_init();
     uart_send("OK", 2);
 #endif
-    _BIS_SR(GIE);
+
 
 
 }
@@ -279,7 +281,7 @@ int main(void) {
              if(valid_data)
               {
                  valid_data =0;
-#if 0
+#if 1
                  au20xx_read_reg( SNS1_OUT_Q16_LSB_REG, &offset_reg_values[0]);
                  au20xx_read_reg( SNS1_OUT_Q16_MSB_REG, &offset_reg_values[1]);
                  au20xx_read_reg( SNS2_OUT_Q16_LSB_REG, &offset_reg_values[2]);
@@ -292,20 +294,6 @@ int main(void) {
                  cd1_value = _IQ24(cd1_value_q16 );  //CD1_OFFSET need to be subtracted
                  cd2_value = _IQ24(cd2_value_q16 );  //CD2_OFFSET need to be subtracted
 
-#endif
-#if 0
-                 if ( i <= 150)
-                 {
-                     cd1_values_array[i] = cd1_value;
-                     cd2_values_array[i] = cd2_value;
-                     sensEn_delay_us();
-                     i++;
-                     if( i >= 150)
-                         i =0;
-                 }
-
-              }
-          }
 #endif
 
 #if FPGA_CONNECT ==1
@@ -329,7 +317,6 @@ int main(void) {
                                                              on timer expire */
                  }
 #endif
-#if 1
 
                  tempNorm = currTempValue - system_settings.tempInit;
                  q24_tempNorm = _IQ24(tempNorm);
@@ -369,15 +356,11 @@ int main(void) {
               delta_previous_YC = delta_YC;
               cd1_previous_value = cd1_value_corr;
               cd2_previous_value = cd2_value_corr;
+       }
 
    }
-          }
-#endif
-
-
-
        }
-       else
+  else
        {
 
            timerA0_load_time(10);
@@ -399,8 +382,32 @@ int main(void) {
                        fram_write(&system_settings.samplesPerTemp, 4, SAMPLES_PER_TEMP_READ_ADDRESS);
                        fram_write(&system_settings.sampleTime, 2, AU20xx_READ_TIME_ADD);
                        fram_write(&system_settings.sensEnTime, 1, SENS_EN_TIME_ADD);
+                       switch(system_settings.sensEnTime)
+                        {
+                          case 0:
+                            system_settings.sensEnTime_us = 48;
+                            sensEn_timer_delay = 42 * 4;
+                          break;
+                          case 1:
+                             system_settings.sensEnTime_us = 96;
+                             sensEn_timer_delay = 90 * 4;
+                          break;
+                          case 2:
+                             system_settings.sensEnTime_us = 192;
+                             sensEn_timer_delay = 184 * 4;
+                          break;
+                          case 3:
+                             system_settings.sensEnTime_us = 380;   /*previous working value 384*/
+                             sensEn_timer_delay = 380*4;              /*previous working value 380 */
+                           break;
+                           default:
+                              system_settings.sensEnTime_us = 380;  /* previous working value 384 */
+                              sensEn_timer_delay = 380 * 4;              /* previous working value 380 */
+                            break;
+                          }
                        fram_write(&system_settings.calibSampleTime, 2, CALIB_SAMPLE_TIME_ADD);
-                      timerA0_load_time(system_settings.calibSampleTime);
+                       timerA0_load_time(system_settings.calibSampleTime);
+                       configure_au20xx(&system_settings);
                    }
                    else
                        uart_send("ERROR", 5);
@@ -537,7 +544,7 @@ int main(void) {
                   avg_min_cd1_value = avg_min_cd1_value >> 3;
                   avg_min_cd2_value = avg_min_cd2_value >> 3;
 
-                   if (((avg_max_cd1_value - avg_min_cd1_value) < 15 ) || (( avg_max_cd2_value - avg_min_cd2_value ) < 15))
+                   if ((((avg_max_cd1_value - avg_min_cd1_value) < 15 ) || (( avg_max_cd2_value - avg_min_cd2_value ) < 15)) && (calibration_done_flag == false))
                    {
                         uart_send("CALIB NOT OK", 12);
                         total_cd1_sample_count = 0;
@@ -552,7 +559,7 @@ int main(void) {
                         min_cd2_value = 0;
                         calibration_done_flag = false;
                    }
-                   else
+                   else if (calibration_done_flag == false)
                    {
                         uart_send("CALIB DONE", 10);
                         cd1_offset_value = cd1_offset_value >> 4;

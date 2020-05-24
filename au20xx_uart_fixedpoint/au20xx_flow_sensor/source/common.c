@@ -56,7 +56,7 @@
 /******************************************************************************
 * Module Variable Definitions
 *******************************************************************************/
-static uint16_t sensEn_timer_delay = 0;
+uint16_t sensEn_timer_delay = 0;
 static bool sensEn_delay_flag = false;
 char data[5];
 
@@ -199,22 +199,23 @@ bool get_top_variables(top_variables_t * topVariable)
     topVariable->cd2_corr_slope = 1.802;
     topVariable->tempInit = 30;
 
+#endif
 
-    //fram_read(&topVariable->tempInit, 1, INIT_TEMP_ADD);
 #if FPGA_CONNECT == 0
     fram_read(&topVariable->sns1_off0, 1, SNS1_OFF0);
     fram_read(&topVariable->sns1_off1, 1, SNS1_OFF1);
     fram_read(&topVariable->sns2_off0, 1, SNS2_OFF0);
     fram_read(&topVariable->sns2_off1, 1, SNS2_OFF1);
+    fram_read(&topVariable->tempInit, 1, INIT_TEMP_ADD);
 #endif
-#else
+#if DEBUG == 0
 
     retVal =  fram_read (&topVariable->samplesPerTemp , 4, SAMPLES_PER_TEMP_READ_ADDRESS);
     if( false == retVal )
         return retVal;
     set_samples_per_temperature_read( topVariable->samplesPerTemp);
 
-    retVal =  fram_read(&topVariable->sensEnTime, 2, SAMPLE_TIME_ADD);
+    retVal =  fram_read(&topVariable->sensEnTime, 2, SENS_EN_TIME_ADD);
     if( false == retVal )
         return retVal;
 
@@ -226,36 +227,36 @@ bool get_top_variables(top_variables_t * topVariable)
         {
         case 0:
             topVariable->sensEnTime_us = 48;
-            sensEn_timer_delay = 42;
+            sensEn_timer_delay = 42 * 4;
         break;
         case 1:
             topVariable->sensEnTime_us = 96;
-            sensEn_timer_delay = 90;
+            sensEn_timer_delay = 90 * 4;
         break;
         case 2:
             topVariable->sensEnTime_us = 192;
-            sensEn_timer_delay = 184;
+            sensEn_timer_delay = 184* 4;
         break;
         case 3:
             topVariable->sensEnTime_us = 384;
-            sensEn_timer_delay = 380;
+            sensEn_timer_delay = 380* 4;
 
         break;
         default:
             topVariable->sensEnTime_us = 384;
-            sensEn_timer_delay = 380;
+            sensEn_timer_delay = 380 * 4;
         break;
         }
     }
     retVal = fram_read(&topVariable->lastRotCount, 2, LAST_ROT_COUNT_ADD);
     if( false == retVal )
         return retVal;
-    retVal = fram_read(&topVariable->sampleTime, 2, SAMPLE_TIME_ADD);
+    retVal = fram_read(&topVariable->sampleTime, 2, AU20xx_READ_TIME_ADD);
     if( false == retVal )
         return retVal;
     if ( (topVariable->sampleTime < 2) || (topVariable->sampleTime > 512))
         topVariable->sampleTime = 20;
-    timerA_load_time(topVariable->sampleTime);
+    timerA0_load_time(topVariable->sampleTime);
 
     retVal = fram_read(&topVariable->cd1_corr_slope, 4, CD1_CORR_SLOPE_ADD);
     if( false == retVal )
@@ -264,10 +265,7 @@ bool get_top_variables(top_variables_t * topVariable)
     if( false == retVal )
         return retVal;
 
-    fram_read(&topVariable->sns1_off0, 1, SNS1_OFF0);
-    fram_read(&topVariable->sns1_off1, 1, SNS1_OFF1);
-    fram_read(&topVariable->sns2_off0, 1, SNS2_OFF0);
-    fram_read(&topVariable->sns2_off1, 1, SNS2_OFF1);
+
 
 
 #endif
@@ -352,11 +350,12 @@ _iq24 absolute(_iq24 value)
 void configure_au20xx(top_variables_t * topVariables)
 {
     au20xx_chip_reset();
+#if 0
     au20xx_write_reg(SNS1_OFF0_REG, topVariables->sns1_off0);
     au20xx_write_reg(SNS1_OFF1_REG, topVariables->sns1_off1);
     au20xx_write_reg(SNS2_OFF0_REG, topVariables->sns2_off0);
     au20xx_write_reg(SNS2_OFF1_REG, topVariables->sns2_off1);
-
+#endif
     au20xx_write_reg(INTF_CFG_REG, (0x78|topVariables->sensEnTime));
 
 }
@@ -364,7 +363,7 @@ void configure_au20xx(top_variables_t * topVariables)
 
 void set_au20xx_regs(top_variables_t * topVariables)
 {
-
+    au20xx_chip_reset();
     au20xx_write_reg(SNS1_OFF0_REG, topVariables->sns1_off0);
     au20xx_write_reg(SNS1_OFF1_REG, topVariables->sns1_off1);
     au20xx_write_reg(SNS2_OFF0_REG, topVariables->sns2_off0);

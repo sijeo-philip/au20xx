@@ -61,7 +61,7 @@ extern bool volatile temperatureReadFlag;
 * Macros
 *******************************************************************************/
 #ifndef DEBUG
-#define DEBUG       1
+#define DEBUG       0
 #endif
 
 #ifndef CONSTANT_TEMP
@@ -73,7 +73,7 @@ extern bool volatile temperatureReadFlag;
 #endif
 
 #ifndef FPGA_CONNECT
-#define FPGA_CONNECT    1
+#define FPGA_CONNECT    0
 #endif
 
 #ifndef CALIBRATION_TEST_EN
