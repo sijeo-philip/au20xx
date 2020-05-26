@@ -216,6 +216,9 @@ void aura_hw_init ( void )
     //       be set to true else false
     get_top_variables(&system_settings);
 
+#if EN_CALIBRATE == 1
+    au20xx_calibrate(&system_settings);
+#endif
 #if FPGA_CONNECT == 0 && CALIBRATION_TEST_EN == 0
     set_au20xx_regs(&system_settings);
 #endif
@@ -260,6 +263,7 @@ int main(void) {
      Top Variable settings and store the same in the respective FRAM locations */
 #if CONSTANT_TEMP == 1
    currTempValue = 30;
+   system_settings.tempInit = 30;
 #endif
    for(;;){
 
@@ -442,16 +446,16 @@ int main(void) {
 
                  if(total_cd1_sample_count < 16)
                  {
-                 if ( (avg_cd1_value > max_cd1_value) && (up_down_curve1 <= 0) && ( get_minima1_flag == false) )
+                 if ( (avg_cd1_value > max_cd1_value) && ( get_minima1_flag == false) )
                   {
                     max_cd1_value = avg_cd1_value;
                     max_sample_count_1 = 0;
                     //min_sample_count_1 = 0;
                    }
-                  else if ((up_down_curve1 <= 0) && (get_minima1_flag == false))
+                  else if ( (get_minima1_flag == false))  //(up_down_curve1 <= 0) &&
                   {
                     max_sample_count_1++;
-                    if(max_sample_count_1 > 4 )
+                    if(max_sample_count_1 > 16 )
                      {
                         cd1_offset_value += max_cd1_value;
                         avg_max_cd1_value += max_cd1_value;
@@ -463,16 +467,16 @@ int main(void) {
 
                       }
                    }
-                   if (( avg_cd1_value < min_cd1_value ) && (up_down_curve1 > 0) && (get_minima1_flag == true))
+                   if (( avg_cd1_value < min_cd1_value )&& (get_minima1_flag == true))  // && (up_down_curve1 > 0)
                    {
                       min_cd1_value = avg_cd1_value;
                       min_sample_count_1 = 0;
                       //max_sample_count_1 = 0;
                    }
-                   else if (( up_down_curve1 > 0) && (get_minima1_flag == true))
+                   else if ((get_minima1_flag == true)) //( up_down_curve1 > 0) &&
                    {
                       min_sample_count_1++;
-                      if(min_sample_count_1 > 4)
+                      if(min_sample_count_1 > 16)
                       {
                          cd1_offset_value += min_cd1_value;
                          avg_min_cd1_value += min_cd1_value;
@@ -486,16 +490,16 @@ int main(void) {
                  }
                  if(total_cd2_sample_count < 16)
                  {
-                   if ((avg_cd2_value > max_cd2_value ) && (up_down_curve2 <=0) && (get_minima2_flag == false))
+                   if ((avg_cd2_value > max_cd2_value )&& (get_minima2_flag == false)) // && (up_down_curve2 <=0)
                    {
                       max_cd2_value = avg_cd2_value;
                       max_sample_count_2 = 0;
                       //min_sample_count_2 = 0;
                    }
-                   else if ((up_down_curve2 <= 0) && (get_minima2_flag == false))
+                   else if ( (get_minima2_flag == false))  //(up_down_curve2 <= 0) &&
                    {
                       max_sample_count_2++;
-                      if( max_sample_count_2 > 4)
+                      if( max_sample_count_2 > 16)
                       {
                          cd2_offset_value += max_cd2_value;
                          avg_max_cd2_value += max_cd2_value;
@@ -506,16 +510,16 @@ int main(void) {
                          get_minima2_flag = true;
                        }
                      }
-                    if ((avg_cd2_value < min_cd2_value ) && (up_down_curve2 > 0) && (get_minima2_flag == true))
+                    if ((avg_cd2_value < min_cd2_value ) && (get_minima2_flag == true))  //&& (up_down_curve2 > 0)
                      {
                         min_cd2_value = avg_cd2_value;
                         min_sample_count_2 = 0;
                         //max_sample_count_2 = 0;
                       }
-                      else if ((up_down_curve2 > 0) && (get_minima2_flag == true))
+                      else if ( (get_minima2_flag == true)) //(up_down_curve2 > 0) &&
                       {
                          min_sample_count_2++;
-                         if(min_sample_count_2 > 4)
+                         if(min_sample_count_2 > 16)
                          {
                            cd2_offset_value += min_cd2_value;
                            avg_min_cd2_value += min_cd2_value;

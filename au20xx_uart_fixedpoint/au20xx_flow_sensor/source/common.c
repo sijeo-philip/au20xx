@@ -215,7 +215,7 @@ bool get_top_variables(top_variables_t * topVariable)
         return retVal;
     set_samples_per_temperature_read( topVariable->samplesPerTemp);
 
-    retVal =  fram_read(&topVariable->sensEnTime, 2, SENS_EN_TIME_ADD);
+    retVal =  fram_read(&topVariable->sensEnTime, 1, SENS_EN_TIME_ADD);
     if( false == retVal )
         return retVal;
 

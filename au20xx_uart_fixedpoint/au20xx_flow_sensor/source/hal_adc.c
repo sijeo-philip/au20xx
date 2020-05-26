@@ -61,6 +61,7 @@
 static uint16_t volatile tempValue;
 static int volatile degC;
 static uint16_t volatile voltValue;
+static float degC_per_bit;
 
 bool volatile temperatureReadFlag = false;
 extern bool readTemperatureFlag;
@@ -129,8 +130,11 @@ void adc_init( void )
 
    __adc_enable_memory_interrupt(0);
    __adc_enable_memory_interrupt(1);
+
+   degC_per_bit = ((float)(85.0-30.0))/((float)(CALADC_12V_85C - CALADC_12V_30C));
    ADC_CONV_ENABLE;
    __start_adc_conv();
+
 }
 
 /******************************************************************************
@@ -182,7 +186,7 @@ __interrupt void ADC12_ISR(void)
   case 10: break;
   case 12:
       tempValue = ADC_CONV_MEMORY(0) - CALADC_12V_30C;
-      degC = ((long)tempValue * 10 *(85-30)* 10)/((CALADC_12V_85C - CALADC_12V_30C)*10) + 300;
+      degC = ((long)tempValue) * degC_per_bit + 30.0;
       //TO DO: SAVE Temperature to Holding Register
       ADC12IFGR0 &= 0xFFFE;
       //TO DO: Go to low power mode if needed
