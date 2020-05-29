@@ -111,6 +111,13 @@ _iq24 acc_ang;             /** << Accumulation of calculated angle to determine 
 _iq24 rotation;            /** << Variable to check if the angle of pi is crossed */
 int up_down_curve1;
 int up_down_curve2;
+int sum_of_tempNorm[10];
+
+
+uint8_t temp_count;        /** <<For Loop counter for normal temperature average filtering */
+uint8_t i_temp;            /** << For loop counter for Calibration Mode average filtering */
+
+uint16_t avg_temp_value;
 
 
 uint16_t cd1_value_q16 = 0;
@@ -206,7 +213,7 @@ bool start_calibration_flag = false;
 *******************************************************************************/
 void aura_hw_init ( void )
 {
-
+   int i = 0;
     system_clock_init();        /**<< Set the Frequency of the system */
     gpio_init();                /**<< Initialize the GPIOs for primary/Tertiary/Secondary or as IOs */
     spi_init();                 /**<< Initialize the SPI peripheral */
@@ -216,13 +223,16 @@ void aura_hw_init ( void )
     //       be set to true else false
     get_top_variables(&system_settings);
 
-#if EN_CALIBRATE == 1
+#if 0
     au20xx_calibrate(&system_settings);
 #endif
 #if FPGA_CONNECT == 0 && CALIBRATION_TEST_EN == 0
     set_au20xx_regs(&system_settings);
 #endif
-
+for (i = 0; i < 8; i++ )
+{
+    sum_of_tempNorm[i] = system_settings.tempInit;
+}
 #if FPGA_CONNECT == 0
     refa_init();
     adc_init();
@@ -274,7 +284,7 @@ int main(void) {
           {
               sensENFlag = false;
               valid_data = 0;
-              sensEn_delay_us();
+              sensEn_delay_us();                /** << Sens Enable Pulse duration in the function */
               while(0 == valid_data)
                au20xx_read_reg( SNS_VALID_REG, (void*)&valid_data);
                //delay_us(2);
@@ -318,8 +328,19 @@ int main(void) {
                                                              on timer expire */
                  }
 #endif
+#if CONSTANT_TEMP == 0
+                 sum_of_tempNorm[temp_count] += currTempValue;
+                 temp_count++;
+                 if(temp_count > 7)
+                     temp_count = 0;
+                 tempNorm = average_by_8(sum_of_tempNorm);
+                 tempNorm = tempNorm - system_settings.tempInit;
 
+#elif   CONSTANT_TEMP ==1
                  tempNorm = currTempValue - system_settings.tempInit;
+
+#endif
+
                  q24_tempNorm = _IQ24(tempNorm);
                  cd1_value_corr = _IQ24mpy(cd1_corr_slope , q24_tempNorm);
                  cd1_value_corr = (cd1_value - cd1_value_corr);
@@ -357,6 +378,8 @@ int main(void) {
               delta_previous_YC = delta_YC;
               cd1_previous_value = cd1_value_corr;
               cd2_previous_value = cd2_value_corr;
+
+              //TODO: MCU should be put to sleep
        }
 
    }
@@ -455,7 +478,7 @@ int main(void) {
                   else if ( (get_minima1_flag == false))  //(up_down_curve1 <= 0) &&
                   {
                     max_sample_count_1++;
-                    if(max_sample_count_1 > 16 )
+                    if(max_sample_count_1 > 16 )   /**<< Need to set MACRO for calibration */
                      {
                         cd1_offset_value += max_cd1_value;
                         avg_max_cd1_value += max_cd1_value;
@@ -562,15 +585,21 @@ int main(void) {
                    }
                    else if (calibration_done_flag == false)
                    {
-                        uart_send("CALIB DONE", 10);
+
                         cd1_offset_value = cd1_offset_value >> 4;
                         cd2_offset_value = cd2_offset_value >> 4;
                         system_settings.sns1_off0 = (uint8_t)cd1_offset_value;
                         system_settings.sns1_off1 = (uint8_t)(cd1_offset_value >> 8);
                         system_settings.sns2_off0 = (uint8_t)cd2_offset_value;
                         system_settings.sns2_off1 = (uint8_t)(cd2_offset_value >> 8);
+                        for(i_temp=0; i_temp<8; i_temp++)
+                        {
                         __start_adc_conv();
                         while(!read_temp_sensor(&currTempValue)){}
+                        avg_temp_value += currTempValue;
+                        avg_temp_value = avg_temp_value >> 1;
+                        }
+                        currTempValue = avg_temp_value;
                         fram_write(&currTempValue, 1, INIT_TEMP_ADD);
                         fram_write(&system_settings.sns1_off0, 1, SNS1_OFF0);
                         fram_write(&system_settings.sns1_off1, 1, SNS1_OFF1);
@@ -578,6 +607,7 @@ int main(void) {
                         fram_write(&system_settings.sns2_off1, 1, SNS2_OFF1);
                         calibration_done_flag = true;
                         start_calibration_flag = false;
+                        uart_send("CALIB DONE", 10);
                    }
 
               }

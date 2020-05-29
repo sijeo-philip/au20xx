@@ -68,12 +68,9 @@ extern bool volatile temperatureReadFlag;
 #define CONSTANT_TEMP  1
 #endif
 
-#ifndef EN_CALIBRATE
-#define EN_CALIBRATE    0
-#endif
 
 #ifndef FPGA_CONNECT
-#define FPGA_CONNECT    0
+#define FPGA_CONNECT    1
 #endif
 
 #ifndef CALIBRATION_TEST_EN
@@ -131,6 +128,7 @@ _iq24 absolute(_iq24);
 void configure_au20xx(top_variables_t * topVariables);
 void set_au20xx_regs(top_variables_t * topVariables);
 uint32_t average_by_4(uint32_t *, int* );
+int average_by_8(int*);
 bool process_uart_data(char*, top_variables_t*, bool*);
 #ifdef __cplusplus
 } // extern "C"

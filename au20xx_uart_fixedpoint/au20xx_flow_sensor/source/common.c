@@ -429,6 +429,52 @@ uint32_t average_by_4(uint32_t * address_of_array, int* slope_of_slope)
     return average_value;
 }
 
+/******************************************************************************
+* Function : average_by_4
+*//**
+* \b Description:
+*
+* This function returns average value of the array of 4 long unsigned element
+*
+* PRE-CONDITION: Clocks should be initialized for 1MHz Source
+*
+* POST-CONDITION: Average of 8 elements are calculated and returned
+*
+* @param[in]   address to the array of 8 elements
+*
+* @return       average of 8 elements
+*
+* \b Example Example:
+* @code
+*  int8_t value[8];
+*  int avg_value;
+* avg_value = average_by_8 (value)
+*
+* @endcode
+*
+* @see system_clock_init
+*
+* <br><b> - HISTORY OF CHANGES - </b>
+*
+* <table align="left" style="width:800px">
+* <tr><td> Date       </td><td> Software Version </td><td> Initials </td><td> Description </td></tr>
+* <tr><td> 27/05/2020 </td><td> 0.5.0            </td><td> SP      </td><td> Interface Created </td></tr>
+* </table><br><br>
+* <hr>
+*
+*******************************************************************************/
+int average_by_8(int * address_of_array)
+{
+    static uint8_t i = 0;
+    static int average_value;
+    average_value = 0;
+    for (i = 0; i < 8; i++ )
+    {
+        average_value += address_of_array[i];
+    }
+    average_value = average_value >> 3;
+    return average_value;
+}
 
 
 
