@@ -131,7 +131,7 @@ void adc_init( void )
    __adc_enable_memory_interrupt(0);
    __adc_enable_memory_interrupt(1);
 
-   degC_per_bit = ((float)(85.0-30.0))/((float)(CALADC_12V_85C - CALADC_12V_30C));
+   degC_per_bit = (CALADC_12V_85C - CALADC_12V_30C);
    ADC_CONV_ENABLE;
    __start_adc_conv();
 
@@ -185,8 +185,8 @@ __interrupt void ADC12_ISR(void)
   case 8: break;
   case 10: break;
   case 12:
-      tempValue = ADC_CONV_MEMORY(0) - CALADC_12V_30C;
-      degC = ((long)tempValue) * degC_per_bit + 30.0;
+      tempValue = ((ADC_CONV_MEMORY(0) - CALADC_12V_30C) * (85 - 30));
+      degC = (float)((long)tempValue)/degC_per_bit + 150.0;
       //TO DO: SAVE Temperature to Holding Register
       ADC12IFGR0 &= 0xFFFE;
       //TO DO: Go to low power mode if needed
@@ -290,7 +290,7 @@ bool read_temp_sensor( void * degrees )
       temperatureReadFlag = false;
     }
     return retVal;
-#elif FPGA_CONNECT == 0 || CALIBRATION_TEST_EN == 1
+#elif FPGA_CONNECT == 0 || CONSTANT_TEMP == 0 || CALIBRATION_TEST_EN ==1
     static bool retVal;
     int * degCel = (int*) degrees;
     retVal = temperatureReadFlag;

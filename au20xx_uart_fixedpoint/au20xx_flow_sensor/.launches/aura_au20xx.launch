@@ -4,7 +4,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.MSP430FR6972.ccxml.TI MSP430 USB1/MSP430" value="${build_artifact:aura_au20xx}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP430FR6972.ccxml.TI MSP430 USB1/MSP430" value="aura_au20xx"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:aura_au20xx}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430FR6972.ccxml.TI MSP430 USB1/MSP430" value="E:\AuraSemi\au20xx_fixedpoint\aura_au20xx\Debug\aura_au20xx.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP430FR6972.ccxml.TI MSP430 USB1/MSP430" value="E:\AuraSemi\au20xx_fixedpoint_v1_0\aura_au20xx\Debug\aura_au20xx.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/aura_au20xx"/>
 </listAttribute>

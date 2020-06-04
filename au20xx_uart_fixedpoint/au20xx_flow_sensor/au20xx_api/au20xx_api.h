@@ -43,6 +43,9 @@
 #include "common.h"
 #include <stdint.h>
 #include "hal_gpio.h"
+#include <stdbool.h>
+#include "IQmathLib.h"
+#include "common.h"
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
@@ -75,25 +78,79 @@
 #define SNS_EN_HIGH             SET_GPIO_OUTPUT(P1, BIT3)
 #define SNS_EN_LOW              CLEAR_GPIO_OUTPUT(P1, BIT3)
 
+
+
 /******************************************************************************
 * Configuration Constants
 *******************************************************************************/
 
 
-/******************************************************************************
-* Macros
-*******************************************************************************/
+#ifndef CD1_CORR_SLOPE
+#define CD1_CORR_SLOPE          2.004
+#endif
 
+#ifndef CD2_CORR_SLOPE
+#define CD2_CORR_SLOPE          1.802
+#endif
+
+#ifndef CALIB_CD1_MIN_MAX_SAMPLES
+#define CALIB_CD1_MIN_MAX_SAMPLES   16
+#endif
+
+#ifndef CALIB_CD2_MIN_MAX_SAMPLES
+#define CALIB_CD2_MIN_MAX_SAMPLES   16
+#endif
 
 
 /******************************************************************************
 * Typedefs
 *******************************************************************************/
+struct au20xx_var
+{
+    _iq24   cd1_corr_slope;
+    _iq24   cd2_corr_slope;
+    int8_t  currTempValue;
+    _iq24   cd1_value;
+    _iq24   cd2_value;
+    _iq24   cd1_previous_value;
+    _iq24   cd2_previous_value;
+    _iq24   x0;
+    _iq24   y0;
+    _iq24   delta_previous_XC;
+    _iq24   delta_previous_YC;
+    _iq24   previous_ang;        /**<< Calculated Angle in previous cycle to determine Step change */
+    long    cd_rot_direction_x;
+    long    cd_rot_direction_x_tens;
+};
+
+typedef struct au20xx_var au20xx_var_t;
+
+struct au20xx_calib_var
+{
+    uint16_t total_cd1_sample_count;
+    uint16_t total_cd2_sample_count;
+    uint32_t avg_max_cd1_value;
+    uint32_t avg_max_cd2_value;
+    uint32_t avg_min_cd1_value;
+    uint32_t avg_min_cd2_value;
+    uint32_t cd1_offset_value;
+    uint32_t cd2_offset_value;
+};
+
+typedef struct au20xx_calib_var au20xx_calib_var_t;
+/******************************************************************************
+* Macros
+*******************************************************************************/
+#define SYSTEM_VAR_DEF(variable) \
+    au20xx_var_t variable
+
+#define CALIB_VAR_DEF(variable) \
+    au20xx_calib_var_t variable
 
 
 /******************************************************************************
 * Variables
-*******************************************************************************/
+******************************************************************************/
 
 
 /******************************************************************************
@@ -107,7 +164,8 @@ void au20xx_chip_reset(void);
 void au20xx_send_command(uint8_t sub_command);
 void au20xx_write_reg(uint8_t reg_addr, uint8_t data);
 void au20xx_read_reg( uint8_t reg_addr, void * const data);
-void au20xx_calibrate(top_variables_t* topVariables);
+bool process_sensor_data(au20xx_var_t* , top_variables_t* );
+bool calibrate_au20xx(au20xx_calib_var_t*);
 
 #ifdef __cplusplus
 } // extern "C"

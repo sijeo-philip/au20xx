@@ -44,6 +44,7 @@
 *******************************************************************************/
 #include <stdbool.h>
 #include <stdint.h>
+#include <msp430.h>
 /******************************************************************************
 * Preprocessor Constants
 *******************************************************************************/
@@ -54,9 +55,12 @@ extern bool volatile temperatureReadFlag;
 *******************************************************************************/
 #define UART_INTERBYTE_DELAY    2
 #define UART_BUFF_SIZE          100
-#define GLOBAL_Q                8
+#define SLEEP                   _BIS_SR(LPM3_bits);
+#define WAKE                    _BIC_SR(LPM3_EXIT);
+
 
 #include "IQmathLib.h"
+
 /******************************************************************************
 * Macros
 *******************************************************************************/
@@ -77,7 +81,7 @@ extern bool volatile temperatureReadFlag;
 #define CALIBRATION_TEST_EN     0
 #endif
 /******************************************************************************
-* Typedefs
+* Typedef
 *******************************************************************************/
 typedef struct
 {
@@ -113,6 +117,7 @@ typedef struct
 *******************************************************************************/
 
 
+
 /******************************************************************************
 * Function Prototypes
 *******************************************************************************/
@@ -128,7 +133,7 @@ _iq24 absolute(_iq24);
 void configure_au20xx(top_variables_t * topVariables);
 void set_au20xx_regs(top_variables_t * topVariables);
 uint32_t average_by_4(uint32_t *, int* );
-int average_by_8(int*);
+int8_t average_by_8(int8_t*);
 bool process_uart_data(char*, top_variables_t*, bool*);
 #ifdef __cplusplus
 } // extern "C"

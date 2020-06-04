@@ -297,6 +297,7 @@ __interrupt void TIMER0_ISR ( void )
             uart_rx_flag = false;
         }
     }
+    WAKE;
 }
 
 

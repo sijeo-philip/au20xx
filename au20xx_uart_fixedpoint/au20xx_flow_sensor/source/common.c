@@ -463,7 +463,7 @@ uint32_t average_by_4(uint32_t * address_of_array, int* slope_of_slope)
 * <hr>
 *
 *******************************************************************************/
-int average_by_8(int * address_of_array)
+int8_t average_by_8(int8_t * address_of_array)
 {
     static uint8_t i = 0;
     static int average_value;
