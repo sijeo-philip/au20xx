@@ -278,7 +278,7 @@ __interrupt void TIMER0_ISR ( void )
                                             Temperature Reading along with return value of
                                             read_temp_sensor() if both are true new updated value is read*/
         sampleCount = samplesPerTempReading;
-#if FPGA_CONNECT == 0
+#if FPGA_CONNECT == 0 && CALIBRATION_TEST_EN == 0
         __start_adc_conv();
 #elif FPGA_CONNECT == 1
         temperatureReadFlag = true;
@@ -297,7 +297,9 @@ __interrupt void TIMER0_ISR ( void )
             uart_rx_flag = false;
         }
     }
+#if CALIBRATION_TEST_EN == 0
     WAKE;
+#endif
 }
 
 

@@ -69,12 +69,12 @@ extern bool volatile temperatureReadFlag;
 #endif
 
 #ifndef CONSTANT_TEMP
-#define CONSTANT_TEMP  1
+#define CONSTANT_TEMP  0
 #endif
 
 
 #ifndef FPGA_CONNECT
-#define FPGA_CONNECT    1
+#define FPGA_CONNECT    0
 #endif
 
 #ifndef CALIBRATION_TEST_EN

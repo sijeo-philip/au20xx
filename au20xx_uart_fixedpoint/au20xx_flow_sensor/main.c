@@ -182,8 +182,10 @@ for (i = 0; i < 8; i++ )
  * ENTRY POINT
  */
 int main(void) {
+    static int i = 0;
     WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer
    aura_hw_init();
+
    /*TODO : Check for the IO pin after Power ON to work in normal measurment mode
      or Calibration Mode, wherein the UART will be active and ready to recieve the
      Top Variable settings and store the same in the respective FRAM locations */
@@ -285,7 +287,7 @@ int main(void) {
                        system_settings.sns1_off1 = (uint8_t)(au20xx_calib_variables.cd1_offset_value >> 8);
                        system_settings.sns2_off0 = (uint8_t)au20xx_calib_variables.cd2_offset_value;
                        system_settings.sns2_off1 = (uint8_t)(au20xx_calib_variables.cd2_offset_value >> 8);
-                       for(i_temp=0; i_temp<8; i_temp++)
+                       for(i = 0; i < 7; i++)
                          {
                            __start_adc_conv();
                            while(!read_temp_sensor(&currTempValue)){}
