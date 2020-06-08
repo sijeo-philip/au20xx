@@ -55,8 +55,12 @@ extern bool volatile temperatureReadFlag;
 *******************************************************************************/
 #define UART_INTERBYTE_DELAY    2
 #define UART_BUFF_SIZE          100
-#define SLEEP                   _BIS_SR(LPM3_bits);
-#define WAKE                    _BIC_SR(LPM3_EXIT);
+#define SLEEP \
+do{ \
+    __disable_interrupt(); \
+    __bis_SR_register(LPM3_bits + GIE);  \
+}while(0)
+#define WAKE                    LPM3_EXIT
 
 
 #include "IQmathLib.h"
